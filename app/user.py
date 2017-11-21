@@ -19,16 +19,25 @@ class User_details(object):
                 return "Username already exists."
         #validate password and username
         else:
-            if len(password) < 6:
-                return "Password too short"
+            if not re.match("^[a-zA-Z0-9_]*$", username):
+                return "Username can only contain alphanumeric characters"
             elif password != cnfpassword:
                 return "passwords do not match"
-            elif not re.match("^[a-zA-Z0-9_]*$", username):
-                return "Username can only contain alphanumeric characters"
+            elif len(password) < 6:
+                return "Password too short"     
             else:
+                #register user if all the details are valid
                 user_details['username'] = username
                 user_details['password'] = password
                 self.user_list.append(user_details)
                 return "Registration successfull"
 
-    
+    def login(self, username, password):
+        for user in self.user_list:
+            if username == user['username']:
+                if password == user['password']:
+                    return "successful"
+                else:
+                    return "wrong password"
+        return "user does not exist"
+        
