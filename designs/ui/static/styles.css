@@ -1,0 +1,50 @@
+/* ------------------------------------------------------
+ * General styles
+ * -----------------------------------------------------*/
+
+/* Headings */
+h1,h2,h3,h4,h5,h6{font-weight : bold;}
+h1{font-size : 24px;}
+h2{font-size : 20px;}
+p{font-size : 14px;}
+
+/* ------------------------------------------------------
+ * Index page styles
+ * -----------------------------------------------------*/
+#bckgrndimg{
+  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url('img/events.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  background-attachment: fixed;
+  
+}
+.text-box{
+    position: absolute;
+    transform :translate(40% , 290%);
+    color: white;
+}
+.btn-search {
+	  background: #424242;
+	  border-radius: 0;
+	  color: #fff;
+	  border-width: 1px;
+	  border-style: solid;
+	  border-color: #1c1c1c;
+	}
+
+.btn-search:link, .btn-search:visited {
+	  color: #fff;
+	}
+.btn-search:active, .btn-search:hover {
+  background: #1c1c1c;
+  color: #fff;
+}
+
+/* ------------------------------------------------------
+ * signup and login page styles
+ * -----------------------------------------------------*/
+.backgrnd{
+	background:linear-gradient(rgba(133,130,130,0.4),rgba(133,130,130,0.4));
+	margin-top: 5%;
+}
