@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create event</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+  </head>
+      <body>
+    <div class="container forms">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="row">
+        <div class="ol-md-6 col-md-offset-3">
+          <h3>Create Event</h3>
+        </div>
+      </div>
+      <form action="#" method="POST">
+        <div class="form-group">
+          <label for="eventname"><h3>Event Name</h3></label>  
+            <input type="text" class="form-control" name="eventname"  placeholder="Enter event name" required/>
+        
+          <label for="eventname"><h3>Description</h3></label>  
+            <input type="text" class="form-control" name="description"  placeholder="event description">
+
+          <label> <h3>Category</h3> </label>
+          <select  class="form-control" name="category">
+
+          <option value="">select</option>
+          <option value="Business">Education</option>
+          <option value="Education">Technology</option>
+          <option value="Technology">Social</option>
+          </select>
+          <label for="eventname"><h3>Event venue</h3></label>  
+          <input type="text" class="form-control" name="venue"  placeholder="Enter event venue" required/>
+          <label for="eventname"><h3>Event Date</h3></label>  
+          <input type="date" class="form-control" name="date"  required/>
+        </div>
+        <div class="row">
+      <div class="col-md-6 col-md-offset-5">
+            <button type="submit" class="btn btn-success">Create</button>
+      </div>
+  </div>
+      </form>
+    </div>
+    </div>
+  </body>
+</html>
