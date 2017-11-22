@@ -34,6 +34,7 @@ class Events(object):
 				self.event_details['date_created'] = date.today().isoformat()
 				self.event_details['createdby'] = createdby
 				self.event_details['id'] = len(self.event_list) + 1
+				self.event_list.append(self.event_details)
 				return "event created"
 
 	def delete(self, eventid):
