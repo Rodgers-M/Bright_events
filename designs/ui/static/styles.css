@@ -20,8 +20,8 @@ p{font-size : 14px;}
   
 }
 .text-box{
-    position: absolute;
-    transform :translate(40% , 290%);
+    position: relative;
+    margin-top: 17%;
     color: white;
 }
 .btn-search {
