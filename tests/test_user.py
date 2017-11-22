@@ -22,12 +22,24 @@ class UserTests(unittest.TestCase):
         self.user.register("rodger", "654123", "654123")
         res = self.user.register("rodger", "654123", "654123")
         self.assertEqual(res, "Username already exists.")
+    def test_first_user_has_id_1(self):
+        """Test if the id's are generated correctly"""
+        self.user.register("rodger", "654123", "654123")
+        id = self.user.user_list[0]['id']
+        self.assertEqual(id, 1)
+    def test_if_id_is_int(self):
+        """Test if the ids are integers"""
+        self.user.register("rodger", "654123", "654123")
+        id = self.user.user_list[0]['id']
+        self.assertIsInstance(id, int)
 
     def test_password_length(self):
+        """Test to ensure that a user has a strong password"""
         res = self.user.register("random", "654", "654")
         self.assertEqual(res, "Password too short")
 
     def test_password_match(self):
+        """Test if password matching is working"""
         res = self.user.register("random", "654123", "1234654")
         self.assertEqual(res, "passwords do not match")
 
