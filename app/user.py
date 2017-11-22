@@ -1,4 +1,4 @@
-#to be used to match strings
+#used to validate names
 import re
 
 
@@ -10,6 +10,7 @@ class User_details(object):
         self.user_list = []
 
     def register(self, username, password, cnfpassword):
+        """A method to register users with correct and valid details"""
 
         # empty dict to hold dgtails of the user to be created
         user_details = {}
@@ -17,8 +18,8 @@ class User_details(object):
         for user in self.user_list:
             if username == user['username']:
                 return "Username already exists."
-        #validate password and username
         else:
+            #validate password and username
             if not re.match("^[a-zA-Z0-9_]*$", username):
                 return "Username can only contain alphanumeric characters"
             elif password != cnfpassword:
@@ -29,10 +30,12 @@ class User_details(object):
                 #register user if all the details are valid
                 user_details['username'] = username
                 user_details['password'] = password
+                user_details['id'] = len(self.user_list) + 1
                 self.user_list.append(user_details)
                 return "Registration successfull"
 
     def login(self, username, password):
+        """A method to register a user given valid user details"""
         for user in self.user_list:
             if username == user['username']:
                 if password == user['password']:
