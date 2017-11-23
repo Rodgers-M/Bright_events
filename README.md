@@ -19,10 +19,10 @@ Events can be grouped according to location or categories and users can also sea
  * Navigate to project folder
  * Create a virtual environment
  * Activate virtual environment
- * Use python run.py to run the server
+ * Use `python run.py` to run the server
 
 **Running tests**
 
 * Install nosetests 
 * navigate to project folder
-* Use nosetests tests/ to run the tests
+* Use `nosetests tests/` to run the tests
