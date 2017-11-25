@@ -44,4 +44,10 @@ class User_details(object):
                 else:
                     return "wrong password"
         return "user does not exist"
+
+    def find_user_by_id(self, user_id):
+        """ Retrieve a user given a user id"""
+        for user in self.user_list:
+            if user['id'] == user_id:
+                return user
         
