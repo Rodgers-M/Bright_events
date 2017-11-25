@@ -31,7 +31,6 @@ class Events(object):
 		"""A method for creating a new event"""
 
 		self.event_details = {}
-
 		if self.existing_event(name, createdby, location):
 			return "event exists"	
 		else:
@@ -74,6 +73,7 @@ class Events(object):
 					if not self.valid_name(name):
 						return "name too short or invalid"
 					else:
+						self.event_list.remove(event)
 						event['name'] = name
 						event['description'] = description
 						event['category'] = category
