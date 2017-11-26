@@ -7,7 +7,8 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../static/styles.css">
   </head>
    <body style="background-color: #ebebe0;">
     <nav class="navbar navbar-inverse">
@@ -35,12 +36,11 @@
       <div class="panel panel-body">
       <form action="#" method="POST">
         <div class="form-group">
-          <label for="eventname"><h3>Event Name</h3></label>  
-            <input type="text" class="form-control" name="eventname"  placeholder="Enter event name" required/>
+          <label for="eventname"><h3>Event Name (<span id="eventname-max-length">30</span> characters left)</h3></label>  
+            <input type="text" class="form-control" name="eventname"  placeholder="Enter event name"   id="eventname" required/>
         
-          <label for="eventname"><h3>Description</h3></label>  
-            <input type="text" class="form-control" name="description"  placeholder="event description">
-
+          <label for="description"><h3>Description (<span id="description-max-length">100</span> characters left)</h3></label>  
+            <textarea name="presentation" class="form-control" id="description"></textarea>
           <label> <h3>Category</h3> </label>
           <select  class="form-control" name="category">
 
@@ -62,5 +62,17 @@
     </div>
     </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+
+      $.validate({
+        modules : 'location, date, security, file',
+        onModulesLoaded : function() {
+        }
+      });
+       $('#eventname').restrictLength( $('#eventname-max-length') );
+       $('#description').restrictLength( $('#description-max-length') );
+    </script>
   </body>
 </html>
