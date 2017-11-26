@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events)
+[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=master)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=master)
 
 
 # Welcome to Bright events
