@@ -1,4 +1,4 @@
-from app import app, user_object , event_object
+from app import app, user_object , event_object, rsvp_object
 from flask import request, json , jsonify, url_for, session
 import uuid
 
@@ -28,6 +28,11 @@ def login():
 		username = user_details['username']
 		password = user_details['password']
 		res = user_object.login(username, password)
+		if res == "successful":
+			for user in user_object.user_list:
+				if user['username'] == username:
+					session['userid'] = user['id']
+					return "login successful"
 		return res
 	return "The login page is coming soon"
 
@@ -70,7 +75,14 @@ def delete_event(eventid):
 	res = event_object.delete(eventid)
 	return res
 
-@app.route('/event/<eventid>/rsvp', methods=['POST'])
+@app.route('/event/<eventid>/rsvp', methods=['GET','POST'])
 def rsvp(eventid):
 	"""A route for registering a user to an event"""
-	pass
+	eventid = uuid.UUID(eventid)
+	if request.method == 'POST':
+		userid = session['userid']
+		res = rsvp_object.create(eventid, userid)
+		return res
+	userids = rsvp_object.view_rsvp(eventid)
+	users = [user for user in user_object.user_list if user['id'] in userids]
+	return jsonify(users)
