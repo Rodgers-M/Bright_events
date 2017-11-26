@@ -1,4 +1,7 @@
-# Bright_events
+[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events)
+
+
+# Welcome to Bright events
 A web application that provides a platform for event organizers to create and manage different types of events. 
 
 **Application Features**
