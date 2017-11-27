@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=master)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=master) [![Test Coverage](https://api.codeclimate.com/v1/badges/2cd6d821bfc4a0e35170/test_coverage)](https://codeclimate.com/github/Rodgers-M/Bright_events/test_coverage) 
+[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=dev)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/2cd6d821bfc4a0e35170/test_coverage)](https://codeclimate.com/github/Rodgers-M/Bright_events/test_coverage) 
 
 # Welcome to Bright events
 A web application that provides a platform for event organizers to create and manage different types of events. 
