@@ -1,5 +1,6 @@
 #used to validate names
 import re
+import uuid
 
 
 class User_details(object):
@@ -30,7 +31,7 @@ class User_details(object):
                 #register user if all the details are valid
                 user_details['username'] = username
                 user_details['password'] = password
-                user_details['id'] = len(self.user_list) + 1
+                user_details['id'] = uuid.uuid1()
                 self.user_list.append(user_details)
                 return "Registration successfull"
 
@@ -43,4 +44,10 @@ class User_details(object):
                 else:
                     return "wrong password"
         return "user does not exist"
+
+    def find_user_by_id(self, user_id):
+        """ Retrieve a user given a user id"""
+        for user in self.user_list:
+            if user['id'] == user_id:
+                return user
         

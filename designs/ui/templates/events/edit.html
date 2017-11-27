@@ -7,16 +7,30 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <link rel="stylesheet" type="text/css" href="../../static/styles.css">
   </head>
-      <body style="background-color: #ebebe0;">
+    <body style="background-color: #ebebe0;">
+     <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Bright Events</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li ><a href="new.html">Create Event</a></li>
+            <li class="active" ><a href="#">Edit Event</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="../signup.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="../login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+        </div>
+      </nav>
     <div class="container forms">
     <div class="col-md-6 col-md-offset-3">
-      <div class="row">
-        <div class="ol-md-6 col-md-offset-3">
-          <h3>Edit Event</h3>
-        </div>
-      </div>
+          <h3 class="text-center">Edit Event</h3>
+      <div class="panel panel-default">
+      <div class="panel panel-body">
       <form action="#" method="POST">
         <div class="form-group">
           <label for="eventname"><h3>Event Name</h3></label>  
@@ -37,12 +51,12 @@
           <label for="eventname"><h3>Event Date</h3></label>  
           <input type="date" class="form-control" name="date"  required/>
         </div>
-        <div class="row">
-      <div class="col-md-6 col-md-offset-5">
-            <button type="submit" class="btn btn-success">Update</button>
-      </div>
-  </div>
+        <div class="form-group">
+                <button type="submit" class="btn btn-block btn-success">Update</button>
+        </div>
       </form>
+      </div>
+      </div>
     </div>
     </div>
   </body>
