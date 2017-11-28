@@ -22,7 +22,7 @@ class Events(object):
 
 	def valid_name(self, name):
 		"""check name length and special characters"""
-		if len(name) < 3 or not re.match("^[a-zA-Z0-9_]*$", name):
+		if len(name) < 3 or not re.match("^[a-zA-Z0-9_ ]*$", name):
 			return False
 		else:
 			return True
