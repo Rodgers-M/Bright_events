@@ -1,7 +1,7 @@
 import os
 from flask import Flask
 from app import user, events, rsvp, middleware
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from config import app_config
 
 
@@ -9,12 +9,12 @@ from config import app_config
 app = Flask(__name__, instance_relative_config=True, template_folder='../designs/ui/templates', \
 	static_folder='../designs/ui/static')
 #load from config.py in root folder
-app.config.from_object(app_config['production'])
+app.config.from_object(app_config['development'])
 
 # load dotenv in the base root
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
 dotenv_path = os.path.join(APP_ROOT, '.env')
-load_dotenv(dotenv_path)
+load_dotenv(find_dotenv())
 
 #specify application route url
 app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
