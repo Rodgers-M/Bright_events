@@ -1,5 +1,6 @@
+
 from app import app, user_object , event_object, rsvp_object
-from flask import request, json , jsonify, url_for, session, render_template
+from flask import request, json , jsonify, url_for, session, render_template, redirect, flash
 import uuid
 
 @app.route('/')
@@ -12,61 +13,86 @@ def index():
 def register():
 	"""A route to handle user"""
 	if request.method == 'POST':
-		user_details = request.get_json()
-		username = user_details['username']
-		password = user_details['password']
-		cnfpass = user_details['cnfpass']
+		print('request')
+		username = request.form['username']
+		print(username)
+		email = request.form['email']
+		print(email)
+		password = request.form['password']
+		print(password)
+		cnfpass = request.form['cnfpass']
+		print(cnfpass)
 		#pass the details to the register method
-		res = user_object.register(username, password, cnfpass)
-		return res
+		res = user_object.register(username, email, password, cnfpass)
+		if res == "Username already exists."\
+			or res == "Username can only contain alphanumeric characters"\
+			or res == "passwords do not match"\
+			or res == "Password too short":
+			flash(res, 'warning')
+			return redirect(url_for('register'))
+		flash("Registration successfull, now login", "success")
+		return redirect(url_for('login'))
 	return render_template("signup.html")
 
 @app.route('/auth/login', methods=['GET','POST'])
 def login():
 	if request.method == 'POST':
-		user_details = request.get_json()
-		username = user_details['username']
-		password = user_details['password']
+		username = request.form['username']
+		password = request.form['password']
 		res = user_object.login(username, password)
 		if res == "successful":
 			for user in user_object.user_list:
 				if user['username'] == username:
 					session['userid'] = user['id']
-					return "login successful"
-		return res
+					session['username'] = username
+					print(session['userid'])
+					print(session['username'])
+			flash('login success' , 'success')
+			return redirect(url_for('newevent'))
+		flash("wrong password or username", 'warning')
+		return redirect(url_for('login'))
 	return render_template("login.html")
 
 #routes for events
+@app.route('/newevent')
+def newevent():
+	return render_template('events/new.html')
 @app.route('/events', methods = ['GET', 'POST'])
 def events():
 	if request.method == 'POST':
-		event_details = request.get_json()
-		name = event_details['name']
-		description = event_details['description']
-		category = event_details['category']
-		location = event_details['location']
-		event_date = event_details['event_date']
-		createdby = event_details['createdby']
+		name = request.form['eventname']
+		description = request.form['description']
+		category = request.form['category']
+		location = request.form['location']
+		event_date = request.form['event_date']
+		createdby = session['username']
 		res = event_object.create(name, description, category, location, event_date, createdby)
-		print(event_object.event_list[0])
-		return res
+		if res == "event exists":
+			flash("a similar event exists", "warning")
+			return redirect('events')
+		flash("event created successfuly", "success")
+		#this route will later redirect to view events
+		return redirect('events')
 	events = event_object.view_all()
+	print(events)
 	return jsonify(events)
 
-@app.route('/events/<eventid>', methods = ['PUT'])
+@app.route('/events/<eventid>', methods = ['GET','PUT'])
 def update_event(eventid):
 	"""A route to handle event updates"""
-	eventid = uuid.UUID(eventid)
-	event_details = request.get_json()
-	print(eventid)
-	name = event_details['name']
-	description = event_details['description']
-	category = event_details['category']
-	location = event_details['location']
-	event_date = event_details['event_date']
-	createdby = event_details['createdby']
-	res = event_object.update(eventid, name,description, category, location, event_date, createdby)
-	return res
+	if request.method == 'PUT':
+		eventid = uuid.UUID(eventid)
+		event_details = request.get_json()
+		print(eventid)
+		name = request.form['eventname']
+		description = request.form['description']
+		category = request.form['category']
+		location = request.form['location']
+		event_date = request.form['event_date']
+		createdby = session['userid']
+		res = event_object.update(eventid, name,description, category, location, event_date, createdby)
+		return res
+	return render_template('events/edit.html')
 
 @app.route('/events/<eventid>', methods=['DELETE'])
 def delete_event(eventid):
