@@ -6,6 +6,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     """Configurations for Development."""
     DEBUG = True
+    SECRET_KEY = "samplesecret"
 
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
