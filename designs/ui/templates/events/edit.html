@@ -16,13 +16,13 @@
             <a class="navbar-brand" href="#">Bright Events</a>
           </div>
           <ul class="nav navbar-nav">
-            <li><a href="../index.html">Home</a></li>
-            <li ><a href="new.html">Create Event</a></li>
+            <li><a href="{{url_for('index')}}">Home</a></li>
+            <li ><a href="{{url_for('newevent')}}">Create Event</a></li>
             <li class="active" ><a href="#">Edit Event</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="../signup.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="../login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li><a href="{{url_for('register')}}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
           </ul>
         </div>
       </nav>
