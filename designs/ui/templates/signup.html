@@ -11,9 +11,10 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
 </head>
- <body>
+ <body style="background-color: #ebebe0;">
 
     <div class="row container">
     <div class="col-md-6 col-md-offset-3 backgrnd">
@@ -21,19 +22,20 @@
     <form action="#" method="POST" name="signup">
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="name" class="form-control" name="username" placeholder="Username">
+        <input type="name" class="form-control" name="username" placeholder="Username" data-validation="length alphanumeric" data-validation-length="3-8" 
+         data-validation-error-msg="Username has to be an alphanumeric value of 3 to 8 chars">
       </div>
   <div class="form-group">
     <label for="Email">Email address</label>
-    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email">
+    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" data-validation="email">
   </div>
   <div class="form-group">
     <label for="Password">Password</label>
-    <input type="password" class="form-control" name="password" minlength="6" placeholder="Password">
+    <input type="password" class="form-control" name="password" minlength="6" placeholder="Password" data-validation="strength" data-validation-strength="2" >
   </div>
   <div class="form-group">
     <label for="confpassword">Confirm Password</label>
-    <input type="password" class="form-control" name="confpassword" placeholder="Confirm Password">
+    <input type="password" class="form-control" name="confpassword" placeholder="Confirm Password" data-validation="confirmation">
   </div>
   <div class="row">
       <div class="col-md-6 col-md-offset-5">
@@ -43,6 +45,15 @@
 </form>
   </div>
 </div>
-   
-  </body>
-  </html>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+
+  $.validate({
+    modules : 'location, date, security, file',
+    onModulesLoaded : function() {
+    }
+  });
+</script>
+</body>
+</html>

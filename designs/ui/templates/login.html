@@ -7,19 +7,22 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
   </head>
-      <body>
+      <body style="background-color: #ebebe0;>
     <div class="container forms">
     <div class="col-md-6 col-md-offset-3 backgrnd">
       <form action="#" method="POST">
     <div class="form-group">
       <label for="username"><h4>Username</h4></label>
-      <input type="text" class="form-control" name="username"  placeholder="Enter username">
+      <input type="text" class="form-control" name="username"  placeholder="Enter username" data-validation="length alphanumeric" data-validation-length="3-8" 
+         data-validation-error-msg="Username has to be an alphanumeric value of 3 to 8 chars">
     </div>
     <div class="form-group">
       <label for="password"><h4>Password</h4></label>
-      <input type="password" class="form-control" name="password" placeholder="Password">
+      <input type="password" class="form-control" name="password" placeholder="Password" 
+        data-validation="strength" data-validation-strength="2">
     </div>
     <div class="row">
       <div class="col-md-2 col-md-offset-2 ">
@@ -32,5 +35,15 @@
 </form>
 </div>
 </div>
-  </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+
+  $.validate({
+    modules : 'location, date, security, file',
+    onModulesLoaded : function() {
+    }
+  });
+</script>
+</body>
 </html>

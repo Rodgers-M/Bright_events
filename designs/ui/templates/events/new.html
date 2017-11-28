@@ -7,24 +7,40 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../static/styles.css">
   </head>
-      <body>
+   <body style="background-color: #ebebe0;">
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Bright Events</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="../index.html">Home</a></li>
+            <li class="active"><a href="#">create Event</a></li>
+            <li><a href="edit.html">Edit Event</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="../signup.html"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="../login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </ul>
+        </div>
+      </nav>
     <div class="container forms">
     <div class="col-md-6 col-md-offset-3">
       <div class="row">
-        <div class="ol-md-6 col-md-offset-3">
-          <h3>Create Event</h3>
-        </div>
+          <h3 class="text-center">Create Event</h3>
       </div>
+      <div class="panel panel-dafault">
+      <div class="panel panel-body">
       <form action="#" method="POST">
         <div class="form-group">
-          <label for="eventname"><h3>Event Name</h3></label>  
-            <input type="text" class="form-control" name="eventname"  placeholder="Enter event name" required/>
+          <label for="eventname"><h3>Event Name (<span id="eventname-max-length">30</span> characters left)</h3></label>  
+            <input type="text" class="form-control" name="eventname"  placeholder="Enter event name"   id="eventname" required/>
         
-          <label for="eventname"><h3>Description</h3></label>  
-            <input type="text" class="form-control" name="description"  placeholder="event description">
-
+          <label for="description"><h3>Description (<span id="description-max-length">100</span> characters left)</h3></label>  
+            <textarea name="presentation" class="form-control" id="description"></textarea>
           <label> <h3>Category</h3> </label>
           <select  class="form-control" name="category">
 
@@ -38,13 +54,25 @@
           <label for="eventname"><h3>Event Date</h3></label>  
           <input type="date" class="form-control" name="date"  required/>
         </div>
-        <div class="row">
-      <div class="col-md-6 col-md-offset-5">
-            <button type="submit" class="btn btn-success">Create</button>
+        <div class="form-group">
+            <button type="submit" class="btn btn-block btn-success">Create</button>
       </div>
-  </div>
-      </form>
+    </form>
     </div>
     </div>
+    </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+    <script>
+
+      $.validate({
+        modules : 'location, date, security, file',
+        onModulesLoaded : function() {
+        }
+      });
+       $('#eventname').restrictLength( $('#eventname-max-length') );
+       $('#description').restrictLength( $('#description-max-length') );
+    </script>
   </body>
 </html>

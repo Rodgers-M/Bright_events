@@ -7,6 +7,9 @@ h1,h2,h3,h4,h5,h6{font-weight : bold;}
 h1{font-size : 24px;}
 h2{font-size : 20px;}
 p{font-size : 14px;}
+html{
+	overflow-x: hidden;
+}
 
 /* ------------------------------------------------------
  * Index page styles
@@ -20,8 +23,8 @@ p{font-size : 14px;}
   
 }
 .text-box{
-    position: absolute;
-    transform :translate(40% , 290%);
+    position: relative;
+    margin-top: 17%;
     color: white;
 }
 .btn-search {
