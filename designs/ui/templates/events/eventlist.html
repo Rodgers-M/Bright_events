@@ -1,0 +1,25 @@
+{% extends "dashboard.html" %}
+
+{% block content %}
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<thead>Event Name</thead>
+				<thead>Description</thead>
+				<thead>Location</thead>
+				<thead>Date</thead>
+				<thead>Options</thead>
+			</tr>
+		</thead>
+		<tbody>
+			{% for event in events%}
+			<tr>
+				<td>{{event['name']}}</td>
+				<td>{{event['description']}}</td>
+				<td>{{event['location']}}</td>
+				<td>{{event['date']}}</td>
+			</tr>
+		</tbody>
+ 	</table>
+</div>
