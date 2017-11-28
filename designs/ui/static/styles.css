@@ -15,17 +15,12 @@ html{
  * Index page styles
  * -----------------------------------------------------*/
 #bckgrndimg{
-  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url('img/events.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('img/events.jpg');
   background-size: cover;
   background-position: center;
   height: 100vh;
   background-attachment: fixed;
   
-}
-.text-box{
-    position: relative;
-    margin-top: 17%;
-    color: white;
 }
 .btn-search {
 	  background: #424242;
