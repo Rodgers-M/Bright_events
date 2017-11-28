@@ -8,7 +8,7 @@ app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
 #load from config.py in root folder
 app.config.from_object('config')
 #load from config.py in instance folder
-app.config.from_pyfile('config.py')
+#app.config.from_pyfile('config.py')
 
 #import the user, events and rsvp classes
 user_object = user.User_details()
