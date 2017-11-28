@@ -1,11 +1,11 @@
 from app import app, user_object , event_object, rsvp_object
-from flask import request, json , jsonify, url_for, session
+from flask import request, json , jsonify, url_for, session, render_template
 import uuid
 
 @app.route('/')
 def index():
 	"""A route to render the home page"""
-	return jsonify(message = "Hey, you are at index.")
+	return render_template("index.html")
 
 #registration and login routes
 @app.route('/auth/register', methods=['GET','POST'])
@@ -19,7 +19,7 @@ def register():
 		#pass the details to the register method
 		res = user_object.register(username, password, cnfpass)
 		return res
-	return jsonify(message = "Hmm, seems you want to register")
+	return render_template("signup.html")
 
 @app.route('/auth/login', methods=['GET','POST'])
 def login():
@@ -34,7 +34,7 @@ def login():
 					session['userid'] = user['id']
 					return "login successful"
 		return res
-	return "The login page is coming soon"
+	return render_template("login.html")
 
 #routes for events
 @app.route('/events', methods = ['GET', 'POST'])
