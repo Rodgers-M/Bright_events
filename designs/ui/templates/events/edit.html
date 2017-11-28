@@ -1,63 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Edit event</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="../../static/styles.css">
-  </head>
-    <body style="background-color: #ebebe0;">
-     <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="#">Bright Events</a>
-          </div>
-          <ul class="nav navbar-nav">
-            <li><a href="{{url_for('index')}}">Home</a></li>
-            <li ><a href="{{url_for('newevent')}}">Create Event</a></li>
-            <li class="active" ><a href="#">Edit Event</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="{{url_for('register')}}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-          </ul>
-        </div>
-      </nav>
-    <div class="container forms">
-    <div class="col-md-6 col-md-offset-3">
-          <h3 class="text-center">Edit Event</h3>
-      <div class="panel panel-default">
-      <div class="panel panel-body">
-      <form action="#" method="POST">
-        <div class="form-group">
-          <label for="eventname"><h3>Event Name</h3></label>  
-            <input type="text" class="form-control" name="eventname"  value="Git practices" required/>
-        
-          <label for="eventname"><h3>Description</h3></label>  
-            <input type="text" class="form-control" name="description"  value="We will learn git best practices">
+{% extends "events/dashboard.html" %}
 
-          <label> <h3>Category</h3> </label>
-          <select  class="form-control" name="category">
+{% block content %}
+<form action="#" method="POST">
+  <div class="form-group">
+    <label for="eventname"><h3>Event Name</h3></label>  
+      <input type="text" class="form-control" name="eventname"  value="Git practices" required/>
+  
+    <label for="eventname"><h3>Description</h3></label>  
+      <input type="text" class="form-control" name="description"  value="We will learn git best practices">
 
-          <option value="technology">Technology</option>
-          <option value="business">Education</option>
-          <option value="Social">Social</option>
-          </select>
-          <label for="eventname"><h3>Event venue</h3></label>  
-          <input type="text" class="form-control" name="venue"  value="The space" required/>
-          <label for="eventname"><h3>Event Date</h3></label>  
-          <input type="date" class="form-control" name="date"  required/>
-        </div>
-        <div class="form-group">
-                <button type="submit" class="btn btn-block btn-success">Update</button>
-        </div>
-      </form>
-      </div>
-      </div>
-    </div>
-    </div>
-  </body>
-</html>
+    <label> <h3>Category</h3> </label>
+    <select  class="form-control" name="category">
+
+    <option value="technology">Technology</option>
+    <option value="business">Education</option>
+    <option value="Social">Social</option>
+    </select>
+    <label for="eventname"><h3>Event venue</h3></label>  
+    <input type="text" class="form-control" name="venue"  value="The space" required/>
+    <label for="eventname"><h3>Event Date</h3></label>  
+    <input type="date" class="form-control" name="date"  required/>
+  </div>
+  <div class="form-group">
+          <button type="submit" class="btn btn-block btn-success">Update</button>
+  </div>
+</form>
+{%endblock%}
