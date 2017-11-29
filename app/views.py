@@ -74,8 +74,7 @@ def events():
 		#this route will later redirect to view events
 		return redirect('events')
 	events = event_object.view_all()
-	print(events)
-	return jsonify(events)
+	return render_template('events/eventlist.html', events=events)
 
 @app.route('/events/<eventid>', methods = ['GET','PUT'])
 def update_event(eventid):
