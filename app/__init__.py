@@ -9,7 +9,6 @@ from config import app_config
 app = Flask(__name__, instance_relative_config=True, template_folder='../designs/ui/templates', \
 	static_folder='../designs/ui/static')
 #load from config.py in root folder
-<<<<<<< Updated upstream
 app.config.from_object(app_config['development'])
 
 # load dotenv in the base root
@@ -19,12 +18,6 @@ load_dotenv(find_dotenv())
 
 #specify application route url
 app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
-=======
-app.config.from_object('config')
-#load from config.py in instance folder
-#app.config.from_pyfile('config.py')
-app.config['SECRETKEY'] = "nickii"
->>>>>>> Stashed changes
 
 #import the user, events and rsvp classes
 user_object = user.User_details()
