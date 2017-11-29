@@ -1,0 +1,35 @@
+{% extends "events/dashboard.html" %}
+
+{% block content %}
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+				<td>Event Name</td>
+				<td>Description</td>
+				<td>Location</td>
+				<td>Date</td>
+				<td>Options</td>
+		</thead>
+		<tbody >
+			{% for event in events%}
+			<tr>
+				<td>{{event['name']}}</td>
+				<td>{{event['description']}}</td>
+				<td>{{event['location']}}</td>
+				<td>{{event['event_date']}}</td>
+				<td >
+					<div style="display: inline-block;">
+						<div>
+							<a href="#" class="btn btn-info" role="button">View RSVPs</a>
+						</div>
+						<div>
+							<a href="#" class="btn btn-info" role="button">Edit</a>
+						</div>
+					</div>
+				</td>
+			</tr>
+			{% endfor%}
+		</tbody>
+ 	</table>
+</div>
+{%endblock%}
