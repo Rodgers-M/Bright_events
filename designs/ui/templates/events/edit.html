@@ -5,10 +5,10 @@
 <form action="#" method="POST">
   <div class="form-group">
     <label for="eventname"><h3>Event Name</h3></label>  
-      <input type="text" class="form-control" name="eventname"  value="Git practices" required/>
+      <input type="text" class="form-control" name="eventname"  value="{{event['name']}}" required/>
   
     <label for="eventname"><h3>Description</h3></label>  
-      <input type="text" class="form-control" name="description"  value="We will learn git best practices">
+      <input type="text" class="form-control" name="description"  value="{{event['description']}}">
 
     <label> <h3>Category</h3> </label>
     <select  class="form-control" name="category">
@@ -18,7 +18,7 @@
     <option value="Social">Social</option>
     </select>
     <label for="eventname"><h3>Event venue</h3></label>  
-    <input type="text" class="form-control" name="venue"  value="The space" required/>
+    <input type="text" class="form-control" name="venue"  value="{{event['location']}}" required/>
     <label for="eventname"><h3>Event Date</h3></label>  
     <input type="date" class="form-control" name="date"  required/>
   </div>
