@@ -18,10 +18,6 @@ load_dotenv(find_dotenv())
 
 #specify application route url
 app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
-app.config.from_object('config')
-#load from config.py in instance folder
-#app.config.from_pyfile('config.py')
-app.config['SECRETKEY'] = "nickii"
 
 #import the user, events and rsvp classes
 user_object = user.User_details()
