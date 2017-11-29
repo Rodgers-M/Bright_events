@@ -1,25 +1,46 @@
-{% extends "dashboard.html" %}
+{% extends "events/dashboard.html" %}
 
 {% block content %}
 <div class="table-responsive">
 	<table class="table table-striped">
 		<thead>
-			<tr>
-				<thead>Event Name</thead>
-				<thead>Description</thead>
-				<thead>Location</thead>
-				<thead>Date</thead>
-				<thead>Options</thead>
-			</tr>
+				<td>Event Name</td>
+				<td>Description</td>
+				<td>Location</td>
+				<td>Date</td>
+				<td>Options</td>
 		</thead>
-		<tbody>
+		<tbody >
 			{% for event in events%}
 			<tr>
 				<td>{{event['name']}}</td>
 				<td>{{event['description']}}</td>
 				<td>{{event['location']}}</td>
-				<td>{{event['date']}}</td>
+				<td>{{event['event_date']}}</td>
+				<td >
+					<div>
+					  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{event['id']}}">RSVP</button>
+
+					  <div class="modal fade" id="{{event['id']}}" role="dialog">
+					    <div class="modal-dialog">
+					    	<form action="{{url_for('rsvp', eventid = event['id'])}}">
+						      <div class="modal-content">
+						        <div class="modal-body">
+						          <p class="text-info">Confirm Reservation for {{event['name']}}</p>
+						        </div>
+						        <div class="modal-footer">
+						          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						        </div>
+						      </div>
+					      </form>
+					    </div>
+					  </div>
+					  
+					</div>
+				</td>
 			</tr>
+			{% endfor%}
 		</tbody>
  	</table>
 </div>
+{%endblock%}
