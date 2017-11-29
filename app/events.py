@@ -63,6 +63,17 @@ class Events(object):
 		new_event_list = [event for event in self.event_list if event['category'] == category]
 		return new_event_list
 
+	def createdby_filter(self, username):
+		"""Filter and return the events created by a particular user"""
+		new_event_list = [event for event in self.event_list if event['createdby'] == username]
+		return new_event_list
+
+	def find_by_id(self, eventid):
+		"""A method to find an event given an id"""
+		for event in self.event_list:
+			if event['id'] == eventid:
+				return event
+		return "event not found"
 	def update(self, eventid, name,description, category, location, event_date, createdby):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
