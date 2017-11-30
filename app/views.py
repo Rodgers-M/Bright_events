@@ -46,6 +46,13 @@ def login():
 		return redirect(url_for('login'))
 	return render_template("login.html")
 
+@app.route('/logout')
+def logout():
+	session.pop('userid')
+	session.pop('username')
+	flash('you logged out', 'success')
+	return redirect(url_for('index'))
+
 #routes for events
 @app.route('/newevent')
 def newevent():
@@ -69,22 +76,24 @@ def events():
 	events = event_object.view_all()
 	return render_template('events/eventlist.html', events=events)
 
-@app.route('/events/<eventid>', methods = ['GET','POST'])
+@app.route('/events/<eventid>/edit', methods = ['GET','POST'])
 def update_event(eventid):
 	"""A route to handle event updates"""
+	eventid = uuid.UUID(eventid)
 	if request.method == 'POST':
-		eventid = uuid.UUID(eventid)
 		name = request.form['eventname']
 		description = request.form['description']
 		category = request.form['category']
 		location = request.form['location']
 		event_date = request.form['event_date']
-		createdby = session['userid']
+		createdby = session['username']
 		res = event_object.update(eventid, name,description, category, location, event_date, createdby)
 		if res == "Event cannot be updated, a similar event exists" \
 			or res == "name too short or invalid":
 			flash('event can not be udated, please correct the values', 'warning')
 			return redirect(url_for('update_event', eventid = eventid))
+		flash('event updated', 'success')
+		return redirect(url_for('myevents'))
 	res = event_object.find_by_id(eventid)
 	if res == "event not found":
 		flash("event not found, it might have been deleted", 'warning')
@@ -98,7 +107,7 @@ def myevents():
 	events = event_object.createdby_filter(username)
 	return render_template('events/personalEvents.html', events = events)
 	
-@app.route('/events/<eventid>', methods=['POST'])
+@app.route('/events/<eventid>/delete', methods=['POST'])
 def delete_event(eventid):
 	"""A route to handle deletion of events"""
 	eventid = uuid.UUID(eventid)
@@ -123,4 +132,4 @@ def rsvp(eventid):
 		return redirect(url_for('events'))
 	userids = rsvp_object.view_rsvp(eventid)
 	users = [user for user in user_object.user_list if user['id'] in userids]
-	return jsonify(users)
+	return render_template('events/viewrsvps.html', users=users)
