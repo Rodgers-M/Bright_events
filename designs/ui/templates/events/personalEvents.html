@@ -20,7 +20,7 @@
 				<td>{{event['event_date']}}</td>
 				<td >
 					<a href="{{url_for('rsvp', eventid =event['id'])}}" class="btn btn-info" role="button">View RSVPs</a>
-					<a href="#" class="btn btn-info" role="button" style="float: right;">Edit</a>
+					<a href="{{url_for('update_event', eventid=event['id'])}}" class="btn btn-info" role="button" style="float: right;">Edit</a>
 				</td>
 				<td>
 					<div>
