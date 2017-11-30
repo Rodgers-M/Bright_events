@@ -78,13 +78,13 @@ class Events(object):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
 			if event['id'] == eventid:
+				self.event_list.remove(event)
 				if self.existing_event(name, createdby, location):
 					return "Event cannot be updated, a similar event exists"
 				else:
 					if not self.valid_name(name):
 						return "name too short or invalid"
 					else:
-						self.event_list.remove(event)
 						event['name'] = name
 						event['description'] = description
 						event['category'] = category
