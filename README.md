@@ -8,11 +8,26 @@ A web application that provides a platform for event organizers to create and ma
 * Creating Events
 * Events RSVP 
 
-A user can create, view, edit and delete events. Other users can also the events posted and can respond to them (RSVP). The event owner is able to view people who have responded to their events,thus improve planning.
 
-Events can be grouped according to location or categories and users can also search events based on the same.
+A user can perform the following :
+
+* create an event
+* view the events they have created
+* edit and update the event. 
+* delete the event created.
+* view RSVPs to that event.
+
+Other users can view the events posted and can respond to them (RSVP).
+The users can also search events based on location or category
+
 
 **Getting started with the app**
+
+**Technologies used to build the application**
+
+* [Python 3.6] (https://docs.python.org/3/)
+
+* [Flask] (http://flask.pocoo.org/)
 
 **Running the app server**
 
@@ -28,3 +43,24 @@ Events can be grouped according to location or categories and users can also sea
 * Install nosetests 
 * navigate to project folder
 * Use `nosetests tests/` to run the tests
+
+
+**API endpoints**
+
+**These endpoints can be tested using postman**
+
+* POST /api/v1/auth/register   					create user acccount
+
+* POST /api/v1/ auth/login						login an existing user
+
+* GET  /api/events  								Retrieve events
+
+* POST /api/events/								Create an event	
+
+* POST /api/events/< eventid >/delete   			Delete an event
+
+* POST /api/events/< eventid >/edit				Edit an event			
+
+* POST /api/event/< eventid >/rsvp    			RSVP to an event
+
+* GET /api/event/< eventid >/rsvp    			Retrieve event RSVPs
