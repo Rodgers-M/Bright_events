@@ -2,7 +2,7 @@
 {% extends "events/dashboard.html" %}
 
 {% block content %}
-<form action="#" method="POST">
+<form action="{{url_for('update_event', eventid = event['id'])}}" method="POST">
   <div class="form-group">
     <label for="eventname"><h3>Event Name</h3></label>  
       <input type="text" class="form-control" name="eventname"  value="{{event['name']}}" required/>
@@ -13,14 +13,16 @@
     <label> <h3>Category</h3> </label>
     <select  class="form-control" name="category">
 
-    <option value="technology">Technology</option>
-    <option value="business">Education</option>
-    <option value="Social">Social</option>
+      <option value="">select</option>
+      <option value="Business">Business</option>
+      <option value="Education">Education</option>
+      <option value="Technology">Technology</option>
+      <option value="social">Social</option>
     </select>
     <label for="eventname"><h3>Event venue</h3></label>  
-    <input type="text" class="form-control" name="venue"  value="{{event['location']}}" required/>
+    <input type="text" class="form-control" name="location"  value="{{event['location']}}" required/>
     <label for="eventname"><h3>Event Date</h3></label>  
-    <input type="date" class="form-control" name="date"  required/>
+    <input type="date" class="form-control" name="event_date"  required/>
   </div>
   <div class="form-group">
           <button type="submit" class="btn btn-block btn-success">Update</button>
