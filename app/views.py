@@ -95,7 +95,7 @@ def update_event(eventid):
 		flash('event updated', 'success')
 		return redirect(url_for('myevents'))
 	res = event_object.find_by_id(eventid)
-	if res == "event not found":
+	if not res:
 		flash("event not found, it might have been deleted", 'warning')
 		return redirect(url_for('myevents'))
 	return render_template('events/edit.html', event = res)
@@ -124,12 +124,16 @@ def rsvp(eventid):
 	eventid = uuid.UUID(eventid)
 	if request.method == 'POST':
 		userid = session['userid']
-		res = rsvp_object.create(eventid, userid)
-		if res == "rsvp success":
-			flash('Successfuly reserved a seat, see you then', 'success')
+		if not event_object.find_by_id(eventid):
+			flash("can not rsvp to a non existing event", "warning")
 			return redirect(url_for('events'))
-		flash('You already registered for this event', 'warning')
-		return redirect(url_for('events'))
+		else:
+			res = rsvp_object.create(eventid, userid)
+			if res == "rsvp success":
+				flash('Successfuly reserved a seat, see you then', 'success')
+				return redirect(url_for('events'))
+			flash('You already registered for this event', 'warning')
+			return redirect(url_for('events'))
 	userids = rsvp_object.view_rsvp(eventid)
 	users = [user for user in user_object.user_list if user['id'] in userids]
 	return render_template('events/viewrsvps.html', users=users)
