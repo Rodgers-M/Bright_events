@@ -5,16 +5,18 @@
 	<table class="table table-striped">
 		<thead>
 				<td>Event Name</td>
+				<td>Category</td>
 				<td>Description</td>
 				<td>Location</td>
 				<td>Date</td>
+				<td>Respondents</td>
 				<td>Options</td>
-				<td></td>
 		</thead>
 		<tbody >
 			{% for event in events%}
 			<tr>
 				<td>{{event['name']}}</td>
+				<td>{{event['category']}}</td>
 				<td>{{event['description']}}</td>
 				<td>{{event['location']}}</td>
 				<td>{{event['event_date']}}</td>
