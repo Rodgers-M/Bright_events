@@ -73,7 +73,7 @@ class Events(object):
 		for event in self.event_list:
 			if event['id'] == eventid:
 				return event
-		return "event not found"
+		return False
 	def update(self, eventid, name,description, category, location, event_date, createdby):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
