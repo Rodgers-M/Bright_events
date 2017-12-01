@@ -133,3 +133,17 @@ def rsvp(eventid):
 	userids = rsvp_object.view_rsvp(eventid)
 	users = [user for user in user_object.user_list if user['id'] in userids]
 	return render_template('events/viewrsvps.html', users=users)
+
+@app.route('/searchevents')
+def searchevents():
+	parameter = request.args.get('parameter', None)
+	if parameter == None:
+		return jsonify( status = "no event")
+	else:
+		events = event_object.category_filter(parameter)
+		if events == []:
+			events = event_object.location_filter(parameter)
+			if events != []:
+				return jsonify(events)
+			return jsonify(status = "no events found" )
+		return jsonify(events)
