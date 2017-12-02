@@ -94,6 +94,8 @@ class Events(object):
 				else:
 					if not self.valid_name(name):
 						return "name too short or invalid"
+					elif not self.valid_date(event_date):
+						return "event can only have a future date"
 					else:
 						event['name'] = name
 						event['description'] = description
