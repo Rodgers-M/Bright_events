@@ -1,0 +1,54 @@
+{% extends "events/dashboard.html" %}
+
+{% block content %}
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+				<td>Event Name</td>
+				<td>Category</td>
+				<td>Description</td>
+				<td>Location</td>
+				<td>Date</td>
+				<td>Respondents</td>
+				<td>Options</td>
+		</thead>
+		<tbody >
+			{% for event in events%}
+			<tr>
+				<td>{{event['name']}}</td>
+				<td>{{event['category']}}</td>
+				<td>{{event['description']}}</td>
+				<td>{{event['location']}}</td>
+				<td>{{event['event_date']}}</td>
+				<td >
+					<a href="{{url_for('rsvp', eventid =event['id'])}}" class="btn btn-info" role="button">View RSVPs</a>
+					<a href="{{url_for('update_event', eventid=event['id'])}}" class="btn btn-info" role="button" style="float: right;">Edit</a>
+				</td>
+				<td>
+					<div>
+					  <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#{{event['id']}}">Delete</button>
+
+					  <div class="modal" id="{{event['id']}}" role="dialog">
+					    <div class="modal-dialog">
+					    	<form action="{{url_for('delete_event', eventid = event['id'])}}" method="POST">
+						      <div class="modal-content">
+						        <div class="modal-body">
+						          <h3 class="text-info">Confirm Deleting {{event['name']}}</h3>
+						        </div>
+						        <div class="modal-footer">
+						          <button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+						          <button type="submit" class="btn btn-danger" >Delete</button>
+						        </div>
+						      </div>
+					      </form>
+					    </div>
+					  </div>
+					  
+					</div>
+				</td>
+			</tr>
+			{% endfor%}
+		</tbody>
+ 	</table>
+</div>
+{%endblock%}

@@ -1,5 +1,3 @@
-from app import user_object
-
 class Rsvp(object):
 	"""a class to handle RSVPs"""
 

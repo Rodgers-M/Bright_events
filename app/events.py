@@ -22,7 +22,7 @@ class Events(object):
 
 	def valid_name(self, name):
 		"""check name length and special characters"""
-		if len(name) < 3 or not re.match("^[a-zA-Z0-9_]*$", name):
+		if len(name) < 3 or not re.match("^[a-zA-Z0-9_ ]*$", name):
 			return False
 		else:
 			return True
@@ -31,7 +31,6 @@ class Events(object):
 		"""A method for creating a new event"""
 
 		self.event_details = {}
-
 		if self.existing_event(name, createdby, location):
 			return "event exists"	
 		else:
@@ -64,10 +63,22 @@ class Events(object):
 		new_event_list = [event for event in self.event_list if event['category'] == category]
 		return new_event_list
 
+	def createdby_filter(self, username):
+		"""Filter and return the events created by a particular user"""
+		new_event_list = [event for event in self.event_list if event['createdby'] == username]
+		return new_event_list
+
+	def find_by_id(self, eventid):
+		"""A method to find an event given an id"""
+		for event in self.event_list:
+			if event['id'] == eventid:
+				return event
+		return False
 	def update(self, eventid, name,description, category, location, event_date, createdby):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
 			if event['id'] == eventid:
+				self.event_list.remove(event)
 				if self.existing_event(name, createdby, location):
 					return "Event cannot be updated, a similar event exists"
 				else:

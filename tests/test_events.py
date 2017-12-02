@@ -78,6 +78,15 @@ class Event_tests(unittest.TestCase):
     	new_id = self.event.event_list[0]['id']
     	self.assertEqual(event_id, new_id)
 
+    def test_find_by_id_works(self):
+        """Test if the method finds the exactly specified id"""
+        self.event.create("marathon", "run", "sports", "ndakaini", 26/11/2017, "rodger")
+        event_id = self.event.event_list[0]['id']
+        eventname = self.event.event_list[0]['name']
+        foundevent = self.event.find_by_id(event_id)
+        self.assertEqual(foundevent['name'], eventname)
+
+
 
 
 

@@ -10,7 +10,7 @@ class User_details(object):
         # A list to hold all user objects
         self.user_list = []
 
-    def register(self, username, password, cnfpassword):
+    def register(self,  username, email, password, cnfpassword):
         """A method to register users with correct and valid details"""
 
         # empty dict to hold dgtails of the user to be created
@@ -30,6 +30,7 @@ class User_details(object):
             else:
                 #register user if all the details are valid
                 user_details['username'] = username
+                user_details['email'] = email
                 user_details['password'] = password
                 user_details['id'] = uuid.uuid1()
                 self.user_list.append(user_details)
