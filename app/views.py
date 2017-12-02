@@ -94,8 +94,9 @@ def update_event(eventid):
 		createdby = session['username']
 		res = event_object.update(eventid, name, description, category, location, event_date, createdby)
 		if res == "Event cannot be updated, a similar event exists" \
+			or res == "event can only have a future date"\
 			or res == "name too short or invalid":
-			flash('event can not be udated, please correct the values', 'warning')
+			flash(res, 'warning')
 			return redirect(url_for('update_event', eventid=eventid))
 		flash('event updated', 'success')
 		return redirect(url_for('myevents'))
