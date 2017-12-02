@@ -29,8 +29,8 @@
         <li class="" ><a href="{{url_for('events')}}">View All Events</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{{url_for('register')}}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-        <li><a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{session['username']}}</a></li>
+        <li><a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span>Sign out</a></li>
       </ul>
     </div>
   </div>
