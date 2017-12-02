@@ -2,14 +2,26 @@
 
 {% block content %}
 <div class="table-responsive">
+
 	<table class="table table-striped">
+		{%if events==[]%}
+		<div class="alert alert-warning" role="alert">
+		<p>Hello {{session['username']}}, welcome to Bright Events</p>
+		<p>
+			No one has created an event yet, Click 
+			<a href="{{url_for('newevent')}}">Here</a>
+			to create first event
+		</p>
+		</div>
+		{% else %}
 		<thead>
 				<td>Event Name</td>
 				<td>Description</td>
 				<td>category</td>
 				<td>Location</td>
 				<td>Date</td>
-				<td>Options</td>
+				<td>Orgarniser</td>
+				<td>Respond</td>
 		</thead>
 		<tbody >
 			{% for event in events%}
@@ -19,6 +31,7 @@
 				<td>{{event['category']}}</td>
 				<td>{{event['location']}}</td>
 				<td>{{event['event_date']}}</td>
+				<td>{{event['createdby']}}</td>
 				<td >
 					<div>
 					  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{event['id']}}">RSVP</button>
@@ -44,6 +57,7 @@
 			</tr>
 			{% endfor%}
 		</tbody>
+		{% endif %}
  	</table>
 </div>
 {%endblock%}
