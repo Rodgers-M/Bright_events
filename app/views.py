@@ -1,8 +1,21 @@
 """This module defines the application endpoints"""
 
 import uuid
+from functools import wraps
 from flask import request, jsonify, url_for, session, render_template, redirect, flash
 from app import app, user_object, event_object, rsvp_object
+
+def login_required(f):
+	"""Check if the user is in session, else redirect to login page"""
+	@wraps(f)
+	def login_check(*args, **kwargs):
+		"""A decorated login check function"""
+		if "username" in session:
+			return f(*args, **kwargs)
+		flash("you need to login to access this page", "warning")
+		return redirect(url_for('login'))
+	return login_check
+
 
 @app.route('/')
 def index():
@@ -58,11 +71,13 @@ def logout():
 
 #routes for events
 @app.route('/newevent')
+@login_required
 def newevent():
 	"""A route to render a page for creating events"""
 	return render_template('events/new.html')
 
 @app.route('/events', methods=['GET', 'POST'])
+@login_required
 def events():
 	"""A route to return all the events available and create new events"""
 	if request.method == 'POST':
@@ -82,6 +97,7 @@ def events():
 	return render_template('events/eventlist.html', events=events)
 
 @app.route('/events/<eventid>/edit', methods=['GET','POST'])
+@login_required
 def update_event(eventid):
 	"""A route to handle event updates"""
 	eventid = uuid.UUID(eventid)
@@ -107,6 +123,7 @@ def update_event(eventid):
 	return render_template('events/edit.html', event=res)
 
 @app.route('/events/myevents')
+@login_required
 def myevents():
 	"""This route returns events belonging to a specific user"""
 	username = session['username']
@@ -114,6 +131,7 @@ def myevents():
 	return render_template('events/personalEvents.html', events=events)
 	
 @app.route('/events/<eventid>/delete', methods=['POST'])
+@login_required
 def delete_event(eventid):
 	"""A route to handle deletion of events"""
 	eventid = uuid.UUID(eventid)
@@ -125,6 +143,7 @@ def delete_event(eventid):
 	return redirect('myevents')
 	
 @app.route('/event/<eventid>/rsvp', methods=['GET', 'POST'])
+@login_required
 def rsvp(eventid):
 	"""A route for registering a user to an event"""
 	eventid = uuid.UUID(eventid)
