@@ -1,4 +1,6 @@
+"""This module defines a classs with a call method for adding route url"""
 class PrefixMiddleware(object):
+    """ a class to define a prefix to routes of an app"""
 
     def __init__(self, app, prefix=''):
         self.app = app

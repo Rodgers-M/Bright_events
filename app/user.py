@@ -1,3 +1,4 @@
+"""This module defines a user class and methods associated to it"""
 #used to validate names
 import re
 import uuid
@@ -6,11 +7,10 @@ import uuid
 class User_details(object):
     """ A class to handle activities related to a user"""
     def __init__(self):
-
         # A list to hold all user objects
         self.user_list = []
 
-    def register(self,  username, email, password, cnfpassword):
+    def register(self, username, email, password, cnfpassword):
         """A method to register users with correct and valid details"""
 
         # empty dict to hold dgtails of the user to be created
@@ -19,6 +19,7 @@ class User_details(object):
         for user in self.user_list:
             if username == user['username']:
                 return "Username already exists."
+                break
         else:
             #validate password and username
             if not re.match("^[a-zA-Z0-9_]*$", username):
@@ -44,6 +45,7 @@ class User_details(object):
                     return "successful"
                 else:
                     return "wrong password"
+                    break
         return "user does not exist"
 
     def find_user_by_id(self, user_id):
@@ -51,4 +53,6 @@ class User_details(object):
         for user in self.user_list:
             if user['id'] == user_id:
                 return user
+                break
+
         

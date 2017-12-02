@@ -19,6 +19,7 @@ class StagingConfig(Config):
 
 class ProductionConfig(Config):
     """Configurations for Production."""
+    SECRET_KEY="isItReallySecret?IguessItIs!" 	
     DEBUG = False
     TESTING = False
 

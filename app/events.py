@@ -1,6 +1,6 @@
 #used to to validate event names
 import re
-from datetime import date
+from datetime import date, datetime
 import uuid
 
 class Events(object):
@@ -17,6 +17,7 @@ class Events(object):
 			if event['name'] == name and event['createdby'] == createdby:
 				if event['location'] == location:
 					return True
+					break
 		else:
 			return False
 
@@ -27,9 +28,15 @@ class Events(object):
 		else:
 			return True
 
-	def create(self,name,description, category, location, event_date, createdby):
-		"""A method for creating a new event"""
+	def valid_date(self, event_date):
+		"""Check if the given date is less than the current date"""
+		date = datetime.strptime(event_date, '%Y-%m-%d').date()
+		if date < date.today():
+			return False
+		return True
 
+	def create(self, name, description, category, location, event_date, createdby):
+		"""A method for creating a new event"""
 		self.event_details = {}
 		if self.existing_event(name, createdby, location):
 			return "event exists"	
@@ -37,6 +44,9 @@ class Events(object):
 			#validate event name
 			if not self.valid_name(name):
 				return "name too short or invalid"
+			#validate event date
+			elif not self.valid_date(event_date):
+				return "event can only have a future date"
 			else:
 				self.event_details['name'] = name
 				self.event_details['description'] = description
@@ -74,7 +84,7 @@ class Events(object):
 			if event['id'] == eventid:
 				return event
 		return False
-	def update(self, eventid, name,description, category, location, event_date, createdby):
+	def update(self, eventid, name, description, category, location, event_date, createdby):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
 			if event['id'] == eventid:
@@ -84,6 +94,8 @@ class Events(object):
 				else:
 					if not self.valid_name(name):
 						return "name too short or invalid"
+					elif not self.valid_date(event_date):
+						return "event can only have a future date"
 					else:
 						event['name'] = name
 						event['description'] = description
@@ -95,8 +107,9 @@ class Events(object):
 						event['id'] = eventid
 						self.event_list.append(self.event_details)
 						return "update success"
-			else:
-				return "no event with given id"
+						break
+		else:
+			return "no event with given id"
 
 	def delete(self, eventid):
 		""" A method to delete an event from event list"""
@@ -104,6 +117,7 @@ class Events(object):
 			if event['id'] == eventid:
 				self.event_list.remove(event)
 				return "deleted"
+				break
 		else:
 			return "error, event not found"
 
