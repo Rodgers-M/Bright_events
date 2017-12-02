@@ -55,4 +55,11 @@ class User_details(object):
                 return user
                 break
 
-        
+    def reset_pass(self, username, newpass):
+        """A method to reset a password"""
+        for user in self.user_list:
+            if user['username'] == username:
+                user['password'] = newpass
+                return "success"
+                break
+            return "incorrect username"
