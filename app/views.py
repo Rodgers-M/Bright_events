@@ -73,12 +73,11 @@ def events():
 		event_date = request.form['event_date']
 		createdby = session['username']
 		res = event_object.create(name, description, category, location, event_date, createdby)
-		if res == "event exists":
-			flash("a similar event exists", "warning")
-			return redirect('events')
-		flash("event created successfuly", "success")
-		#this route will later redirect to view events
-		return redirect('events')
+		if res == "event created":
+			flash("event created successfuly", "success")
+			return redirect(url_for('myevents'))
+		flash(res, "warning")
+		return redirect(url_for('newevent'))
 	events = event_object.view_all()
 	return render_template('events/eventlist.html', events=events)
 
