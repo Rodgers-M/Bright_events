@@ -1,6 +1,8 @@
+"""This module contains tests for the rsvp class"""
 import unittest
 from app.rsvp  import Rsvp
 class UserTests(unittest.TestCase):
+    """test class definitin and setup"""
 
     def setUp(self):
         """ Set up user object before each test"""

@@ -1,8 +1,10 @@
+"""This module defines tests for the user class and its methods"""
 import unittest
 from app.user import User_details
 
 
 class UserTests(unittest.TestCase):
+    """Define and setup testing class"""
 
     def setUp(self):
         """ Set up user object before each test"""
@@ -14,13 +16,13 @@ class UserTests(unittest.TestCase):
 
     def test_isuccessful_registration(self):
         """Test is a user with correct credentials can register sucessfully"""
-        res = self.user.register("rodger", "rodger@mail.com","654123", "654123")
+        res = self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         self.assertEqual(res, "Registration successfull")
 
     def test_existing_user(self):
         """TTest with an already existing user, try registering a user twice"""
         self.user.register("rodger", "rodger@mail.com", "654123", "654123")
-        res = self.user.register("rodger", "rodger@mail.com","654123", "654123")
+        res = self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         self.assertEqual(res, "Username already exists.")
 
     def test_password_length(self):
@@ -54,7 +56,7 @@ class UserTests(unittest.TestCase):
     def test_find_user_by_id(self):
         """ Test if the method will find a user given a user id"""
         #first register a user and get their id
-        self.user.register("rodger", "rodger@mail.com","654123", "654123")
+        self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         user_id = self.user.user_list[0]['id']
         res = self.user.find_user_by_id(user_id)
         #test if it retuens a dictionery with user details 
@@ -62,7 +64,3 @@ class UserTests(unittest.TestCase):
         #test if the username of the returned user is the one registered
         username = res['username']
         self.assertIs(username, "rodger")
-
-
-
-    

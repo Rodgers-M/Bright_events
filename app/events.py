@@ -17,6 +17,7 @@ class Events(object):
 			if event['name'] == name and event['createdby'] == createdby:
 				if event['location'] == location:
 					return True
+					break
 		else:
 			return False
 
@@ -27,7 +28,7 @@ class Events(object):
 		else:
 			return True
 
-	def create(self,name,description, category, location, event_date, createdby):
+	def create(self, name, description, category, location, event_date, createdby):
 		"""A method for creating a new event"""
 
 		self.event_details = {}
@@ -74,7 +75,7 @@ class Events(object):
 			if event['id'] == eventid:
 				return event
 		return False
-	def update(self, eventid, name,description, category, location, event_date, createdby):
+	def update(self, eventid, name, description, category, location, event_date, createdby):
 		""" Find an event with the given id and update its details"""
 		for event in self. event_list:
 			if event['id'] == eventid:
@@ -95,8 +96,9 @@ class Events(object):
 						event['id'] = eventid
 						self.event_list.append(self.event_details)
 						return "update success"
-			else:
-				return "no event with given id"
+						break
+		else:
+			return "no event with given id"
 
 	def delete(self, eventid):
 		""" A method to delete an event from event list"""
@@ -104,6 +106,7 @@ class Events(object):
 			if event['id'] == eventid:
 				self.event_list.remove(event)
 				return "deleted"
+				break
 		else:
 			return "error, event not found"
 
