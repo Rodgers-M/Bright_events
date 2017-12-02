@@ -163,6 +163,24 @@ def rsvp(eventid):
 	users = [user for user in user_object.user_list if user['id'] in userids]
 	return render_template('events/viewrsvps.html', users=users)
 
+@app.route('/resetpass', methods=['GET','POST'])
+def resetpass():
+	"""Route to reset user password"""
+	if request.method == 'POST':
+		username = request.form['username']
+		password = request.form['password']
+		cnfpass = request.form['cnfpass']
+		if password != cnfpass:
+			flash("passwords do not match", "warning")
+			return redirect(url_for('resetpass'))
+		res = user_object.reset_pass(username. password)
+		if res == "success":
+			flash('password reset, now login', "success")
+			return redirect(url_for('login'))
+		flash('incorect username', 'danger')
+		return redirect(url_for('resetpass'))
+	return render_template('resetpass.html')
+
 @app.route('/searchevents')
 def searchevents():
 	"""A route to search events depending on the events category or location"""
@@ -177,3 +195,4 @@ def searchevents():
 				return jsonify(events)
 			return jsonify(status="no events found")
 		return jsonify(events)
+
