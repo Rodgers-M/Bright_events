@@ -35,11 +35,18 @@
         data-validation="strength" data-validation-strength="2">
     </div>
     <div class="row">
-      <div class="col-md-2 col-md-offset-2 ">
+      <div class="col-md-2 col-md-offset-5 ">
         <button type="submit" class="center btn btn-primary">log in</button>
       </div>
-      <div class="col-md-6">
+    </div>
+    <div class="row">
+      <div class="col-md-7 col-md-offset-3">
         <h4>Not yet Registered?<a href ="{{url_for('register')}}"> Sign Up</a></h4>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+        <h4>Forgot password?<a href ="{{url_for('resetpass')}}">Reset</a></h4>
       </div>
     </div>
 </form>
