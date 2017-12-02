@@ -40,8 +40,13 @@
           <ul class="nav navbar-nav">
           </ul>
           <ul class="nav navbar-nav navbar-right">
+             {% if 'username' in session%}
+              <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{session['username']}}</a></li>
+              <li><a href="{{url_for('events')}}"><span class="glyphicon glyphicon-tasks"></span> Dashboard</a></li>
+              {% else %}
             <li><a href="{{url_for('register')}}"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="{{url_for('login')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% endif %}
           </ul>
         </div>
       </nav>
@@ -57,7 +62,7 @@
                     <button class="btn btn-search" type="button" id="search"><i class="fa fa-search fa-fw"></i> Search</button>
                   </span>
             </div>
-            <span id=result>?</span>
+            <span id=result></span>
           </div>
         </div>
       </div> 
