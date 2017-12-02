@@ -173,7 +173,7 @@ def resetpass():
 		if password != cnfpass:
 			flash("passwords do not match", "warning")
 			return redirect(url_for('resetpass'))
-		res = user_object.reset_pass(username. password)
+		res = user_object.reset_pass(username, password)
 		if res == "success":
 			flash('password reset, now login', "success")
 			return redirect(url_for('login'))
