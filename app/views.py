@@ -163,7 +163,7 @@ def rsvp(eventid):
 	users = [user for user in user_object.user_list if user['id'] in userids]
 	return render_template('events/viewrsvps.html', users=users)
 
-@app.route('/resetpass', methods=['GET','POST'])
+@app.route('/auth/resetpass', methods=['GET','POST'])
 def resetpass():
 	"""Route to reset user password"""
 	if request.method == 'POST':
