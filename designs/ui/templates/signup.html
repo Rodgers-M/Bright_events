@@ -14,10 +14,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
 </head>
- <body style="background-color: #ebebe0;">
+ <body class="bg">
 
     <div class="row container">
-    <div class="col-md-6 col-md-offset-3 backgrnd">
+    <div class="col-md-6 col-md-offset-4 backgrnd">
       <h1 class="text-center">Sign Up</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -34,30 +34,30 @@
         <input type="name" class="form-control" name="username" placeholder="Username" data-validation="length alphanumeric" data-validation-length="3-8" 
          data-validation-error-msg="Username has to be an alphanumeric value of 3 to 8 chars">
       </div>
-  <div class="form-group">
-    <label for="Email">Email address</label>
-    <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" data-validation="email">
-  </div>
-  <div class="form-group">
-    <label for="Password">Password</label>
-    <input type="password" class="form-control" name="password" minlength="6" placeholder="Password" data-validation="strength" data-validation-strength="2" >
-  </div>
-  <div class="form-group">
-    <label for="confpassword">Confirm Password</label>
-    <input type="password" class="form-control" name="cnfpass" placeholder="Confirm Password" >
-  </div>
-  <div class="row">
-      <div class="col-md-3 col-md-offset-2">
-            <button type="submit" class="btn btn-primary">Sign up</button>
+      <div class="form-group">
+        <label for="Email">Email address</label>
+        <input type="email" class="form-control" name="email" aria-describedby="emailHelp" placeholder="Enter email" data-validation="email">
       </div>
-      <div class="col-md-6">
-        <h4>Already Registered?<a href ="{{url_for('login')}}"> Login</a></h4>
+      <div class="form-group">
+        <label for="Password">Password</label>
+        <input type="password" class="form-control" name="password" minlength="6" placeholder="Password" data-validation="strength" data-validation-strength="2" >
       </div>
-  </div>
-</form>
+      <div class="form-group">
+        <label for="confpassword">Confirm Password</label>
+        <input type="password" class="form-control" name="cnfpass" placeholder="Confirm Password" >
+      </div>
+      <div class="row">
+          <div class="col-md-3 col-md-offset-2">
+                <button type="submit" class="btn btn-primary">Sign up</button>
+          </div>
+          <div class="col-md-6">
+            <h4>Already Registered?<a href ="{{url_for('login')}}"> Login</a></h4>
+          </div>
+      </div>
+    </form>
   </div>
 </div>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
