@@ -4,13 +4,13 @@
 <div class="table-responsive">
 	<table class="table table-striped">
 		{%if events==[]%}
-		<div class="alert alert-warning" role="alert">
-		<p>Hello {{session['username']}}, welcome to your dashboard</p>
-		<p>
+		<div class="alert-info ds_alerts text-center" role="alert">
+		<h4>Hello {{session['username']}}, welcome to your dashboard</h4>
+		<h4>
 			You have not created any event yet, Click 
 			<a href="{{url_for('newevent')}}">Here</a>
 			to create your first event
-		</p>
+		</h4>
 		</div>
 		{% else %}
 		<thead>

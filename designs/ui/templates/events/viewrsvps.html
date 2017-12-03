@@ -6,6 +6,12 @@
 </div>
 <div class="table-responsive">
 	<table class="table table-striped">
+		{%if users==[]%}
+		<div class="alert-info ds_alerts" role="alert">
+		<p>Hello {{session['username']}}, No one has responded to this event yet</p>
+		<P> When someone responds, their details will be shown here</P>
+		</div>
+		{% else %}
 		<thead>
 				<td><h4 class="text-center">Username</h4></td>
 				<td><h4 class="text-center">Email</h4></td>
@@ -17,6 +23,7 @@
 				<td><h4 class="text-center">{{user['username']}}</h4></td>
 				<td><h4 class="text-center">{{user['email']}}</h4></td>
 			{% endfor%}
+			{% endif %}
 		</tbody>
  	</table>
 </div>

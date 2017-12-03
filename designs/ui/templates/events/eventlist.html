@@ -5,13 +5,13 @@
 
 	<table class="table table-striped">
 		{%if events==[]%}
-		<div class="alert alert-warning" role="alert">
-		<p>Hello {{session['username']}}, welcome to Bright Events</p>
-		<p>
+		<div class="alert-info ds_alerts text-center" role="alert">
+		<h4>Hello {{session['username']}}, welcome to Bright Events</h4>
+		<h4>
 			No one has created an event yet, Click 
 			<a href="{{url_for('newevent')}}">Here</a>
 			to create first event
-		</p>
+		</h4>
 		</div>
 		{% else %}
 		<thead>
