@@ -56,7 +56,7 @@ def login():
 					session['userid'] = user['id']
 					session['username'] = username
 			flash('login success', 'success')
-			return redirect(url_for('newevent'))
+			return redirect(url_for('events'))
 		flash("wrong password or username", 'warning')
 		return redirect(url_for('login'))
 	return render_template("login.html")
@@ -74,7 +74,7 @@ def logout():
 @login_required
 def newevent():
 	"""A route to render a page for creating events"""
-	return render_template('events/new.html')
+	return render_template('events/new.html', page="create")
 
 @app.route('/events', methods=['GET', 'POST'])
 @login_required
@@ -90,11 +90,12 @@ def events():
 		res = event_object.create(name, description, category, location, event_date, createdby)
 		if res == "event created":
 			flash("event created successfuly", "success")
-			return redirect(url_for('myevents'))
+			return redirect(url_for('myevents', page="myevents"))
 		flash(res, "warning")
 		return redirect(url_for('newevent'))
 	events = event_object.view_all()
-	return render_template('events/eventlist.html', events=events)
+	return render_template('events/eventlist.html', events=events,\
+			 page="events")
 
 @app.route('/events/<eventid>/edit', methods=['GET','POST'])
 @login_required
@@ -120,7 +121,8 @@ def update_event(eventid):
 	if not res:
 		flash("event not found, it might have been deleted", 'warning')
 		return redirect(url_for('myevents'))
-	return render_template('events/edit.html', event=res)
+	return render_template('events/edit.html', event=res,\
+			 page="edit")
 
 @app.route('/events/myevents')
 @login_required
@@ -128,7 +130,8 @@ def myevents():
 	"""This route returns events belonging to a specific user"""
 	username = session['username']
 	events = event_object.createdby_filter(username)
-	return render_template('events/personalEvents.html', events=events)
+	return render_template('events/personalEvents.html', events=events,\
+			page="myevents")
 	
 @app.route('/events/<eventid>/delete', methods=['POST'])
 @login_required
