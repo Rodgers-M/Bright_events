@@ -45,12 +45,20 @@ html{
 }
 
 /* ------------------------------------------------------
- * signup and login page styles
+ * signup, resetpass and login page styles
  * -----------------------------------------------------*/
 .backgrnd{
-	background:linear-gradient(rgba(133,130,130,0.4),rgba(133,130,130,0.4));
+	background:linear-gradient(rgba(107, 107, 71,0.6),rgba(107, 107, 71,0.6));
 	margin-top: 5%;
+	border: 1px solid white;
+	padding: 1%;
+	margin-top: 20vh;
 }
+.bg{
+	  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url('img/events.jpg');
+	  background-size: cover;
+	  color: white;
+ }
 
 /* ------------------------------------------------------
  * Dashboard  styles
@@ -93,3 +101,5 @@ html{
  table{
  	margin-top: 3%;
  }
+
+ 
