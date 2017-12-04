@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login - Bright events</title>
+  <title>Reset pass - Bright events</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
@@ -13,7 +13,7 @@
       <body style="background-color: #ebebe0;>
     <div class="container forms">
     <div class="col-md-5 col-md-offset-3 backgrnd">
-      <h1 class="text-center"> Login</h1>
+      <h1 class="text-center"> Reset Password</h1>
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
@@ -23,7 +23,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-      <form action="{{url_for('login')}}" method="POST">
+      <form action="{{url_for('resetpass')}}" method="POST">
     <div class="form-group">
       <label for="username"><h4>Username</h4></label>
       <input type="text" class="form-control" name="username"  placeholder="Enter username" data-validation="length alphanumeric" data-validation-length="3-8" 
@@ -34,19 +34,14 @@
       <input type="password" class="form-control" name="password" placeholder="Password" 
         data-validation="strength" data-validation-strength="2">
     </div>
-    <div class="row">
-      <div class="col-md-2 col-md-offset-5 ">
-        <button type="submit" class="center btn btn-primary">log in</button>
-      </div>
+     <div class="form-group">
+      <label for="password"><h4>Confirm Password</h4></label>
+      <input type="password" class="form-control" name="cnfpass" placeholder="Password" 
+      >
     </div>
     <div class="row">
-      <div class="col-md-7 col-md-offset-3">
-        <h4>Not yet Registered?<a href ="{{url_for('register')}}"> Sign Up</a></h4>
-      </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-        <h4>Forgot password?<a href ="{{url_for('resetpass')}}">Reset</a></h4>
+      <div class="col-md-3 col-md-offset-2 ">
+        <button type="submit" class="center btn btn-primary">Reset</button>
       </div>
     </div>
 </form>

@@ -15,7 +15,7 @@ html{
  * Index page styles
  * -----------------------------------------------------*/
 #bckgrndimg{
-  background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.8)), url('img/events.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8)), url('img/events.jpg');
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -51,3 +51,45 @@ html{
 	background:linear-gradient(rgba(133,130,130,0.4),rgba(133,130,130,0.4));
 	margin-top: 5%;
 }
+
+/* ------------------------------------------------------
+ * Dashboard  styles
+ * -----------------------------------------------------*/
+/* Remove the navbar's default margin-bottom and rounded borders */ 
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 450px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+
+    /* ------------------------------------------------------
+ * Events Dashboard styles
+ * -----------------------------------------------------*/
+ table{
+ 	margin-top: 3%;
+ }

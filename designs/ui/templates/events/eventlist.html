@@ -1,0 +1,63 @@
+{% extends "events/dashboard.html" %}
+
+{% block content %}
+<div class="table-responsive">
+
+	<table class="table table-striped">
+		{%if events==[]%}
+		<div class="alert alert-warning" role="alert">
+		<p>Hello {{session['username']}}, welcome to Bright Events</p>
+		<p>
+			No one has created an event yet, Click 
+			<a href="{{url_for('newevent')}}">Here</a>
+			to create first event
+		</p>
+		</div>
+		{% else %}
+		<thead>
+				<td>Event Name</td>
+				<td>Description</td>
+				<td>category</td>
+				<td>Location</td>
+				<td>Date</td>
+				<td>Orgarniser</td>
+				<td>Respond</td>
+		</thead>
+		<tbody >
+			{% for event in events%}
+			<tr>
+				<td>{{event['name']}}</td>
+				<td>{{event['description']}}</td>
+				<td>{{event['category']}}</td>
+				<td>{{event['location']}}</td>
+				<td>{{event['event_date']}}</td>
+				<td>{{event['createdby']}}</td>
+				<td >
+					<div>
+					  <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#{{event['id']}}">RSVP</button>
+
+					  <div class="modal fade" id="{{event['id']}}" role="dialog">
+					    <div class="modal-dialog">
+					    	<form action="{{url_for('rsvp', eventid = event['id'])}}" method="POST">
+						      <div class="modal-content">
+						        <div class="modal-body">
+						          <h3 class="text-info">Confirm Reservation for {{event['name']}}</h3>
+						        </div>
+						        <div class="modal-footer">
+						          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						          <button type="submit" class="btn btn-success" >RSVP</button>
+						        </div>
+						      </div>
+					      </form>
+					    </div>
+					  </div>
+					  
+					</div>
+				</td>
+			</tr>
+			{% endfor%}
+		</tbody>
+		{% endif %}
+ 	</table>
+</div>
+{%endblock%}

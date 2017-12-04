@@ -20,14 +20,38 @@ A user can perform the following :
 Other users can view the events posted and can respond to them (RSVP).
 The users can also search events based on location or category
 
+**Application demo**
 
+* To interact with the application via the browser,visit the following url
+    
+     * [rodgerbrightevents](https://rogderbrightevents.herokuapp.com/api/v1)
+    
+* To interact with the API via Postman, use the link below
+    
+    * https://rodgerbrighteventsapi.herokuapp.com/api/v1
+
+    then use the following endpoints to perform the specified tasks
+    
+    EndPoint                            | Functionality
+    ------------------------            | ----------------------
+    POST /auth/register                 | Create a user account
+    POST /auth/login                    | Log in a user
+    POST /events                        | Create an event
+    GET /events                         | Retrieve existing events
+    POST /event/< eventid >/rsvp        | Register a user to an event
+    GET  /event/< eventid >/rsp         | Retrieve users who responded to the event
+    PUT /api/events/< eventid >/edit    | Update an event
+    DELETE /api/events/< eventid >      | Delete event
+
+
+    
 **Getting started with the app**
 
 **Technologies used to build the application**
 
-* [Python 3.6] (https://docs.python.org/3/)
+* [Python 3.6](https://docs.python.org/3/)
 
-* [Flask] (http://flask.pocoo.org/)
+* [Flask](http://flask.pocoo.org/)
 
 **Running the app server**
 
