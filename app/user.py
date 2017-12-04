@@ -19,7 +19,6 @@ class User_details(object):
         for user in self.user_list:
             if username == user['username']:
                 return "Username already exists."
-                break
         else:
             #validate password and username
             if not re.match("^[a-zA-Z0-9_]*$", username):
@@ -45,7 +44,6 @@ class User_details(object):
                     return "successful"
                 else:
                     return "wrong password"
-                    break
         return "user does not exist"
 
     def find_user_by_id(self, user_id):
@@ -53,7 +51,6 @@ class User_details(object):
         for user in self.user_list:
             if user['id'] == user_id:
                 return user
-                break
 
     def reset_pass(self, username, newpass):
         """A method to reset a password"""
@@ -61,5 +58,4 @@ class User_details(object):
             if user['username'] == username:
                 user['password'] = newpass
                 return "success"
-                break
             return "incorrect username"

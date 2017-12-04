@@ -17,7 +17,6 @@ class Events(object):
 			if event['name'] == name and event['createdby'] == createdby:
 				if event['location'] == location:
 					return True
-					break
 		else:
 			return False
 
@@ -107,7 +106,6 @@ class Events(object):
 						event['id'] = eventid
 						self.event_list.append(self.event_details)
 						return "update success"
-						break
 		else:
 			return "no event with given id"
 
@@ -117,7 +115,6 @@ class Events(object):
 			if event['id'] == eventid:
 				self.event_list.remove(event)
 				return "deleted"
-				break
 		else:
 			return "error, event not found"
 

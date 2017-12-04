@@ -10,7 +10,6 @@ class Rsvp(object):
 		for rsvp in self.rsvp_list:
 			if rsvp['event_id'] == event_id and rsvp['user_id'] == user_id:
 				return "user already registered for event"
-				break
 		else:
 			self.rsvp_details['event_id'] = event_id
 			self.rsvp_details['user_id'] = user_id
