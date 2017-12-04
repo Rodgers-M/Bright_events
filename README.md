@@ -67,24 +67,3 @@ The users can also search events based on location or category
 * Install nosetests 
 * navigate to project folder
 * Use `nosetests tests/` to run the tests
-
-
-**API endpoints**
-
-**These endpoints can be tested using postman**
-
-* POST /api/v1/auth/register   					create user acccount
-
-* POST /api/v1/ auth/login						login an existing user
-
-* GET  /api/events  								Retrieve events
-
-* POST /api/events/								Create an event	
-
-* POST /api/events/< eventid >/delete   			Delete an event
-
-* POST /api/events/< eventid >/edit				Edit an event			
-
-* POST /api/event/< eventid >/rsvp    			RSVP to an event
-
-* GET /api/event/< eventid >/rsvp    			Retrieve event RSVPs
