@@ -90,7 +90,7 @@ def rsvp(eventid):
 		userid = session['userid']
 		res = rsvp_object.create(eventid, userid)
 		if res == "rsvp success":
-			return jsonify(response=res), 200
+			return jsonify(response=res), 201
 		return jsonify(response =res), 304
 	userids = rsvp_object.view_rsvp(eventid)
 	users = [user for user in user_object.user_list if user['id'] in userids]
