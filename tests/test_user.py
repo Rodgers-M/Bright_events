@@ -19,11 +19,27 @@ class UserTests(unittest.TestCase):
         res = self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         self.assertEqual(res, "Registration successfull")
 
-    def test_existing_user(self):
-        """TTest with an already existing user, try registering a user twice"""
+    def test_special_characters_in_username(self):
+        """Test registering a username with special characters"""
+        res = self.user.register("rodger*#", "rodger@mail.com", "654123", "654123")
+        self.assertEqual(res, "Username can only contain alphanumeric characters")
+
+    def test_username_length(self):
+        """Test registering a username with less than 3 characters"""
+        res = self.user.register("rg", "rodger@mail.com", "654123", "654123")
+        self.assertEqual(res, "username must be more than 3 characters")
+        
+    def test_existing_user_username(self):
+        """Test with an already existing username, try registering a user twice"""
         self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         res = self.user.register("rodger", "rodger@mail.com", "654123", "654123")
-        self.assertEqual(res, "Username already exists.")
+        self.assertEqual(res, "Username or email already exists.")
+
+    def test_existing_user_email(self):
+        """Test registering a user with an existing email"""
+        self.user.register("rodger", "rodger@mail.com", "654123", "654123")
+        res = self.user.register("rodgy", "rodger@mail.com", "654123", "654123")
+        self.assertEqual(res, "Username or email already exists.")
 
     def test_password_length(self):
         """Test to ensure that a user has a strong password"""
