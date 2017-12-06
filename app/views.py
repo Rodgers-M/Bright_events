@@ -33,7 +33,7 @@ def register():
 		cnfpass = request.form['cnfpass']
 		#pass the details to the register method
 		res = user_object.register(username, email, password, cnfpass)
-		if res == "Username already exists."\
+		if res == "Username or email already exists."\
 			or res == "Username can only contain alphanumeric characters"\
 			or res == "passwords do not match"\
 			or res == "Password too short":
