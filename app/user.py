@@ -17,12 +17,14 @@ class User_details(object):
         user_details = {}
         # checkif a user with that username exists
         for user in self.user_list:
-            if username == user['username']:
-                return "Username already exists."
+            if username == user['username'] or user['email'] == email:
+                return "Username or email already exists."
         else:
             #validate password and username
             if not re.match("^[a-zA-Z0-9_]*$", username):
                 return "Username can only contain alphanumeric characters"
+            elif len(username.strip()) < 3:
+                return "username must be more than 3 characters"
             elif password != cnfpassword:
                 return "passwords do not match"
             elif len(password) < 6:
