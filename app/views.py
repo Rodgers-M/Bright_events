@@ -2,6 +2,10 @@ import uuid
 from app import app, user_object , event_object, rsvp_object
 from flask import request, json , jsonify, url_for, session, render_template
 
+@app.route('/')
+def index():
+	"""Render api docuementation"""
+	return render_template('brightapi.html')
 #registration and login routes
 @app.route('/auth/register', methods=['GET','POST'])
 def register():
