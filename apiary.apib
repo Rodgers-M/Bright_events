@@ -1,0 +1,240 @@
+FORMAT: 1A
+HOST: https://rodgerbrighteventsapi.herokuapp.com/api/v1
+
+# brightevents
+
+Brightevents a simple API allowing consumers to create, view update, and delete events.
+
+## User Registration [/auth/register]
+
+### Register a new user [POST]
+
+You can create a user by sennding a json request with username, 
+, password, and password confirmation. password must be atleast 6 characters long.
+
++ Request(application/json)
+
+            {
+                "username" : "examplename",
+                "email" : "example@gmail.com",
+                "password" : "1234567dg",
+                "cnfpass" : "1234567dg"
+            }
+
++ Response 201 (application/json)
+            
+            {
+                "response" : "Registration successfull"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Username already exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Username can only contain alphanumeric characters"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "passwords do not match"
+            }
+
+## Login [/auth/login]
+
+### Login a user [POST]
+
+you can login a user by sending their username and password
+
++ Request (application/json)
+
+            {
+                "username":"examplename",
+                "password" : "1234567dg"
+            }
+            
++ Response 200 (application/json)
+
+            {
+                "response" : "login successful"
+            }
+            
++ Response 403 (application/json)
+
+            {
+                "response" : "wrong username or password"
+            }
+            
+## events [/events]
+
+### Create an event [POST]
+
+you can create an event by sending event name, description, category, location, date and createdby
+
++ Request (application/json)
+
+            {
+                "name":"examplename",
+                "description" : "event description",
+                "category":"category",
+                "location":"location",
+                "event_date":"2017-2-20",
+                "createdby":"eventowner"
+            }
+            
++ Response 201 (application/json)
+
+            {
+                "response" : "event created"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "event exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "name too short or invalid"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "event can only have a future date"
+            }
+        
+
+### Fetch all events [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+        [
+            {
+                "createdby":"eventowner",
+                "category":"category",
+                "date_created" : "2017-1-12",
+                "description" : "event description",
+                "event_date":"2017-2-20",
+                "id" : "2be47f9a-d733-11e7-920a-bc8556ecad23",
+                "location":"location",
+                "name":"examplename"
+            },
+            {
+            "category": "greetings",
+            "createdby": "rodgdhat",
+            "date_created": "2017-12-05",
+            "description": "say hello world",
+            "event_date": "2019-12-30",
+            "id": "a9e6d5c4-d9d5-11e7-a25c-bc8556ecad23",
+            "location": "hall",
+            "name": "heljome"
+            }
+        ]
+        
+## update and delete event [/events/<eventid>]
+
+### update event [POST]
+
+you can update an event by sending the event id together with the new name, description, category, location, date and createdby
+
++ Request (application/json)
+
+            {
+                "name":"newexamplename",
+                "description" : "new event description",
+                "category":"new category",
+                "location":"location",
+                "event_date":"2017-2-20",
+                "createdby":"eventowner"
+            }
+            
++ Response 200 (application/json)
+
+            {
+                "response" : "update success"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "Event cannot be updated, a similar event exists"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "name too short or invalid"
+            }
+            
++ Response 409 (application/json)
+
+            {
+                "response" : "event can only have a future date"
+            }
+            
++ Response 404 (application/json)
+
+            {
+                "response" : "no event with given id"
+            }
+            
+### delete event [DELETE]
+
+you can delete an event by sending a request with the event id
+
++ Request (application/json)
+
++ Response 204 (application/json)
+
++ Response 404 (application/json)
+
+            {
+                "response" : "error, event not found"
+            }
+
+## Rsvp to event [/event/<eventid>/rsvp]
+
+### Rsvp to an event[POST]
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+            {
+                "response" : "rsvp success"
+            }
+
++ Response 409 (application/json)
+
+            {
+                "response" : "user already registered for event"
+            }
+            
+### view RSVPs to event[GET]
+
+you can view users registered to an event by sending a request with event id
+
++ Request (application/json)
+
++ Response 200 (application/json)
+            
+            [
+            {
+                "username" : "examplename1",
+                "email" : "example@gmail.com1"
+            },
+            {
+                "username" : "examplename",
+                "email" : "example@gmail.com"
+            }
+            ]
