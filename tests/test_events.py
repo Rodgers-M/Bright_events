@@ -3,7 +3,7 @@ import unittest
 from app.events import Events
 
 
-class Event_tests(unittest.TestCase):
+class EventTests(unittest.TestCase):
     """Class definitin and setup"""
 
     def setUp(self):

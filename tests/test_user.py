@@ -1,6 +1,6 @@
 """This module defines tests for the user class and its methods"""
 import unittest
-from app.user import User_details
+from app.user import UserDetails
 
 
 class UserTests(unittest.TestCase):
@@ -8,7 +8,7 @@ class UserTests(unittest.TestCase):
 
     def setUp(self):
         """ Set up user object before each test"""
-        self.user = User_details()
+        self.user = UserDetails()
 
     def tearDown(self):
         """ Clear up objects after every test"""

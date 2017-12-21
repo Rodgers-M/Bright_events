@@ -4,7 +4,7 @@ import re
 import uuid
 
 
-class User_details(object):
+class UserDetails(object):
     """ A class to handle activities related to a user"""
     def __init__(self):
         # A list to hold all user objects

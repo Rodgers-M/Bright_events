@@ -9,7 +9,7 @@ from config import app_config
 app = Flask(__name__, instance_relative_config=True, template_folder='../designs/ui/templates', \
 	static_folder='../designs/ui/static')
 #load from config.py in root folder
-app.config.from_object(app_config['production'])
+app.config.from_object(app_config['development'])
 
 # load dotenv in the base root
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
@@ -20,7 +20,7 @@ load_dotenv(find_dotenv())
 app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
 
 #import the user, events and rsvp classes
-user_object = user.User_details()
+user_object = user.UserDetails()
 event_object = events.Events()
 rsvp_object = rsvp.Rsvp()
 

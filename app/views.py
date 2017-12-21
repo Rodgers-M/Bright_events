@@ -185,7 +185,7 @@ def resetpass():
 	return render_template('resetpass.html')
 
 @app.route('/searchevents', methods=['POST'])
-def searchevents():
+def search_events():
 	"""A route to search events depending on the events category or location"""
 	parameter = request.form['search']
 	if len(parameter.strip()) == 0:
@@ -202,4 +202,3 @@ def searchevents():
 			return redirect(url_for('events'))
 		return render_template('events/eventlist.html', events=events,\
 			 page="searchresults")
-
