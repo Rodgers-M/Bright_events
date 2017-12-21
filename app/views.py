@@ -184,18 +184,22 @@ def resetpass():
 		return redirect(url_for('resetpass'))
 	return render_template('resetpass.html')
 
-@app.route('/searchevents')
+@app.route('/searchevents', methods=['POST'])
 def searchevents():
 	"""A route to search events depending on the events category or location"""
-	parameter = request.args.get('parameter', None)
-	if parameter == None:
-		return jsonify(status="no event")
+	parameter = request.form['search']
+	if len(parameter.strip()) == 0:
+		flash('please type event name or location', 'warning')
+		return redirect(url_for('events', page="events"))
 	else:
 		events = event_object.category_filter(parameter)
 		if events == []:
 			events = event_object.location_filter(parameter)
 			if events != []:
-				return jsonify(events)
-			return jsonify(status="no events found")
-		return jsonify(events)
+				return render_template('events/eventlist.html', events=events,\
+			 page="searchresults")
+			flash('no events matched your search, check the input and search again', 'warning')
+			return redirect(url_for('events'))
+		return render_template('events/eventlist.html', events=events,\
+			 page="searchresults")
 
