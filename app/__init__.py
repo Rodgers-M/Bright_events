@@ -9,7 +9,7 @@ from config import app_config
 app = Flask(__name__, instance_relative_config=True, template_folder='../designs/ui/templates', \
 	static_folder='../designs/ui/static')
 #load from config.py in root folder
-app.config.from_object(app_config['development'])
+app.config.from_object(app_config['production'])
 
 # load dotenv in the base root
 APP_ROOT = os.path.join(os.path.dirname(__file__), '..')   # refers to application_top
