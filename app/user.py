@@ -21,8 +21,9 @@ class UserDetails(object):
                 return "Username or email already exists."
         else:
             #validate password and username
-            if not re.match("^[a-zA-Z0-9_]*$", username):
-                return "Username can only contain alphanumeric characters"
+            if not re.match("^[a-zA-Z0-9_]*$", username)\
+            or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
+                return "Username or email can only contain alphanumeric characters"
             elif len(username.strip()) < 3:
                 return "username must be more than 3 characters"
             elif password != cnfpassword:
