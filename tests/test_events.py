@@ -96,12 +96,3 @@ class EventTests(unittest.TestCase):
         eventname = self.event.event_list[0]['name']
         foundevent = self.event.find_by_id(event_id)
         self.assertEqual(foundevent['name'], eventname)
-
-
-
-
-
-
-
-
-   
