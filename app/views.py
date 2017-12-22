@@ -34,7 +34,7 @@ def register():
 		#pass the details to the register method
 		res = user_object.register(username, email, password, cnfpass)
 		if res == "Username or email already exists."\
-			or res == "Username can only contain alphanumeric characters"\
+			or res == "Username or email can only contain alphanumeric characters"\
 			or res == "passwords do not match"\
 			or res == "Password too short":
 			flash(res, 'warning')
@@ -193,9 +193,9 @@ def search_events():
 		return redirect(url_for('events', page="events"))
 	else:
 		events = event_object.category_filter(parameter)
-		if events == []:
+		if not events:
 			events = event_object.location_filter(parameter)
-			if events != []:
+			if events:
 				return render_template('events/eventlist.html', events=events,\
 			 page="searchresults")
 			flash('no events matched your search, check the input and search again', 'warning')
