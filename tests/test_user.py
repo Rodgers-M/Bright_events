@@ -22,7 +22,13 @@ class UserTests(unittest.TestCase):
     def test_special_characters_in_username(self):
         """Test registering a username with special characters"""
         res = self.user.register("rodger*#", "rodger@mail.com", "654123", "654123")
-        self.assertEqual(res, "Username can only contain alphanumeric characters")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
+
+    def test_special_characters_in_email(self):
+        """Test registering a username with special characters"""
+        res = self.user.register("rodger", "rodge#r@mail.com", "654123", "654123")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
+
 
     def test_username_length(self):
         """Test registering a username with less than 3 characters"""
