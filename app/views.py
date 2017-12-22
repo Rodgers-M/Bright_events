@@ -188,7 +188,7 @@ def resetpass():
 def search_events():
 	"""A route to search events depending on the events category or location"""
 	parameter = request.form['search']
-	if len(parameter.strip()) == 0:
+	if not parameter.strip():
 		flash('please type event name or location', 'warning')
 		return redirect(url_for('events', page="events"))
 	else:
