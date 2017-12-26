@@ -1,6 +1,6 @@
 """This module defines tests for the user class and its methods"""
 import unittest
-from app.user import User_details
+from app.user import UserDetails
 
 
 class UserTests(unittest.TestCase):
@@ -8,7 +8,7 @@ class UserTests(unittest.TestCase):
 
     def setUp(self):
         """ Set up user object before each test"""
-        self.user = User_details()
+        self.user = UserDetails()
 
     def tearDown(self):
         """ Clear up objects after every test"""
@@ -22,7 +22,22 @@ class UserTests(unittest.TestCase):
     def test_special_characters_in_username(self):
         """Test registering a username with special characters"""
         res = self.user.register("rodger*#", "rodger@mail.com", "654123", "654123")
-        self.assertEqual(res, "Username can only contain alphanumeric characters")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
+
+    def test_special_characters_in_email(self):
+        """Test registering an email with special characters"""
+        res = self.user.register("rodger", "rodge#r@mail.com", "654123", "654123")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
+
+    def test_register_invalid_email(self):
+        """Test registering a user with invalid email"""
+        res = self.user.register("rodger", "rodger@mail.", "654123", "654123")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
+
+    def test_email_missing_at_sign(self):
+        """Test registering a user with invalid email"""
+        res = self.user.register("rodger", "rodgermail.com", "654123", "654123")
+        self.assertEqual(res, "Username or email can only contain alphanumeric characters")
 
     def test_username_length(self):
         """Test registering a username with less than 3 characters"""

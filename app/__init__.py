@@ -4,7 +4,7 @@ from app import user, events, rsvp, middleware
 from config import app_config
 
 #import the user, events and rsvp classes
-user_object = user.User_details()
+user_object = user.UserDetails()
 event_object = events.Events()
 rsvp_object = rsvp.Rsvp()
 
