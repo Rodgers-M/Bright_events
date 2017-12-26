@@ -23,7 +23,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-      <form action="{{url_for('resetpass')}}" method="POST">
+      <form action="{{url_for('main.resetpass')}}" method="POST">
     <div class="form-group">
       <label for="username"><h4>Username</h4></label>
       <input type="text" class="form-control" name="username"  placeholder="Enter username" data-validation="length alphanumeric" data-validation-length="3-8" 

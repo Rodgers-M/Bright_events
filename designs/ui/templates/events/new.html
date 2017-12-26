@@ -2,7 +2,7 @@
 {% extends "events/dashboard.html" %}
 
 {% block content %}
-<form action="{{url_for('events')}}" method="POST">
+<form action="{{url_for('main.events')}}" method="POST">
     <div class="form-group">
       <label for="eventname"><h3>Event Name (<span id="eventname-max-length">30</span> characters left)</h3></label>  
         <input type="text" class="form-control" name="eventname"  placeholder="Enter event name"   id="eventname" required/>

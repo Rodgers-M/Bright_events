@@ -1,8 +1,7 @@
-
 {% extends "events/dashboard.html" %}
 
 {% block content %}
-<form action="{{url_for('update_event', eventid = event['id'])}}" method="POST">
+<form action="{{url_for('main.update_event', eventid = event['id'])}}" method="POST">
   <div class="form-group">
     <label for="eventname"><h3>Event Name</h3></label>  
       <input type="text" class="form-control" name="eventname"  value="{{event['name']}}" required/>
@@ -28,4 +27,4 @@
           <button type="submit" class="btn btn-block btn-success">Update</button>
   </div>
 </form>
-{%endblock%}
+{%endblock%}/
