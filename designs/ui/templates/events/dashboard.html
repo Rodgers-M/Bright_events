@@ -23,20 +23,20 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
-        <li><a href="{{url_for('index')}}">Home</a></li>
+        <li><a href="{{url_for('main.index')}}">Home</a></li>
         <li {%if page == "create" %} class="active" {%endif%}>
-          <a href="{{url_for('newevent')}}">Create Event</a>
+          <a href="{{url_for('main.newevent')}}">Create Event</a>
         </li>
         <li {%if page == "myevents" %} class="active" {%endif%}>
-          <a href="{{url_for('myevents')}}">My Events</a>
+          <a href="{{url_for('main.myevents')}}">My Events</a>
           </li>
         <li {%if page == "events" %} class="active" {%endif%} >
-          <a href="{{url_for('events')}}">View All Events</a>
+          <a href="{{url_for('main.events')}}">View All Events</a>
           </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#"><span class="glyphicon glyphicon-user"></span> {{session['username']}}</a></li>
-        <li><a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span>Sign out</a></li>
+        <li><a href="{{url_for('main.logout')}}"><span class="glyphicon glyphicon-log-out"></span>Sign out</a></li>
       </ul>
     </div>
   </div>

@@ -23,7 +23,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-      <form action="{{url_for('login')}}" method="POST">
+      <form action="{{url_for('main.login')}}" method="POST">
     <div class="form-group">
       <label for="username"><h4>Username</h4></label>
       <input type="text" class="form-control" name="username"  placeholder="Enter username" data-validation="length alphanumeric" data-validation-length="3-8" 
@@ -41,12 +41,12 @@
     </div>
     <div class="row">
       <div class="col-md-7 col-md-offset-3">
-        <h4>Not yet Registered?<a href ="{{url_for('register')}}"> Sign Up</a></h4>
+        <h4>Not yet Registered?<a href ="{{url_for('main.register')}}"> Sign Up</a></h4>
       </div>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-        <h4>Forgot password?<a href ="{{url_for('resetpass')}}">Reset</a></h4>
+        <h4>Forgot password?<a href ="{{url_for('main.resetpass')}}">Reset</a></h4>
       </div>
     </div>
 </form>

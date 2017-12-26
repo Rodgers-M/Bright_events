@@ -28,7 +28,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-    <form action="{{url_for('register')}}" method="POST">
+    <form action="{{url_for('main.register')}}" method="POST">
       <div class="form-group">
         <label for="username">Username</label>
         <input type="name" class="form-control" name="username" placeholder="Username" data-validation="length alphanumeric" data-validation-length="3-8" 
@@ -51,7 +51,7 @@
                 <button type="submit" class="btn btn-primary">Sign up</button>
           </div>
           <div class="col-md-6">
-            <h4>Already Registered?<a href ="{{url_for('login')}}"> Login</a></h4>
+            <h4>Already Registered?<a href ="{{url_for('main.login')}}"> Login</a></h4>
           </div>
       </div>
     </form>
