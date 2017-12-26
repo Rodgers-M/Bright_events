@@ -6,7 +6,7 @@ class Config(object):
 class DevelopmentConfig(Config):
     """Configurations for Development."""
     DEBUG = True
-    SECRET_KEY = "samplesecret"
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
@@ -19,7 +19,7 @@ class StagingConfig(Config):
 
 class ProductionConfig(Config):
     """Configurations for Production."""
-    SECRET_KEY="isItReallySecret?IguessItIs!" 	
+    SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = False
     TESTING = False
 
