@@ -20,7 +20,7 @@ load_dotenv(find_dotenv())
 app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v1')
 
 #import the user, events and rsvp classes
-user_object = user.User_details()
+user_object = user.UserDetails()
 event_object = events.Events()
 rsvp_object = rsvp.Rsvp()
 

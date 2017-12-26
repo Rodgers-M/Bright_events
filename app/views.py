@@ -34,7 +34,7 @@ def register():
 		#pass the details to the register method
 		res = user_object.register(username, email, password, cnfpass)
 		if res == "Username or email already exists."\
-			or res == "Username can only contain alphanumeric characters"\
+			or res == "Username or email can only contain alphanumeric characters"\
 			or res == "passwords do not match"\
 			or res == "Password too short":
 			flash(res, 'warning')
@@ -184,18 +184,21 @@ def resetpass():
 		return redirect(url_for('resetpass'))
 	return render_template('resetpass.html')
 
-@app.route('/searchevents')
-def searchevents():
+@app.route('/searchevents', methods=['POST'])
+def search_events():
 	"""A route to search events depending on the events category or location"""
-	parameter = request.args.get('parameter', None)
-	if parameter == None:
-		return jsonify(status="no event")
+	parameter = request.form['search']
+	if not parameter.strip():
+		flash('please type event name or location', 'warning')
+		return redirect(url_for('events', page="events"))
 	else:
 		events = event_object.category_filter(parameter)
-		if events == []:
+		if not events:
 			events = event_object.location_filter(parameter)
-			if events != []:
-				return jsonify(events)
-			return jsonify(status="no events found")
-		return jsonify(events)
-
+			if events:
+				return render_template('events/eventlist.html', events=events,\
+			 page="searchresults")
+			flash('no events matched your search, check the input and search again', 'warning')
+			return redirect(url_for('events'))
+		return render_template('events/eventlist.html', events=events,\
+			 page="searchresults")

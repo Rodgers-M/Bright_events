@@ -14,7 +14,27 @@
 		</h4>
 		</div>
 		{% else %}
-		<thead>
+		<thead>	
+				{% if page=="events"%}
+				<form  action="{{url_for('search_events')}}" method="POST">
+					 <div>
+					 	<div class="col-md-8 col-md-offset-2 eventsearch">
+					 		<div class="input-group">
+				              <input type="text" class="form-control" placeholder="Type event category or location" name="search">
+			                  <span class="input-group-btn">
+			                    <button class="btn btn-search" type="submit" id="search"><i class="fa fa-search fa-fw"></i> Search</button>
+			                  </span>
+							</div>
+					 	</div>
+					 </div>
+				</form>
+				{%else%}
+					<div class="panel panel-default" style="background-color:  #5cb85c; ">
+					  <div class="panel-body">
+					    The following events matched your search 
+					  </div>
+					</div>
+				{% endif%}
 				<td>Event Name</td>
 				<td>Description</td>
 				<td>category</td>

@@ -3,7 +3,7 @@ import unittest
 from app.events import Events
 
 
-class Event_tests(unittest.TestCase):
+class EventTests(unittest.TestCase):
     """Class definitin and setup"""
 
     def setUp(self):
@@ -96,12 +96,3 @@ class Event_tests(unittest.TestCase):
         eventname = self.event.event_list[0]['name']
         foundevent = self.event.find_by_id(event_id)
         self.assertEqual(foundevent['name'], eventname)
-
-
-
-
-
-
-
-
-   

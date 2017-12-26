@@ -27,21 +27,8 @@ html{
     margin-top: 17%;
     color: white;
 }
-.btn-search {
-	  background: #424242;
-	  border-radius: 0;
-	  color: #fff;
-	  border-width: 1px;
-	  border-style: solid;
-	  border-color: #1c1c1c;
-	}
-
-.btn-search:link, .btn-search:visited {
-	  color: #fff;
-	}
-.btn-search:active, .btn-search:hover {
-  background: #1c1c1c;
-  color: #fff;
+.btn-start{
+  background-color: #c8e458;
 }
 
 /* ------------------------------------------------------
@@ -102,7 +89,10 @@ html{
  	margin-top: 3%;
  }
  .ds_alerts{
- 	color: black;
- 	margin-top: 5%;
+  color: black;
+  margin-top: 5%;
+}
+.eventsearch{
+  margin-top : 2%;
+  margin-bottom: 2%;
  }
- 
