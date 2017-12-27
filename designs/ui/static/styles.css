@@ -27,30 +27,25 @@ html{
     margin-top: 17%;
     color: white;
 }
-.btn-search {
-	  background: #424242;
-	  border-radius: 0;
-	  color: #fff;
-	  border-width: 1px;
-	  border-style: solid;
-	  border-color: #1c1c1c;
-	}
-
-.btn-search:link, .btn-search:visited {
-	  color: #fff;
-	}
-.btn-search:active, .btn-search:hover {
-  background: #1c1c1c;
-  color: #fff;
+.btn-start{
+  background-color: #c8e458;
 }
 
 /* ------------------------------------------------------
- * signup and login page styles
+ * signup, resetpass and login page styles
  * -----------------------------------------------------*/
 .backgrnd{
-	background:linear-gradient(rgba(133,130,130,0.4),rgba(133,130,130,0.4));
+	background:linear-gradient(rgba(107, 107, 71,0.6),rgba(107, 107, 71,0.6));
 	margin-top: 5%;
+	border: 1px solid white;
+	padding: 1%;
+	margin-top: 20vh;
 }
+.bg{
+	  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.7)), url('img/events.jpg');
+	  background-size: cover;
+	  color: white;
+ }
 
 /* ------------------------------------------------------
  * Dashboard  styles
@@ -92,4 +87,12 @@ html{
  * -----------------------------------------------------*/
  table{
  	margin-top: 3%;
+ }
+ .ds_alerts{
+  color: black;
+  margin-top: 5%;
+}
+.eventsearch{
+  margin-top : 2%;
+  margin-bottom: 2%;
  }

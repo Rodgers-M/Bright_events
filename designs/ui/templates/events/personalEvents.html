@@ -4,13 +4,13 @@
 <div class="table-responsive">
 	<table class="table table-striped">
 		{%if events==[]%}
-		<div class="alert alert-warning" role="alert">
-		<p>Hello {{session['username']}}, welcome to your dashboard</p>
-		<p>
+		<div class="alert-info ds_alerts text-center" role="alert">
+		<h4>Hello {{session['username']}}, welcome to your dashboard</h4>
+		<h4>
 			You have not created any event yet, Click 
-			<a href="{{url_for('newevent')}}">Here</a>
+			<a href="{{url_for('main.newevent')}}">Here</a>
 			to create your first event
-		</p>
+		</h4>
 		</div>
 		{% else %}
 		<thead>
@@ -31,8 +31,8 @@
 				<td>{{event['location']}}</td>
 				<td>{{event['event_date']}}</td>
 				<td >
-					<a href="{{url_for('rsvp', eventid =event['id'])}}" class="btn btn-info" role="button">View RSVPs</a>
-					<a href="{{url_for('update_event', eventid=event['id'])}}" class="btn btn-info" role="button" style="float: right;">Edit</a>
+					<a href="{{url_for('main.rsvp', eventid =event['id'])}}" class="btn btn-info" role="button">View RSVPs</a>
+					<a href="{{url_for('main.update_event', eventid=event['id'])}}" class="btn btn-info" role="button" style="float: right;">Edit</a>
 				</td>
 				<td>
 					<div>
@@ -40,7 +40,7 @@
 
 					  <div class="modal" id="{{event['id']}}" role="dialog">
 					    <div class="modal-dialog">
-					    	<form action="{{url_for('delete_event', eventid = event['id'])}}" method="POST">
+					    	<form action="{{url_for('main.delete_event', eventid = event['id'])}}" method="POST">
 						      <div class="modal-content">
 						        <div class="modal-body">
 						          <h3 class="text-info">Confirm Deleting {{event['name']}}</h3>

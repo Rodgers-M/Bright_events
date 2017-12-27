@@ -4,7 +4,7 @@ import re
 import uuid
 
 
-class User_details(object):
+class UserDetails(object):
     """ A class to handle activities related to a user"""
     def __init__(self):
         # A list to hold all user objects
@@ -17,13 +17,15 @@ class User_details(object):
         user_details = {}
         # checkif a user with that username exists
         for user in self.user_list:
-            if username == user['username']:
-                return "Username already exists."
-                break
+            if username == user['username'] or user['email'] == email:
+                return "Username or email already exists."
         else:
             #validate password and username
-            if not re.match("^[a-zA-Z0-9_]*$", username):
-                return "Username can only contain alphanumeric characters"
+            if not re.match("^[a-zA-Z0-9_]*$", username)\
+            or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", email):
+                return "Username or email can only contain alphanumeric characters"
+            elif len(username.strip()) < 3:
+                return "username must be more than 3 characters"
             elif password != cnfpassword:
                 return "passwords do not match"
             elif len(password) < 6:
@@ -45,7 +47,6 @@ class User_details(object):
                     return "successful"
                 else:
                     return "wrong password"
-                    break
         return "user does not exist"
 
     def find_user_by_id(self, user_id):
@@ -53,7 +54,6 @@ class User_details(object):
         for user in self.user_list:
             if user['id'] == user_id:
                 return user
-                break
 
     def reset_pass(self, username, newpass):
         """A method to reset a password"""
@@ -61,5 +61,4 @@ class User_details(object):
             if user['username'] == username:
                 user['password'] = newpass
                 return "success"
-                break
             return "incorrect username"

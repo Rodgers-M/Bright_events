@@ -10,7 +10,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/theme-default.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
   </head>
-      <body style="background-color: #ebebe0;>
+      <body class="bg">
     <div class="container forms">
     <div class="col-md-5 col-md-offset-3 backgrnd">
       <h1 class="text-center"> Login</h1>
@@ -23,7 +23,7 @@
         {% endfor %}
         {% endif %}
         {% endwith %}
-      <form action="{{url_for('login')}}" method="POST">
+      <form action="{{url_for('main.login')}}" method="POST">
     <div class="form-group">
       <label for="username"><h4>Username</h4></label>
       <input type="text" class="form-control" name="username"  placeholder="Enter username" data-validation="length alphanumeric" data-validation-length="3-8" 
@@ -35,18 +35,18 @@
         data-validation="strength" data-validation-strength="2">
     </div>
     <div class="row">
-      <div class="col-md-2 col-md-offset-5 ">
-        <button type="submit" class="center btn btn-primary">log in</button>
+      <div class="col-md-4 col-md-offset-4 ">
+        <button type="submit" class="center btn btn-primary btn-block"> login</button>
       </div>
     </div>
     <div class="row">
       <div class="col-md-7 col-md-offset-3">
-        <h4>Not yet Registered?<a href ="{{url_for('register')}}"> Sign Up</a></h4>
+        <h4>Not yet Registered?<a href ="{{url_for('main.register')}}"> Sign Up</a></h4>
       </div>
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-        <h4>Forgot password?<a href ="{{url_for('resetpass')}}">Reset</a></h4>
+        <h4>Forgot password?<a href ="{{url_for('main.resetpass')}}">Reset</a></h4>
       </div>
     </div>
 </form>
@@ -62,6 +62,7 @@
     onModulesLoaded : function() {
     }
   });
+  $(".alert").fadeOut(5000);
 </script>
 </body>
 </html>
