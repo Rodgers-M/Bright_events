@@ -25,10 +25,10 @@
       <ul class="nav navbar-nav">
         <li><a href="{{url_for('main.index')}}">Home</a></li>
         <li {%if page == "create" %} class="active" {%endif%}>
-          <a href="{{url_for('main.newevent')}}">Create Event</a>
+          <a href="{{url_for('main.new_event')}}">Create Event</a>
         </li>
         <li {%if page == "myevents" %} class="active" {%endif%}>
-          <a href="{{url_for('main.myevents')}}">My Events</a>
+          <a href="{{url_for('main.my_events')}}">My Events</a>
           </li>
         <li {%if page == "events" %} class="active" {%endif%} >
           <a href="{{url_for('main.events')}}">View All Events</a>
