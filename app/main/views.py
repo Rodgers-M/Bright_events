@@ -73,7 +73,7 @@ def logout():
 #routes for events
 @main.route('/newevent')
 @login_required
-def newevent():
+def new_event():
 	"""A route to render a page for creating events"""
 	return render_template('events/new.html', page="create")
 
@@ -91,9 +91,9 @@ def events():
 		res = event_object.create(name, description, category, location, event_date, createdby)
 		if res == "event created":
 			flash("event created successfuly", "success")
-			return redirect(url_for('main.myevents', page="myevents"))
+			return redirect(url_for('main.my_events', page="myevents"))
 		flash(res, "warning")
-		return redirect(url_for('main.newevent'))
+		return redirect(url_for('main.new_event'))
 	events = event_object.view_all()
 	return render_template('events/eventlist.html', events=events,\
 			 page="events")
@@ -117,17 +117,17 @@ def update_event(eventid):
 			flash(res, 'warning')
 			return redirect(url_for('main.update_event', eventid=eventid))
 		flash('event updated', 'success')
-		return redirect(url_for('main.myevents'))
+		return redirect(url_for('main.my_events'))
 	res = event_object.find_by_id(eventid)
 	if not res:
 		flash("event not found, it might have been deleted", 'warning')
-		return redirect(url_for('main.myevents'))
+		return redirect(url_for('main.my_events'))
 	return render_template('events/edit.html', event=res,\
 			 page="edit")
 
 @main.route('/events/myevents')
 @login_required
-def myevents():
+def my_events():
 	"""This route returns events belonging to a specific user"""
 	username = session['username']
 	events = event_object.createdby_filter(username)
@@ -142,9 +142,9 @@ def delete_event(eventid):
 	res = event_object.delete(eventid)
 	if res == "deleted":
 		flash('event deleted', 'success')
-		return redirect(url_for('main.myevents'))
+		return redirect(url_for('main.my_events'))
 	flash('error, could not delete event')
-	return redirect('main.myevents')
+	return redirect(url_for('main.my_events'))
 	
 @main.route('/event/<eventid>/rsvp', methods=['GET', 'POST'])
 @login_required
@@ -168,7 +168,7 @@ def rsvp(eventid):
 	return render_template('events/viewrsvps.html', users=users)
 
 @main.route('/auth/resetpass', methods=['GET','POST'])
-def resetpass():
+def reset_pass():
 	"""Route to reset user password"""
 	if request.method == 'POST':
 		username = request.form['username']
@@ -176,13 +176,13 @@ def resetpass():
 		cnfpass = request.form['cnfpass']
 		if password != cnfpass:
 			flash("passwords do not match", "warning")
-			return redirect(url_for('main.resetpass'))
+			return redirect(url_for('main.reset_pass'))
 		res = user_object.reset_pass(username, password)
 		if res == "success":
 			flash('password reset, now login', "success")
 			return redirect(url_for('login'))
 		flash('incorect username', 'danger')
-		return redirect(url_for('resetpass'))
+		return redirect(url_for('main.reset_pass'))
 	return render_template('resetpass.html')
 
 @main.route('/searchevents', methods=['POST'])

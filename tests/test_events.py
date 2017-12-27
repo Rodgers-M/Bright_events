@@ -2,7 +2,6 @@
 import unittest
 from app.events import Events
 
-
 class EventTests(unittest.TestCase):
     """Class definitin and setup"""
 

@@ -2,7 +2,6 @@
 import unittest
 from app.user import UserDetails
 
-
 class UserTests(unittest.TestCase):
     """Define and setup testing class"""
 
@@ -14,7 +13,7 @@ class UserTests(unittest.TestCase):
         """ Clear up objects after every test"""
         del self.user
 
-    def test_isuccessful_registration(self):
+    def test_successful_registration(self):
         """Test is a user with correct credentials can register sucessfully"""
         res = self.user.register("rodger", "rodger@mail.com", "654123", "654123")
         self.assertEqual(res, "Registration successfull")

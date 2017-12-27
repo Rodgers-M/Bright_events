@@ -9,14 +9,14 @@
 		<h4>Hello {{session['username']}}, welcome to Bright Events</h4>
 		<h4>
 			No one has created an event yet, Click 
-			<a href="{{url_for('main.newevent')}}">Here</a>
+			<a href="{{url_for('main.new_event')}}">Here</a>
 			to create first event
 		</h4>
 		</div>
 		{% else %}
 		<thead>	
 				{% if page=="events"%}
-				<form  action="{{url_for('search_events')}}" method="POST">
+				<form  action="{{url_for('main.search_events')}}" method="POST">
 					 <div>
 					 	<div class="col-md-8 col-md-offset-2 eventsearch">
 					 		<div class="input-group">
