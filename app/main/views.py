@@ -3,7 +3,7 @@
 import uuid
 from functools import wraps
 from flask import request, jsonify, url_for, session, render_template, redirect, flash
-from app import user_object, event_object, rsvp_object
+#from app import user_object, event_object, rsvp_object
 from . import main
 
 def login_required(f):
