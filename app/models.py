@@ -42,7 +42,7 @@ class Events(db.Model):
 	date_created = db.Column(db.DateTime, default=datetime.utcnow)
 	rsvps = db.relationship(User,
 		secondary=rsvps,
-		backref=db.backref('myrsvps', lazy='dynamic'),
+		backref=db.backref('myrsvps', lazy='dynamic', cascade='all, delete-orphan'),
 		lazy='dynamic')
 
 	def add_rsvp(self, user):
