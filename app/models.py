@@ -14,7 +14,7 @@ class User(db.Model):
 	username = db.Column(db.String(64), unique=True)
 	email = db.Column(db.String(64), unique=True)
 	password_hash = db.Column(db.String(128))
-	events = db.relationship('Events', backref='author')
+	events = db.relationship('Events', backref='created_by', cascade="all, delete-orphan")
 	myrsvps = db.relationship('Events',
 		secondary=rsvps,
 		backref=db.backref('rsvps', lazy='dynamic'),
@@ -62,6 +62,11 @@ class Events(db.Model):
 	def get_all():
 		"""a method to fetch all events"""
 		return Events.query.all()
+
+	def save(self):
+		"""add the instance to session and save"""
+		db.session.add(self)
+		db.session.commit()
 
 	def __repr__(self):
 		return '<Events %r>' % self.name
