@@ -14,6 +14,8 @@ class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     TESTING = True
     DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DB_URL')
+    PRESERVE_CONTEXT_ON_EXCEPTION = False
 
 class StagingConfig(Config):
     """Configurations for Staging."""
