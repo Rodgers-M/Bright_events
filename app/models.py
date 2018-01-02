@@ -64,14 +64,14 @@ class User(db.Model):
 		"""Decodes the access token from the Authorization header."""
 		try:
 			# try to decode the token using our SECRET variable
-			payload = jwt.decode(token, current_app.config.get('SECRET'))
+			payload = jwt.decode(token, current_app.config.get('SECRET_KEY'))
 			return payload['sub']
 		except jwt.ExpiredSignatureError:
-			# the token is expired, return an error string
-			return "Expired token. Please login to get a new token"
+			# the token is expired, return an error message
+			return "you are logged out. Please login"
 		except jwt.InvalidTokenError:
-			# the token is invalid, return an error string
-			return "Invalid token. Please register or login"
+			# the token is invalid, return an error message
+			return "Please register or login"
 
 	def __repr__(self):
 		return '<User %r>' % self.username
