@@ -40,9 +40,11 @@ def login():
 		if user and user.verify_password(data['password']):
 			#user details are valid hence generate the access token
 			access_token = user.generate_token(user.id)
+			print(user.id)
+			print(access_token)
 			response = {
 				'message': 'login successful.',
-				'access_token': access_token
+				'access_token': access_token.decode()
 			}
 			return jsonify(response), 200
 		else:
