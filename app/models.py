@@ -38,14 +38,14 @@ class User(db.Model):
 		db.session.add(self)
 		db.session.commit()
 
-	def generate_token(self, user_id):
+	def generate_token(self):
 		"""a method to generate the access token"""
 		try:
 			# set up a payload
 			payload={
 				'exp': datetime.utcnow() + timedelta(minutes=10),
 				'iat': datetime.utcnow(),
-				'sub': user_id
+				'sub': self.id
 			}
 			# create the byte string token using the payload and the SECRET key
 			jwt_string = jwt.encode(
