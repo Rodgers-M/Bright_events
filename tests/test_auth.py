@@ -26,7 +26,7 @@ class AuthTest(unittest.TestCase):
 		db.drop_all()
 		self.app_context.pop()
 		del self.client
-		
+
 	def test_registration(self):
 		"""Test user registration works correcty."""
 		res=self.client().post('/auth/register', data=self.user_data, content_type='application/json')
