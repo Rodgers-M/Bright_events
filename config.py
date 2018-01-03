@@ -16,6 +16,7 @@ class TestingConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DB_URL')
     PRESERVE_CONTEXT_ON_EXCEPTION = False
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
 class StagingConfig(Config):
     """Configurations for Staging."""
