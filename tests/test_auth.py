@@ -1,6 +1,5 @@
 import unittest
-from flask import json, jsonify
-from flask.testing import FlaskClient
+from flask import json
 from app import create_app, db
 
 class AuthTest(unittest.TestCase):
