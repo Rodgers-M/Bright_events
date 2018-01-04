@@ -7,17 +7,18 @@ def before_request():
 	"""get the user bafore every request"""
 	if request.endpoint and request.blueprint != 'auth':
 		auth_header = request.headers.get('Authorization')
-		access_token = auth_header.split(" ")[1]
-		if access_token:
-			#try decoding the token and get the user_id
-			res = User.decode_token(access_token)
-			g.user = None
-			if type(res) is int:
-				#check if no error in string format was returned
-				#find the user with the id on the token
-				user = User.query.filter_by(id=res).first()
-				g.user = user
-			
+		g.user = None
+		if auth_header:
+			access_token = auth_header.split(" ")[1]
+			if access_token:
+				#try decoding the token and get the user_id
+				res = User.decode_token(access_token)
+				if type(res) is int:
+					#check if no error in string format was returned
+					#find the user with the id on the token
+					user = User.query.filter_by(id=res).first()
+					g.user = user
+					
 @auth.route('/register', methods=['POST'])
 def register():
 	""" a route to register a user"""
