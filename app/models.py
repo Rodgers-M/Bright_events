@@ -93,7 +93,9 @@ class Events(db.Model):
 		""" This method adds a user to the list of rsvps"""
 		if not self.has_rsvp(user):
 			self.rsvps.append(user)
-			db.session.add(self)
+			self.save()
+			return "rsvp success"
+		return "already registered"
 
 	def has_rsvp(self, user):
 		"""This method checks if a user is already registered for an event"""
@@ -114,6 +116,11 @@ class Events(db.Model):
 	def get_all():
 		"""a method to fetch all events"""
 		return Events.query.all()
+
+	@staticmethod
+	def get_event_by_id(event_id):
+		"""get an event with the given id"""
+		return Events.query.filter_by(id=event_id).first()
 
 	def __repr__(self):
 		return '<Events %r>' % self.name
