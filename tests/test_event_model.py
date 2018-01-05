@@ -153,7 +153,6 @@ class UserModelTest(unittest.TestCase):
 		res = self.client().post('/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		self.assertEqual(res.status_code, 201)
 		#register another user and create an event
 		user2_data = json.dumps({
 				'username' : 'test_user2',
@@ -166,10 +165,90 @@ class UserModelTest(unittest.TestCase):
 		res2 = self.client().post('/events/create',
 			headers=dict(Authorization="Bearer " + user2_access_token),
 			data=self.event_data, content_type='application/json')
-		self.assertEqual(res2.status_code, 201)
 		#fetch first user events
 		res = self.client().get('/events/myevents',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		result = json.loads(res.data.decode())
 		self.assertEqual(result[0]['created_by'], 'test_user')
 		self.assertNotEqual(result[0]['created_by'], 'test_user2')
+	def test_update_event(self):
+		"""test if an event owner can update an event"""
+		access_token = self.get_access_token()
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		self.assertEqual(res.status_code, 201)
+		#update the event
+		update_data =  json.dumps({
+				'name' : 'new_event_name',
+				'description' : 'real event description',
+				'category' : 'event_update',
+				'location' : 'another space',
+				'event_date' : '2020-12-30'
+			})
+		#send update request
+		res = self.client().put('events/1',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=update_data, content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('event updated', str(res.data))
+
+	def test_get_single_event(self):
+		"""test user can get an event given its id"""
+		access_token = self.get_access_token()
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		#fetch the event created
+		res = self.client().get('/events/1',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+
+	def test_delete_event(self):
+		"""test a user can delete an event"""
+		access_token = self.get_access_token()
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		#delete the event
+		res = self.client().delete('/events/1',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('event deleted', str(res.data))
+		#try fetching the event after deletion
+		res = self.client().get('/events/1',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 404)
+
+	def test_a_user_can_rsvp(self):
+		"""test if a user can register to an event"""
+		access_token = self.get_access_token()
+		self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().post('/events/1/rsvp',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 201)
+		self.assertIn('rsvp success', str(res.data))
+
+	def test_user_can_see_rsvp_list(self):
+		"""test if a user can see rsvps to their events"""
+		access_token = self.get_access_token()
+		self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		self.client().post('/events/1/rsvp',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		res = self.client().get('/events/1/rsvp',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		result = json.loads(res.data.decode())
+		self.assertEqual(result[0]['username'], 'test_user')
+		
+
+
