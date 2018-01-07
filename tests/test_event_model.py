@@ -1,8 +1,6 @@
 import unittest
 import json
-from datetime import datetime
 from app import create_app, db
-from app.models import User
 
 class UserModelTest(unittest.TestCase):
 	"""test the functionalities of the user model"""
@@ -144,7 +142,6 @@ class UserModelTest(unittest.TestCase):
 		access_token = self.get_access_token()
 		res = self.client().get('/events/all',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
-		result = json.loads(res.data.decode())
 		self.assertIn('no events created yet', str(res.data))
 
 	def test_get_user_events(self):
@@ -162,7 +159,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/auth/register', data=user2_data, content_type='application/json')
 		result = self.client().post('/auth/login', data=user2_data, content_type='application/json')
 		user2_access_token = json.loads(result.data.decode())['access_token']
-		res2 = self.client().post('/events/create',
+		self.client().post('/events/create',
 			headers=dict(Authorization="Bearer " + user2_access_token),
 			data=self.event_data, content_type='application/json')
 		#fetch first user events
@@ -249,6 +246,19 @@ class UserModelTest(unittest.TestCase):
 			content_type='application/json')
 		result = json.loads(res.data.decode())
 		self.assertEqual(result[0]['username'], 'test_user')
+
+	def test_a_user_can_not_rsvp_twice(self):
+		"""test if a user can register twice to one event"""
+		access_token = self.get_access_token()
+		self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		self.client().post('/events/1/rsvp',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		res = self.client().post('/events/1/rsvp',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 302)
+		self.assertIn('already registered', str(res.data))
 		
-
-
