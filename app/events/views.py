@@ -154,7 +154,7 @@ def my_rsvps():
 				rsvp = {
 					"event name" : event.name,
 					"location" : event.location,
-					"orgarniser" : event.created_by,
+					"orgarniser" : event.created_by.username,
 					"event date" : event.event_date
 				}
 				rsvp_list.append(rsvp)
