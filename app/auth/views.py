@@ -13,12 +13,12 @@ def before_request():
 			if access_token:
 				#try decoding the token and get the user_id
 				res = User.decode_token(access_token)
-				if type(res) is int:
+				if isinstance(res, int):
 					#check if no error in string format was returned
 					#find the user with the id on the token
 					user = User.query.filter_by(id=res).first()
 					g.user = user
-					
+			
 @auth.route('/register', methods=['POST'])
 def register():
 	""" a route to register a user"""
