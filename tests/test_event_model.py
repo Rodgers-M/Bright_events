@@ -34,21 +34,21 @@ class UserModelTest(unittest.TestCase):
 		db.drop_all()
 		self.app_context.pop()
 
-	def  register_user(self, username='test_user', email='test@test.com', password='test_password'):
+	def  register_user(self, username='test_user', email='test@test.com', passw='test_password'):
 		"""helper function to register a user"""
 		user_data = json.dumps({
 				'username' : username,
 				'email' : email,
-				'password' : password
+				'password' : passw
 			})
 		return self.client().post('/auth/register', data=user_data, content_type='application/json')
 
-	def  login_user(self, username='test_user', email='test@test.com', password='test_password'):
+	def  login_user(self, username='test_user', email='test@test.com', passw='test_password'):
 		"""helper function to login a user"""
 		user_data = json.dumps({
 				'username' : username,
 				'email' : email,
-				'password' : password
+				'password' : passw
 			})
 		return self.client().post('/auth/login', data=user_data, content_type='application/json')
 
