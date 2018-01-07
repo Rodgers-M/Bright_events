@@ -18,7 +18,7 @@ def before_request():
 					#find the user with the id on the token
 					user = User.query.filter_by(id=res).first()
 					g.user = user
-			
+
 @auth.route('/register', methods=['POST'])
 def register():
 	""" a route to register a user"""

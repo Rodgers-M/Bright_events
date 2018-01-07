@@ -87,7 +87,7 @@ def manipulate_event(event_id):
 			#maeke sure the events is modified by the right person
 			if event.created_by.username == g.user.username:
 				if request.method == 'PUT':
-					#get the incoming details 
+				#get the incoming details 
 					event_details = request.get_json()
 					#update the details accordingly
 					event.name = event_details['name']
