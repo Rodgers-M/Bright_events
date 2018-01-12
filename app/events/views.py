@@ -20,14 +20,7 @@ def create():
 			event = Events(name=name, description=description, category=category, \
 				location=location, event_date=event_date, created_by=created_by)
 			event.save()
-			res = {
-				"id" : event.id,
-				"name" : event.name,
-				"category" : event.category,
-				"created_by" : event.created_by.username,
-				"location" : event.location,
-				"date_created" : event.date_created
-				}
+			res = event.to_json()
 			return jsonify(res), 201
 		return jsonify({"message" : "you have a similar event in the same location"}), 302
 	return jsonify({"message" : "please login or register  to create an event"}), 401
@@ -99,15 +92,7 @@ def manipulate_event(event_id):
 					return jsonify({"message" : "event updated successfully"}), 200
 				elif request.method == 'GET':
 					#return the event with the given id
-					found_event = {
-						'id' : event.id,
-						'description' : event.description,
-						'category' : event.category,
-						'location' : event.location,
-						'created_by' : event.created_by.username,
-						'event date' : event.event_date,
-						'date created' : event.date_created
-					}
+					found_event = event.to_json()
 					return jsonify(found_event), 200
 				else:
 				#if the request method is delete
@@ -161,7 +146,35 @@ def my_rsvps():
 		return jsonify({"message" : "you have not responded to any events yet"}), 200
 	return jsonify({"message" : "please login or signup to see your rsvps"}), 401
 
-
-
-
-
+@events.route('/search', methods=['POST'])
+def search():
+	"""search events based on location or category"""
+	if g.user:
+		filter_param = request.get_json()
+		try:
+			location = filter_param['location']
+			#if the filter parameter is location, call the location filter method
+			event_list = []
+			found_events = Events.get_events_by_location(location)
+			if found_events:
+				for event in found_events:
+					json_event = event.to_json()
+					event_list.append(json_event)
+				return jsonify(event_list), 200
+			return jsonify({"message" : "there are no events in the given location yet"}), 404
+		except KeyError:
+			try:
+				category = filter_param['category']
+				event_list = []
+				found_events = Events.get_events_by_category(filter_param['category'])
+				if found_events:
+					for event in found_events:
+						json_event = event.to_json()
+						event_list.append(json_event)
+					return jsonify(event_list), 200
+				return jsonify({"message" : "there are no events with the given category"}), 404
+			except KeyError:
+				return jsonify({"message" : "can not search given parameter"}), 400
+			except Exception as error:
+				return jsonify({"message" : str(error)})
+	return jsonify({"message" : "please login or signup to see events"}), 401
