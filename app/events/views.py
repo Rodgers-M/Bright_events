@@ -166,7 +166,7 @@ def search():
 			try:
 				category = filter_param['category']
 				event_list = []
-				found_events = Events.get_events_by_category(filter_param['category'])
+				found_events = Events.get_events_by_category(category)
 				if found_events:
 					for event in found_events:
 						json_event = event.to_json()
