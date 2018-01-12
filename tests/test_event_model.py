@@ -287,7 +287,7 @@ class UserModelTest(unittest.TestCase):
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('event_testing', str(res.data))
-		
+
 	def test_invalid_search(self):
 		"""test searching events by category works"""
 		access_token = self.get_access_token()
