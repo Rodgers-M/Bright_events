@@ -43,7 +43,7 @@ class User(db.Model):
 		try:
 			# set up a payload
 			payload={
-				'exp': datetime.utcnow() + timedelta(minutes=10),
+				'exp': datetime.utcnow() + timedelta(minutes=60),
 				'iat': datetime.utcnow(),
 				'sub': self.id
 			}
@@ -55,9 +55,9 @@ class User(db.Model):
 			)
 			return jwt_string
 
-		except Exception as e:
+		except Exception as error:
 			# return an error in string format if an exception occurs
-			return str(e)
+			return str(error)
 
 	@staticmethod
 	def decode_token(token):
@@ -112,6 +112,19 @@ class Events(db.Model):
 		db.session.delete(self)
 		db.session.commit()
 
+	def to_json(self):
+		"""convert a given event to json"""
+		json_event ={
+					"name" : self.name,
+					"description" : self.description,
+					"category" : self.category,
+					"location" : self.location,
+					"orgarniser" : self.created_by.username,
+					"event date" : self.event_date,
+					"date created" : self.date_created
+				}
+		return json_event
+
 	@staticmethod
 	def get_all():
 		"""a method to fetch all events"""
@@ -121,6 +134,16 @@ class Events(db.Model):
 	def get_event_by_id(event_id):
 		"""get an event with the given id"""
 		return Events.query.filter_by(id=event_id).first()
+
+	@staticmethod
+	def get_events_by_category(category):
+		"""filter events by category"""
+		return Events.query.filter_by(category=category).order_by(Events.event_date.desc()).all()
+
+	@staticmethod
+	def get_events_by_location(location):
+		"""filter events by location"""
+		return Events.query.filter_by(location=location).order_by(Events.event_date.desc()).all()
 
 	def __repr__(self):
 		return '<Events %r>' % self.name
