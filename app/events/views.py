@@ -40,7 +40,7 @@ def get_all(page=1):
 				evnt = event.to_json()
 				event_list.append(evnt)
 			return jsonify(event_list), 200
-		return jsonify({"message" : "this page has no events, try previous one"}), 200
+		return jsonify({"message" : "this page has no events, or no events available"}), 200
 	return jsonify({"message" : "please login or register view events"}), 401
 
 @events.route('/myevents')
