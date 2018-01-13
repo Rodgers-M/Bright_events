@@ -142,7 +142,7 @@ class UserModelTest(unittest.TestCase):
 		access_token = self.get_access_token()
 		res = self.client().get('/events/all',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
-		self.assertIn('no events created yet', str(res.data))
+		self.assertIn('no events available', str(res.data))
 
 	def test_get_user_events(self):
 		"""test fecthing events belonging to a particular user"""
