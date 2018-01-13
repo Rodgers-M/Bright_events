@@ -166,8 +166,8 @@ class UserModelTest(unittest.TestCase):
 		res = self.client().get('/events/myevents',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		result = json.loads(res.data.decode())
-		self.assertEqual(result[0]['created_by'], 'test_user')
-		self.assertNotEqual(result[0]['created_by'], 'test_user2')
+		self.assertEqual(result[0]['orgarniser'], 'test_user')
+		self.assertNotEqual(result[0]['orgarniser'], 'test_user2')
 	def test_update_event(self):
 		"""test if an event owner can update an event"""
 		access_token = self.get_access_token()
