@@ -1,6 +1,8 @@
+from functools import wraps
 from flask import request, jsonify,g
 from app.models import Events
 from . import events
+
 @events.route('/create', methods=['POST'])
 def create():
 	"""a route to handle creating an event"""
@@ -26,26 +28,19 @@ def create():
 	return jsonify({"message" : "please login or register  to create an event"}), 401
 
 @events.route('/all')
-def get_all():
+@events.route('/all/<int:page>')
+def get_all(page=1):
 	"""fetch all events available"""
 	if g.user:
-		events = Events.get_all()
-		if events:
+		#fetch the first 15 events based on event date
+		result = Events.query.order_by(Events.event_date.asc()).paginate(page=page, per_page=1, error_out=False)
+		if result.items:
 			event_list = []
-			for event in events:
-				evnt = {
-					"id" : event.id,
-					"name" : event.name,
-					"description" : event.description,
-					"category" : event.category,
-					"location" : event.location,
-					"created_by" : event.created_by.username,
-					"event_date" : event.event_date,
-					"date_created" : event.date_created
-				}
+			for event in result.items:
+				evnt = event.to_json()
 				event_list.append(evnt)
 			return jsonify(event_list), 200
-		return jsonify({"message" : "no events created yet"}), 200
+		return jsonify({"message" : "this page has no events, try previous one"}), 200
 	return jsonify({"message" : "please login or register view events"}), 401
 
 @events.route('/myevents')
@@ -56,16 +51,7 @@ def my_events():
 		if events:
 			event_list = []
 			for event in events:
-				evnt ={
-					"id" : event.id,
-					"name" : event.name,
-					"description" : event.description,
-					"category" : event.category,
-					"location" : event.location,
-					"created_by" : event.created_by.username,
-					"event_date" : event.event_date,
-					"date_created" : event.date_created
-				}
+				evnt =event.to_json()
 				event_list.append(evnt)
 			return jsonify(event_list), 200
 		return jsonify({"message" : "you have not created any events yet"}), 200
