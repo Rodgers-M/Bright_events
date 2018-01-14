@@ -73,6 +73,27 @@ class User(db.Model):
 			# the token is invalid, return an error message
 			return "Please register or login"
 
+	#this will be used to test pagination
+	@staticmethod
+	def generate_fake_users(count=20):
+		"""try genarating 20 fake users"""
+		from sqlalchemy.exc import IntegrityError
+		from random import seed
+		import forgery_py
+
+		seed()
+		for i in range(count):
+			user  = User(username=forgery_py.internet.user_name(True),
+					email=forgery_py.internet.email_address(),
+					password=forgery_py.lorem_ipsum.word())
+			db.session.add(user)
+			try:
+				#try saving the user to db
+				db.session.commit()
+			except IntegrityError:
+				#if generated email or username already exists
+				db.session.rollback()
+
 	def __repr__(self):
 		return '<User %r>' % self.username
 
@@ -144,6 +165,29 @@ class Events(db.Model):
 	def get_events_by_location(location):
 		"""filter events by location"""
 		return Events.query.filter_by(location=location).order_by(Events.event_date.desc()).all()
+
+	#this will be used to test pagination
+	@staticmethod
+	def generate_fake_events(count=100):
+		"""generate 100 fake events"""
+		import random
+		import forgery_py
+
+		random.seed()
+		categories = ["technology", "social", "education", "family"]
+		user_count = User.query.count()
+		for i in range(count):
+			#pick a random user to be the event creator
+			user = User.query.offset(random.randint(0, user_count - 1)).first()
+			event = Events(name=forgery_py.lorem_ipsum.word(),
+					description=forgery_py.lorem_ipsum.sentences(),
+					category=random.choice(categories),
+					location=forgery_py.address.city(),
+					event_date = forgery_py.date.date(True),
+					created_by = user
+					)
+			db.session.add(event)
+			db.session.commit()
 
 	def __repr__(self):
 		return '<Events %r>' % self.name
