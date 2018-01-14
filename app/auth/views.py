@@ -23,7 +23,7 @@ def before_request():
 def register():
 	""" a route to register a user"""
 	data = request.get_json()
-	user = User.query.filter_by(email=data['email']).first()
+	user = User.query.filter((User.email==data['email']) | (User.username==data['username'])).first()
 
 	if not user:
 		#if no user with matching email
