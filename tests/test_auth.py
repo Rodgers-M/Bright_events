@@ -13,7 +13,8 @@ class AuthTest(unittest.TestCase):
 		self.user_data = json.dumps({
 							'username' : 'test_username',
 							'email' : 'test@example.com',
-							'password' : 'test_password'
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
 						})
 
 		with self.app.app_context():
@@ -43,8 +44,87 @@ class AuthTest(unittest.TestCase):
 		self.assertEqual(second_res.status_code, 202)
 		# get the results returned in json format
 		result = json.loads(second_res.data.decode())
-		self.assertEqual( result['message'], "a user with given email exists, please login")
+		self.assertEqual( result['message'], "email or username exists, please login or chose another username")
 
+	def test_register_existing_email(self):
+		"""try registering a user with existing email but unique username"""
+		self.client().post('/auth/register', data=self.user_data, content_type='application/json')
+		another_user = json.dumps({
+							'username' : 'different_username',
+							'email' : 'test@example.com',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=another_user, content_type='application/json')
+		self.assertIn('email or username exists', str(res.data))
+
+	def test_register_existing_username(self):
+		"""try registering a user with existing email but unique username"""
+		self.client().post('/auth/register', data=self.user_data, content_type='application/json')
+		another_user = json.dumps({
+							'username' : 'test_username',
+							'email' : 'diff_test@example.com',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=another_user, content_type='application/json')
+		self.assertIn('username exists', str(res.data))
+
+	def test_register_invalid_email(self):
+		"""try registering a user with invlid email"""
+		invalid_user = json.dumps({
+							'username' : 'test_username',
+							'email' : 'test@example',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username or email must be valid', str(res.data))
+
+	def test_special_characters_in_email(self):
+		"""try registering username with special characters"""
+		invalid_user = json.dumps({
+							'username' : 'username',
+							'email' : 'test@example/.com',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username or email must be valid', str(res.data))
+
+
+	def test_special_characters_in_username(self):
+		"""try registering username with special characters"""
+		invalid_user = json.dumps({
+							'username' : '#username',
+							'email' : 'test@example',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username or email must be valid', str(res.data))
+
+	def test_a_short_username(self):
+		"""try registering a short username"""
+		invalid_user = json.dumps({
+							'username' : 'ab',
+							'email' : 'test@example',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username or email must be valid', str(res.data))
+
+	def test_short_password(self):
+		"""test registering a user with a short passsword"""
+		invalid_user = json.dumps({
+							'username' : 'username',
+							'email' : 'test@example.com',
+							'password' : 'test',
+							'cnfpassword' : 'test'
+						})
+		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('Password too short', str(res.data))
 	def test_existing_user_login(self):
 		"""test an existing user can login"""
 		res = self.client().post('/auth/register', data=self.user_data, content_type='application/json')
