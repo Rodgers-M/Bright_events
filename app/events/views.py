@@ -1,4 +1,3 @@
-from functools import wraps
 from flask import request, jsonify,g
 from app.models import Events
 from . import events
