@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify, g
 from app.models import User
 from . import auth
@@ -19,32 +20,49 @@ def before_request():
 					user = User.query.filter_by(id=res).first()
 					g.user = user
 
+def validdate_data(data):
+	"""validate user details"""
+	if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip())\
+	or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
+		return "username or email must be valid can only contain alphanumeric characters"
+	elif len(data['username'].strip()) < 3:
+		return "username must be more than 3 characters"
+	elif data['password'] != data['cnfpassword']:
+		return "passwords do not match"
+	elif len(data['password'].strip()) < 6:
+		return "Password too short"
+	else:
+		return "valid"
+
 @auth.route('/register', methods=['POST'])
 def register():
 	""" a route to register a user"""
 	data = request.get_json()
-	user = User.query.filter_by(email=data['email']).first()
+	#validate the data
+	res = validdate_data(data)
+	if res is "valid":
+		user = User.query.filter((User.email==data['email']) | (User.username==data['username'])).first()
+		if not user:
+			#if no user with matching email
+			try:
+				username = data['username']
+				email = data['email']
+				password = data['password']
+				user = User(username=username, email=email, password=password)
+				user.save()
 
-	if not user:
-		#if no user with matching email
-		try:
-			username = data['username']
-			email = data['email']
-			password = data['password']
-			user = User(username=username, email=email, password=password)
-			user.save()
-
-			#registration was successful
-			response = {'message' : "registration successful, now login"}
-			return jsonify(response), 201
-		except Exception as e:
-			#an error occured when trying to register the user
-			response = {'message' : str(e)}
-			return jsonify(response), 401
-	else:
-		# there is an existing user with given email
-		response = {'message' : 'a user with given email exists, please login'}
-		return jsonify(response), 202
+				#registration was successful
+				response = {'message' : "registration successful, now login"}
+				return jsonify(response), 201
+			except Exception as e:
+				#an error occured when trying to register the user
+				response = {'message' : str(e)}
+				return jsonify(response), 401
+		else:
+			# there is an existing user with given email
+			response = {'message' : 'email or username exists, please login or chose another username'}
+			return jsonify(response), 202
+	return jsonify({"message" : res})
 
 @auth.route('/login', methods=['POST'])
 def login():
