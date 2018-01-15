@@ -62,7 +62,7 @@ def register():
 			# there is an existing user with given email
 			response = {'message' : 'email or username exists, please login or chose another username'}
 			return jsonify(response), 202
-	return jsonify({"message" : res})
+	return jsonify({"message" : res}), 400
 
 @auth.route('/login', methods=['POST'])
 def login():
