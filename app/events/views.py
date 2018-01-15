@@ -1,29 +1,62 @@
+import re
+from datetime import date, datetime
+from sqlalchemy import cast , Date
 from flask import request, jsonify,g
 from app.models import Events
 from . import events
+
+def validate_data(data):
+	"""validate the event details and return appropriate message"""
+	if len(data['name'].strip()) < 3 or not re.match("^[a-zA-Z0-9_ ]*$", data['name'].strip()):
+		return "event name should only contain alphanemeric characters and be at least 3 characters"
+	elif len(data['location'].strip()) < 3 or not re.match("^[a-zA-Z0-9_ ]*$", data['location'].strip()):
+		return "event location should only contain alphanemeric characters and be at least 3 characters"
+	elif len(data['category'].strip())<3 or not re.match("^[a-zA-Z0-9_]*$", data['category'].strip()):
+		return "event category should only contain alphanemeric characters and be at least 3 characters"
+	else:
+		return "valid"
+
+def validate_date(event_date):
+	"""check that the event date is not past"""
+	try:
+		date = datetime.strptime(event_date, '%Y-%m-%d').date()
+	except ValueError:
+		return "incorrect date format, should be YYYY-MM-DD"
+	if date < date.today():
+		return "event cannot have a past date"
+	return "valid"
+
 
 @events.route('/create', methods=['POST'])
 def create():
 	"""a route to handle creating an event"""
 	if g.user:
 		event_details = request.get_json()
-		name = event_details['name']
-		description = event_details['description']
-		category = event_details['category']
-		location = event_details['location']
-		event_date = event_details['event_date']
-		created_by = g.user
-		#check if the user has an event with a similar name and location
-		existing_event = [event for event in g.user.events if event.name == name \
-			and event.location == location]
-		if not existing_event:
-			#create the event if does not exist
-			event = Events(name=name, description=description, category=category, \
-				location=location, event_date=event_date, created_by=created_by)
-			event.save()
-			res = event.to_json()
-			return jsonify(res), 201
-		return jsonify({"message" : "you have a similar event in the same location"}), 302
+		check_details = validate_data(event_details)
+		check_date = validate_date(event_details['event_date'])
+		#check if the data was confirmed valid
+		if check_details is not "valid":
+			return jsonify({"message" : check_details}), 400
+		elif check_date is not "valid":
+			return jsonify({"message" : check_date}), 400
+		else:
+			name = event_details['name']
+			description = event_details['description']
+			category = event_details['category']
+			location = event_details['location']
+			event_date = event_details['event_date']
+			created_by = g.user
+			#check if the user has an event with a similar name and location
+			existing_event = [event for event in g.user.events if event.name == name \
+				and event.location == location]
+			if not existing_event:
+				#create the event if does not exist
+				event = Events(name=name, description=description, category=category, \
+					location=location, event_date=event_date, created_by=created_by)
+				event.save()
+				res = event.to_json()
+				return jsonify(res), 201
+			return jsonify({"message" : "you have a similar event in the same location"}), 302
 	return jsonify({"message" : "please login or register  to create an event"}), 401
 
 @events.route('/all')
@@ -32,7 +65,7 @@ def get_all(page=1):
 	"""fetch all events available"""
 	if g.user:
 		#fetch the first 15 events based on event date
-		result = Events.query.order_by(Events.event_date.asc()).paginate(page=page, per_page=15, error_out=False)
+		result = Events.query.filter(cast(Events.event_date, Date) >=  date.today()).paginate(page=1, per_page=15, error_out=False)
 		if result.items:
 			event_list = []
 			for event in result.items:
