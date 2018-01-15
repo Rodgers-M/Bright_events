@@ -30,7 +30,7 @@ def validdate_data(data):
 	elif data['password'] != data['cnfpassword']:
 		return "passwords do not match"
 	elif len(data['password'].strip()) < 6:
-		return "Password too short" 
+		return "Password too short"
 	else:
 		return "valid"
 
