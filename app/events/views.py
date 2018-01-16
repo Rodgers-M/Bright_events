@@ -65,7 +65,7 @@ def get_all(page=1):
 	"""fetch all events available"""
 	if g.user:
 		#fetch the first 15 events based on event date
-		result = Events.query.filter(cast(Events.event_date, Date) >=  date.today()).paginate(page=1, per_page=15, error_out=False)
+		result = Events.query.filter(cast(Events.event_date, Date) >=  date.today()).paginate(page, per_page=15, error_out=False)
 		if result.items:
 			event_list = []
 			for event in result.items:
