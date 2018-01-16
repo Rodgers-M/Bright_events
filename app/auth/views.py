@@ -22,17 +22,20 @@ def before_request():
 
 def validdate_data(data):
 	"""validate user details"""
-	if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip())\
-	or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
-		return "username or email must be valid can only contain alphanumeric characters"
-	elif len(data['username'].strip()) < 3:
-		return "username must be more than 3 characters"
-	elif data['password'] != data['cnfpassword']:
-		return "passwords do not match"
-	elif len(data['password'].strip()) < 6:
-		return "Password too short"
-	else:
-		return "valid"
+	try:
+		if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip())\
+		or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
+			return "username or email must be valid can only contain alphanumeric characters"
+		elif len(data['username'].strip()) < 3:
+			return "username must be more than 3 characters"
+		elif data['password'] != data['cnfpassword']:
+			return "passwords do not match"
+		elif len(data['password'].strip()) < 6:
+			return "Password too short"
+		else:
+			return "valid"
+	except Exception as error:
+		return "please provide all the fields, missing " + str(error)
 
 @auth.route('/register', methods=['POST'])
 def register():
@@ -54,9 +57,9 @@ def register():
 				#registration was successful
 				response = {'message' : "registration successful, now login"}
 				return jsonify(response), 201
-			except Exception as e:
+			except Exception as error:
 				#an error occured when trying to register the user
-				response = {'message' : str(e)}
+				response = {'message' : str(error)}
 				return jsonify(response), 401
 		else:
 			# there is an existing user with given email
