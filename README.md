@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=dev)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/2cd6d821bfc4a0e35170/test_coverage)](https://codeclimate.com/github/Rodgers-M/Bright_events/test_coverage)
+[![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=dev)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=dev) [![Test Coverage](https://api.codeclimate.com/v1/badges/2cd6d821bfc4a0e35170/test_coverage)](https://codeclimate.com/github/Rodgers-M/Bright_events/test_coverage) [![Code Health](https://landscape.io/github/Rodgers-M/Bright_events/ft-improve-user-registration-154309282/landscape.svg?style=flat)](https://landscape.io/github/Rodgers-M/Bright_events/ft-improve-user-registration-154309282)
 
 # Welcome to Bright events
 A web application that provides a platform for event organizers to create and manage different types of events. 
@@ -52,6 +52,12 @@ The users can also search events based on location or category
 * [Python 3.6](https://docs.python.org/3/)
 
 * [Flask](http://flask.pocoo.org/)
+
+* [PostgreSQL](https://www.postgresql.org/)
+
+* [flask sqlalchemy](http://flask-sqlalchemy.pocoo.org/2.3/)
+
+* [JWT](auth0.com/docs/jwt)
 
 **Running the app server**
 

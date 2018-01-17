@@ -11,11 +11,6 @@ class UserModelTest(unittest.TestCase):
 		self.app_context.push()
 		self.client = self.app.test_client
 		db.create_all()
-		self.user_data = json.dumps({
-				'username' : 'test_user',
-				'email' : 'test@test.com',
-				'password' : 'test_password'
-			})
 		self.event_data = json.dumps({
 				'name' : 'eventname',
 				'description' : 'sample event description',
@@ -34,21 +29,23 @@ class UserModelTest(unittest.TestCase):
 		db.drop_all()
 		self.app_context.pop()
 
-	def  register_user(self, username='test_user', email='test@test.com', passw='test_password'):
+	def  register_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
 		"""helper function to register a user"""
 		user_data = json.dumps({
 				'username' : username,
 				'email' : email,
-				'password' : passw
+				'password' : passw,
+				'cnfpassword' : cnfpass
 			})
 		return self.client().post('/auth/register', data=user_data, content_type='application/json')
 
-	def  login_user(self, username='test_user', email='test@test.com', passw='test_password'):
+	def  login_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
 		"""helper function to login a user"""
 		user_data = json.dumps({
 				'username' : username,
 				'email' : email,
-				'password' : passw
+				'password' : passw,
+				'cnfpassword' : cnfpass
 			})
 		return self.client().post('/auth/login', data=user_data, content_type='application/json')
 
@@ -153,8 +150,9 @@ class UserModelTest(unittest.TestCase):
 		#register another user and create an event
 		user2_data = json.dumps({
 				'username' : 'test_user2',
-				'email' :' test_email_2@testing.com',
-				'password' : 'mypassword'
+				'email' :'	testemail2@testing.com',
+				'password' : 'mypassword',
+				'cnfpassword' : 'mypassword'
 			})
 		self.client().post('/auth/register', data=user2_data, content_type='application/json')
 		result = self.client().post('/auth/login', data=user2_data, content_type='application/json')
