@@ -173,7 +173,7 @@ class UserModelTest(unittest.TestCase):
 			headers=dict(Authorization="Bearer " + access_token + "spoil" ),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 401)
-		self.assertIn('please login or register', str(res.data))
+		self.assertIn('Please register or login', str(res.data))
 
 	def test_user_without_a_token(self):
 		"""test if a user without a token can create an event"""
@@ -181,7 +181,7 @@ class UserModelTest(unittest.TestCase):
 			headers=dict(Authorization=" "),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 401)
-		self.assertIn('please login or register', str(res.data))
+		self.assertIn('acess token is missing', str(res.data))
 
 	def test_get_all_events(self):
 		"""test if the api can fecth all events"""
