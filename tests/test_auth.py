@@ -92,6 +92,16 @@ class AuthTest(unittest.TestCase):
 		res = self.client().post('/auth/register', data=invalid_user, content_type='application/json')
 		self.assertIn('username or email must be valid', str(res.data))
 
+	def test_missing_some_fields(self):
+		"""test registering a user without a confirm password field"""
+		self.client().post('/auth/register', data=self.user_data, content_type='application/json')
+		another_user = json.dumps({
+							'username' : 'test_username',
+							'email' : 'diff_test@example.com',
+							'password' : 'test_password'
+						})
+		res = self.client().post('/auth/register', data=another_user, content_type='application/json')
+		self.assertIn("please provide all the fields", str(res.data))
 
 	def test_special_characters_in_username(self):
 		"""try registering username with special characters"""

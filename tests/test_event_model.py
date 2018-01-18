@@ -1,5 +1,6 @@
 import unittest
 import json
+from datetime import date, timedelta
 from app import create_app, db
 
 class UserModelTest(unittest.TestCase):
@@ -16,7 +17,7 @@ class UserModelTest(unittest.TestCase):
 				'description' : 'sample event description',
 				'category' : 'event_testing',
 				'location' : 'the space',
-				'event_date' : '2019-12-30'
+				'event_date' : str(date.today())
 			})
 
 		with self.app.app_context():
@@ -94,7 +95,7 @@ class UserModelTest(unittest.TestCase):
 				'description' : 'sample event description',
 				'category' : 'event_testing',
 				'location' : 'another_location',
-				'event_date' : '2019-12-30'
+				'event_date' : str(date.today())
 			})
 		res = self.client().post('/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
@@ -102,6 +103,67 @@ class UserModelTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 201)
 		result = json.loads(res.data.decode())
 		self.assertEqual(result['location'], 'another_location')
+
+	def test_short_event_name(self):
+		"""test creating an event with a short event name"""
+		access_token = self.get_access_token()
+		event_data = json.dumps({
+				'name' : 'nm',
+				'description' : 'sample event description',
+				'category' : 'event_testing',
+				'location' : 'another_location',
+				'event_date' : str(date.today())
+			})
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=event_data, content_type='application/json')
+		self.assertEqual(res.status_code, 400)
+		self.assertIn("be at least 3 characters", str(res.data))
+
+	def test_special_characters_in_data(self):
+		"""test creating event with special characters in details"""
+		access_token = self.get_access_token()
+		event_data = json.dumps({
+				'name' : 'eventname#',
+				'description' : 'sample event description',
+				'category' : 'event_testing',
+				'location' : 'another_location',
+				'event_date' : str(date.today())
+			})
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=event_data, content_type='application/json')
+		self.assertIn("should only contain alphanemeric characters", str(res.data))
+
+	def test_past_date(self):
+		"""test creating event with a past date"""
+		access_token = self.get_access_token()
+		event_data = json.dumps({
+				'name' : 'eventname',
+				'description' : 'sample event description',
+				'category' : 'event_testing',
+				'location' : 'another_location',
+				'event_date' : str(date.today() - timedelta(days=1))
+			})
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=event_data, content_type='application/json')
+		self.assertIn("event cannot have a past date", str(res.data))
+
+	def test_invalid_date(self):
+		"""test creating event with invalid date format"""
+		access_token = self.get_access_token()
+		event_data = json.dumps({
+				'name' : 'eventname',
+				'description' : 'sample event description',
+				'category' : 'event_testing',
+				'location' : 'another_location',
+				'event_date' : "2-12-2019"
+			})
+		res = self.client().post('/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=event_data, content_type='application/json')
+		self.assertIn("incorrect date format", str(res.data))
 
 	def test_user_with_invalid_token(self):
 		"""assert if a user with invalid token can create an event"""
