@@ -38,7 +38,7 @@ class UserModelTest(unittest.TestCase):
 				'password' : passw,
 				'cnfpassword' : cnfpass
 			})
-		return self.client().post('/auth/register', data=user_data, content_type='application/json')
+		return self.client().post('/api/v2/auth/register', data=user_data, content_type='application/json')
 
 	def  login_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
 		"""helper function to login a user"""
@@ -48,7 +48,7 @@ class UserModelTest(unittest.TestCase):
 				'password' : passw,
 				'cnfpassword' : cnfpass
 			})
-		return self.client().post('/auth/login', data=user_data, content_type='application/json')
+		return self.client().post('/api/v2/auth/login', data=user_data, content_type='application/json')
 
 	def get_access_token(self):
 		"""register and login a user to get an access token"""
@@ -61,7 +61,7 @@ class UserModelTest(unittest.TestCase):
 		"""test an event can be created successfully"""
 		access_token = self.get_access_token()
 		#create an event
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
@@ -70,12 +70,12 @@ class UserModelTest(unittest.TestCase):
 	def test_creating_duplicate_events(self):
 		"""assert if a user can create 2 events with same name and location"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
 		#try creating the same event again
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 302)
@@ -83,7 +83,7 @@ class UserModelTest(unittest.TestCase):
 	def test_same_event_name_diff_location(self):
 		"""test a user can create 2 events with same name but different location"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
@@ -97,7 +97,7 @@ class UserModelTest(unittest.TestCase):
 				'location' : 'another_location',
 				'event_date' : str(date.today())
 			})
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
@@ -114,7 +114,7 @@ class UserModelTest(unittest.TestCase):
 				'location' : 'another_location',
 				'event_date' : str(date.today())
 			})
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 400)
@@ -130,7 +130,7 @@ class UserModelTest(unittest.TestCase):
 				'location' : 'another_location',
 				'event_date' : str(date.today())
 			})
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertIn("should only contain alphanemeric characters", str(res.data))
@@ -145,7 +145,7 @@ class UserModelTest(unittest.TestCase):
 				'location' : 'another_location',
 				'event_date' : str(date.today() - timedelta(days=1))
 			})
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertIn("event cannot have a past date", str(res.data))
@@ -160,7 +160,7 @@ class UserModelTest(unittest.TestCase):
 				'location' : 'another_location',
 				'event_date' : "2-12-2019"
 			})
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertIn("incorrect date format", str(res.data))
@@ -169,7 +169,7 @@ class UserModelTest(unittest.TestCase):
 		"""assert if a user with invalid token can create an event"""
 		access_token = self.get_access_token()
 		#add a string to invalidate the token
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token + "spoil" ),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 401)
@@ -177,7 +177,7 @@ class UserModelTest(unittest.TestCase):
 
 	def test_user_without_a_token(self):
 		"""test if a user without a token can create an event"""
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization=" "),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 401)
@@ -186,11 +186,11 @@ class UserModelTest(unittest.TestCase):
 	def test_get_all_events(self):
 		"""test if the api can fecth all events"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
-		res = self.client().get('/events/all',
+		res = self.client().get('/api/v2/events/all',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		result = json.loads(res.data.decode())
@@ -199,14 +199,14 @@ class UserModelTest(unittest.TestCase):
 	def test_get_all_events_with_empty_db(self):
 		"""fecth events when no events are created"""
 		access_token = self.get_access_token()
-		res = self.client().get('/events/all',
+		res = self.client().get('/api/v2/events/all',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		self.assertIn('no events available', str(res.data))
 
 	def test_get_user_events(self):
 		"""test fecthing events belonging to a particular user"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		#register another user and create an event
@@ -216,14 +216,14 @@ class UserModelTest(unittest.TestCase):
 				'password' : 'mypassword',
 				'cnfpassword' : 'mypassword'
 			})
-		self.client().post('/auth/register', data=user2_data, content_type='application/json')
-		result = self.client().post('/auth/login', data=user2_data, content_type='application/json')
+		self.client().post('/api/v2/auth/register', data=user2_data, content_type='application/json')
+		result = self.client().post('/api/v2/auth/login', data=user2_data, content_type='application/json')
 		user2_access_token = json.loads(result.data.decode())['access_token']
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + user2_access_token),
 			data=self.event_data, content_type='application/json')
 		#fetch first user events
-		res = self.client().get('/events/myevents',
+		res = self.client().get('/api/v2/events/myevents',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		result = json.loads(res.data.decode())
 		self.assertEqual(result[0]['orgarniser'], 'test_user')
@@ -231,7 +231,7 @@ class UserModelTest(unittest.TestCase):
 	def test_update_event(self):
 		"""test if an event owner can update an event"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
@@ -244,7 +244,7 @@ class UserModelTest(unittest.TestCase):
 				'event_date' : '2020-12-30'
 			})
 		#send update request
-		res = self.client().put('events/1',
+		res = self.client().put('/api/v2events/1',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=update_data, content_type='application/json')
 		self.assertEqual(res.status_code, 200)
@@ -253,11 +253,11 @@ class UserModelTest(unittest.TestCase):
 	def test_get_single_event(self):
 		"""test user can get an event given its id"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		#fetch the event created
-		res = self.client().get('/events/1',
+		res = self.client().get('/api/v2/events/1',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
@@ -265,17 +265,17 @@ class UserModelTest(unittest.TestCase):
 	def test_delete_event(self):
 		"""test a user can delete an event"""
 		access_token = self.get_access_token()
-		res = self.client().post('/events/create',
+		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		#delete the event
-		res = self.client().delete('/events/1',
+		res = self.client().delete('/api/v2/events/1',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('event deleted', str(res.data))
 		#try fetching the event after deletion
-		res = self.client().get('/events/1',
+		res = self.client().get('/api/v2/events/1',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 404)
@@ -283,10 +283,10 @@ class UserModelTest(unittest.TestCase):
 	def test_a_user_can_rsvp(self):
 		"""test if a user can register to an event"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/events/1/rsvp',
+		res = self.client().post('/api/v2/events/1/rsvp',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 201)
@@ -295,13 +295,13 @@ class UserModelTest(unittest.TestCase):
 	def test_user_can_see_rsvp_list(self):
 		"""test if a user can see rsvps to their events"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		self.client().post('/events/1/rsvp',
+		self.client().post('/api/v2/events/1/rsvp',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
-		res = self.client().get('/events/1/rsvp',
+		res = self.client().get('/api/v2/events/1/rsvp',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		result = json.loads(res.data.decode())
@@ -310,13 +310,13 @@ class UserModelTest(unittest.TestCase):
 	def test_a_user_can_not_rsvp_twice(self):
 		"""test if a user can register twice to one event"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		self.client().post('/events/1/rsvp',
+		self.client().post('/api/v2/events/1/rsvp',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
-		res = self.client().post('/events/1/rsvp',
+		res = self.client().post('/api/v2/events/1/rsvp',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 302)
@@ -325,10 +325,10 @@ class UserModelTest(unittest.TestCase):
 	def test_search_by_location(self):
 		"""test searching events by location works"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/events/search',
+		res = self.client().post('/api/v2/events/search',
 			headers=dict(Authorization="Bearer " + access_token),
 			data = json.dumps({"location" : "the space"}),
 			content_type='application/json')
@@ -338,10 +338,10 @@ class UserModelTest(unittest.TestCase):
 	def test_search_by_category(self):
 		"""test searching events by category works"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/events/search',
+		res = self.client().post('/api/v2/events/search',
 			headers=dict(Authorization="Bearer " + access_token),
 			data = json.dumps({"category" : "event_testing"}),
 			content_type='application/json')
@@ -351,10 +351,10 @@ class UserModelTest(unittest.TestCase):
 	def test_invalid_search(self):
 		"""test searching events by category works"""
 		access_token = self.get_access_token()
-		self.client().post('/events/create',
+		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/events/search',
+		res = self.client().post('/api/v2/events/search',
 			headers=dict(Authorization="Bearer " + access_token),
 			data = json.dumps({"description" : "event_testing"}),
 			content_type='application/json')
