@@ -322,41 +322,67 @@ class UserModelTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 302)
 		self.assertIn('already registered', str(res.data))
 
-	def test_search_by_location(self):
+	def test_filter_by_location(self):
 		"""test searching events by location works"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/api/v2/events/search',
+		res = self.client().post('/api/v2/events/filter',
 			headers=dict(Authorization="Bearer " + access_token),
 			data = json.dumps({"location" : "the space"}),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('the space', str(res.data))
 
-	def test_search_by_category(self):
+	def test_filter_by_category(self):
 		"""test searching events by category works"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/api/v2/events/search',
+		res = self.client().post('/api/v2/events/filter',
 			headers=dict(Authorization="Bearer " + access_token),
 			data = json.dumps({"category" : "event_testing"}),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('event_testing', str(res.data))
 
-	def test_invalid_search(self):
-		"""test searching events by category works"""
+	def test_invalid_filter(self):
+		"""test filtering with invalid parameter"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().post('/api/v2/events/filter',
+			headers=dict(Authorization="Bearer " + access_token),
+			data = json.dumps({"description" : "event_testing"}),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 400)
+		self.assertIn('can not search given parameter', str(res.data))
+
+	def test_search_by_full_name(self):
+		"""test searching events by full name works"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
 		res = self.client().post('/api/v2/events/search',
 			headers=dict(Authorization="Bearer " + access_token),
-			data = json.dumps({"description" : "event_testing"}),
+			data = json.dumps({"name" : "eventname"}),
 			content_type='application/json')
-		self.assertEqual(res.status_code, 400)
-		self.assertIn('can not search given parameter', str(res.data))
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('eventname', str(res.data))
+
+	def test_search_by_partial_name(self):
+		"""test searching events by partial name works"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().post('/api/v2/events/search',
+			headers=dict(Authorization="Bearer " + access_token),
+			data = json.dumps({"name" : "event"}),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('eventname', str(res.data))
