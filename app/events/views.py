@@ -62,7 +62,8 @@ def create():
 def get_all(page=1):
 	"""fetch all events available"""
 	#fetch the first 15 events based on event date
-	result = Events.query.filter(cast(Events.event_date, Date) >=  date.today()).paginate(page, per_page=15, error_out=False)
+	result = Events.query.filter(cast(Events.event_date, Date) >=  date.today())\
+	.paginate(page, per_page=15, error_out=False)
 	if result.items:
 		event_list = []
 		for event in result.items:
@@ -152,33 +153,53 @@ def my_rsvps():
 		return jsonify(rsvp_list), 200
 	return jsonify({"message" : "you have not responded to any events yet"}), 200
 
-@events.route('/search', methods=['POST'])
-def search():
-	"""search events based on location or category"""
+@events.route('/filter', methods=['POST'])
+@events.route('/filter/<int:page>', methods=['POST'])
+def filter(page=1):
+	"""filter events by location or category"""
 	filter_param = request.get_json()
 	try:
 		location = filter_param['location']
 		#if the filter parameter is location, call the location filter method
 		event_list = []
-		found_events = Events.get_events_by_location(location)
-		if found_events:
-			for event in found_events:
+		found_events = Events.get_events_by_location(location, page)
+		if found_events.items:
+			for event in found_events.items:
 				json_event = event.to_json()
 				event_list.append(json_event)
 			return jsonify(event_list), 200
-		return jsonify({"message" : "there are no events in the given location yet"}), 404
+		return jsonify({"message" : "there are no more events in the given location yet"}), 404
 	except KeyError:
 		try:
 			category = filter_param['category']
 			event_list = []
-			found_events = Events.get_events_by_category(category)
-			if found_events:
-				for event in found_events:
+			found_events = Events.get_events_by_category(category, page)
+			if found_events.items:
+				for event in found_events.items:
 					json_event = event.to_json()
 					event_list.append(json_event)
 				return jsonify(event_list), 200
-			return jsonify({"message" : "there are no events with the given category"}), 404
+			return jsonify({"message" : "there are no more events with the given category"}), 404
 		except KeyError:
 			return jsonify({"message" : "can not search given parameter"}), 400
 		except Exception as error:
 			return jsonify({"message" : str(error)})
+
+@events.route('/search', methods=['POST'])
+@events.route('/search/<int:page>', methods=['POST'])
+def search(page=1):
+	"""search events by event name"""
+	search_param = request.get_json()
+	try:
+		name = search_param['name']
+		event_list = []
+		found_events = Events.get_events_by_name(name, page)
+		if found_events.items:
+			for event in found_events.items:
+				json_event = event.to_json()
+				event_list.append(json_event)
+			return jsonify(event_list), 200
+		return jsonify({"message" : "there are no more events with the given category"}), 404
+	except Exception as error:
+		#if an error occurs in getting the parameter
+		return str(error)
