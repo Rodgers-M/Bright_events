@@ -30,7 +30,8 @@ class UserModelTest(unittest.TestCase):
 		db.drop_all()
 		self.app_context.pop()
 
-	def  register_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
+	def  register_user(self, username='test_user', email='test@test.com',\
+                passw='test_password', cnfpass='test_password'):
 		"""helper function to register a user"""
 		user_data = json.dumps({
 				'username' : username,
@@ -38,9 +39,11 @@ class UserModelTest(unittest.TestCase):
 				'password' : passw,
 				'cnfpassword' : cnfpass
 			})
-		return self.client().post('/api/v2/auth/register', data=user_data, content_type='application/json')
+		return self.client().post('/api/v2/auth/register', data=user_data,\
+                        content_type='application/json')
 
-	def  login_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
+	def  login_user(self, username='test_user', email='test@test.com',\
+                passw='test_password', cnfpass='test_password'):
 		"""helper function to login a user"""
 		user_data = json.dumps({
 				'username' : username,
@@ -328,7 +331,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().get('/api/v2/events/search?location=the space',
+		res = self.client().get('/api/v2/events/filter?location=the space',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
@@ -340,7 +343,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().get('/api/v2/events/search?category=event_testing',
+		res = self.client().get('/api/v2/events/filter?category=event_testing',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
@@ -352,7 +355,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().get('/api/v2/events/search?description=event_testing',
+		res = self.client().get('/api/v2/events/filter?description=event_testing',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 400)
@@ -364,7 +367,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().get('/api/v2/events/search?name=eventname',
+		res = self.client().get('/api/v2/events/search?q=eventname',
 			headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
@@ -376,7 +379,7 @@ class UserModelTest(unittest.TestCase):
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().get('/api/v2/events/search?name=event',
+		res = self.client().get('/api/v2/events/search?q=event',
 			headers=dict(Authorization="Bearer " + access_token))
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('eventname', str(res.data))
