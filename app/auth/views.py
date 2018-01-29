@@ -19,6 +19,10 @@ def before_request():
 					#find the user with the id on the token
 					user = User.query.filter_by(id=res).first()
 					g.user = user
+					return
+				return jsonify({"message" : res}), 401
+			return jsonify({"message" : "acess token is missing"}), 401
+		return jsonify({"message" : "Authorization header is missing"}), 401
 
 def validdate_data(data):
 	"""validate user details"""
