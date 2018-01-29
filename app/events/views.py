@@ -156,24 +156,17 @@ def my_rsvps():
 		return jsonify(rsvp_list), 200
 	return jsonify({"message" : "you have not responded to any events yet"}), 200
 
-@events.route('/search')
-def search():
+@events.route('/filter')
+def filter():
 	"""filter events by location or category"""
 	#get the incoming parameters
-	name = request.args.get("name")
 	location = request.args.get("location")
 	category = request.args.get("category")
 	#get the given page and number of events or set them to default
 	page = request.args.get("page", default=1, type=int)
 	per_page = request.args.get("per_page", default=15, type=int)
 	#check which parameter was given and use it to query the database
-	if name:
-		found_events = Events.get_events_by_name(name, page, per_page)
-		if found_events.items:
-			event_list = make_event_list(found_events.items)
-			return jsonify(event_list), 200
-		return jsonify({"message" : "there are no more events matching the given name"}), 404
-	elif location:
+	if location:
 		found_events = Events.get_events_by_location(location, page, per_page)
 		if found_events.items:
 			event_list = make_event_list(found_events.items)
@@ -187,3 +180,23 @@ def search():
 		return jsonify({"message" : "there are no more events matching the given category"}), 404
 	else:
 		return jsonify({"message" : "can not search events with the given parameter"}), 400
+
+
+@events.route('/search')
+def search():
+    """search events given an event name"""
+    #get the name given
+    name = request.args.get('q')
+    #get the given page and number of events or set them to default
+    page = request.args.get("page", default=1, type=int)
+    per_page = request.args.get("per_page", default=15, type=int)
+    if name:
+        found_events = Events.get_events_by_name(name, page, per_page)
+        if found_events.items:
+            event_list = make_event_list(found_events.items)
+            return jsonify(event_list), 200
+        return jsonify({"message" : "there are no more events matching the given name"}), 404
+    return jsonify({"message" : "can not search events, provide event name"}), 400
+
+
+
