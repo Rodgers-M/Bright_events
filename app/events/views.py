@@ -157,7 +157,7 @@ def my_rsvps():
 	return jsonify({"message" : "you have not responded to any events yet"}), 200
 
 @events.route('/filter')
-def filter():
+def events_filter():
 	"""filter events by location or category"""
 	#get the incoming parameters
 	location = request.args.get("location")
