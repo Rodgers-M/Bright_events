@@ -3,7 +3,7 @@ import json
 from datetime import date, timedelta
 from app import create_app, db
 
-class UserModelTest(unittest.TestCase):
+class EventModelTest(unittest.TestCase):
 	"""test the functionalities of the user model"""
 
 	def setUp(self):
@@ -336,6 +336,17 @@ class UserModelTest(unittest.TestCase):
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('the space', str(res.data))
+
+	def test_partial_location_filter(self):
+		"""test searching by a partial location name"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertIn('space', str(res.data))
 
 	def test_filter_by_category(self):
 		"""test searching events by category works"""
