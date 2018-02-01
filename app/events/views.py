@@ -69,7 +69,7 @@ def get_all():
 	"""fetch all events available"""
 	#fetch the first 15 events based on event date
 	page = request.args.get("page", default=1, type=int)
-	per_page = request.args.get("per_page", default=15, type=int)
+	per_page = request.args.get("limit", default=15, type=int)
 	#fetch matching events from the database
 	result = Events.query.filter(cast(Events.event_date, Date) >=  date.today())\
 	.paginate(page, per_page, error_out=False)
@@ -164,20 +164,27 @@ def events_filter():
 	category = request.args.get("category")
 	#get the given page and number of events or set them to default
 	page = request.args.get("page", default=1, type=int)
-	per_page = request.args.get("per_page", default=15, type=int)
+	per_page = request.args.get("limit", default=15, type=int)
 	#check which parameter was given and use it to query the database
-	if location:
+	if location and category:
+		#if both location and category have been given,filter by both
+		found_events = Events.filter_events(location, category, page, per_page)
+		if found_events.items:
+			event_list = make_event_list(found_events.items)
+			return jsonify(event_list), 200
+		return jsonify({"message" : "there are no more {} events in {}".format(category, location)}), 404
+	elif location:
 		found_events = Events.get_events_by_location(location, page, per_page)
 		if found_events.items:
 			event_list = make_event_list(found_events.items)
 			return jsonify(event_list), 200
-		return jsonify({"message" : "there are no more events matching the given location"}), 404
+		return jsonify({"message" : "there are no more events in {}".format(location)}), 404
 	elif category:
 		found_events = Events.get_events_by_category(category, page, per_page)
 		if found_events.items:
 			event_list = make_event_list(found_events.items)
 			return jsonify(event_list), 200
-		return jsonify({"message" : "there are no more events matching the given category"}), 404
+		return jsonify({"message" : "there are no more {} events".format(category)}), 404
 	else:
 		return jsonify({"message" : "can not search events with the given parameter"}), 400
 
@@ -189,7 +196,7 @@ def search():
     name = request.args.get('q')
     #get the given page and number of events or set them to default
     page = request.args.get("page", default=1, type=int)
-    per_page = request.args.get("per_page", default=15, type=int)
+    per_page = request.args.get("limit", default=15, type=int)
     if name:
         found_events = Events.get_events_by_name(name, page, per_page)
         if found_events.items:
