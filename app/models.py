@@ -166,7 +166,17 @@ class Events(db.Model):
 		"""filter events by location"""
 		return Events.query.filter(Events.location.ilike("%" + location + "%"))\
 		.filter(cast(Events.event_date, Date) >=  date.today())\
-		.order_by(Events.event_date.desc()).paginate(page, per_page, error_out=False)
+		.order_by(Events.event_date.desc())\
+                .paginate(page, per_page, error_out=False)
+
+	@staticmethod
+	def filter_events(location, category, page, per_page):
+		"""filter events by both category and location"""
+		return Events.query.filter(Events.location.ilike("%" + location + "%"))\
+            .filter(Events.category.ilike("%" + category + "%"))\
+			.filter(cast(Events.event_date, Date) >=  date.today())\
+			.order_by(Events.event_date.desc())\
+                        .paginate(page, per_page, error_out=False)
 
 	@staticmethod
 	def get_events_by_name(name, page, per_page):
