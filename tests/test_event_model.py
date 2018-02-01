@@ -372,6 +372,28 @@ class EventModelTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 400)
 		self.assertIn('can not search events with the given parameter', str(res.data))
 
+	def test_filter_by_category_and_location(self):
+		"""test filtering events by both category and location"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+		headers=dict(Authorization="Bearer " + access_token),
+		data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space&category=testing',
+		headers=dict(Authorization="Bearer " + access_token),
+		content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+
+	def test_filter_existing_location_and_non_existing_category(self):
+		"""filter existing events in a location but not category"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+		headers=dict(Authorization="Bearer " + access_token),
+		data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space&category=family',
+		headers=dict(Authorization="Bearer " + access_token),
+		content_type='application/json')
+		self.assertIn('there are no more family events in space', str(res.data))
+
 	def test_search_by_full_name(self):
 		"""test searching events by full name works"""
 		access_token = self.get_access_token()
