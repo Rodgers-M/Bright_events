@@ -1,5 +1,7 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
+from datetime import date
+from sqlalchemy import cast , Date
 from flask import current_app
 from datetime import datetime, timedelta
 from app import db
@@ -136,6 +138,7 @@ class Events(db.Model):
 	def to_json(self):
 		"""convert a given event to json"""
 		json_event ={
+					"id" : self.id,
 					"name" : self.name,
 					"description" : self.description,
 					"category" : self.category,
@@ -147,24 +150,39 @@ class Events(db.Model):
 		return json_event
 
 	@staticmethod
-	def get_all():
-		"""a method to fetch all events"""
-		return Events.query.all()
-
-	@staticmethod
 	def get_event_by_id(event_id):
 		"""get an event with the given id"""
 		return Events.query.filter_by(id=event_id).first()
 
 	@staticmethod
-	def get_events_by_category(category):
+	def get_events_by_category(category, page, per_page):
 		"""filter events by category"""
-		return Events.query.filter_by(category=category).order_by(Events.event_date.desc()).all()
+		return Events.query.filter(Events.category.ilike("%" + category + "%"))\
+		.filter(cast(Events.event_date, Date) >=  date.today())\
+		.order_by(Events.event_date.desc()).paginate(page, per_page, error_out=False)
 
 	@staticmethod
-	def get_events_by_location(location):
+	def get_events_by_location(location, page, per_page):
 		"""filter events by location"""
-		return Events.query.filter_by(location=location).order_by(Events.event_date.desc()).all()
+		return Events.query.filter(Events.location.ilike("%" + location + "%"))\
+		.filter(cast(Events.event_date, Date) >=  date.today())\
+		.order_by(Events.event_date.desc())\
+                .paginate(page, per_page, error_out=False)
+
+	@staticmethod
+	def filter_events(location, category, page, per_page):
+		"""filter events by both category and location"""
+		return Events.query.filter(Events.location.ilike("%" + location + "%"))\
+            .filter(Events.category.ilike("%" + category + "%"))\
+			.filter(cast(Events.event_date, Date) >=  date.today())\
+			.order_by(Events.event_date.desc())\
+                        .paginate(page, per_page, error_out=False)
+
+	@staticmethod
+	def get_events_by_name(name, page, per_page):
+		"""filter events by name"""
+		return Events.query.filter(Events.name.ilike("%" + name + "%"))\
+		.order_by(Events.event_date.desc()).paginate(page, per_page, error_out=False)
 
 	#this will be used to test pagination
 	@staticmethod

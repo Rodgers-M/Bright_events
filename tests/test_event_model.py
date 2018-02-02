@@ -3,7 +3,7 @@ import json
 from datetime import date, timedelta
 from app import create_app, db
 
-class UserModelTest(unittest.TestCase):
+class EventModelTest(unittest.TestCase):
 	"""test the functionalities of the user model"""
 
 	def setUp(self):
@@ -30,7 +30,8 @@ class UserModelTest(unittest.TestCase):
 		db.drop_all()
 		self.app_context.pop()
 
-	def  register_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
+	def  register_user(self, username='test_user', email='test@test.com',\
+                passw='test_password', cnfpass='test_password'):
 		"""helper function to register a user"""
 		user_data = json.dumps({
 				'username' : username,
@@ -38,9 +39,11 @@ class UserModelTest(unittest.TestCase):
 				'password' : passw,
 				'cnfpassword' : cnfpass
 			})
-		return self.client().post('/api/v2/auth/register', data=user_data, content_type='application/json')
+		return self.client().post('/api/v2/auth/register', data=user_data,\
+                        content_type='application/json')
 
-	def  login_user(self, username='test_user', email='test@test.com', passw='test_password', cnfpass='test_password'):
+	def  login_user(self, username='test_user', email='test@test.com',\
+                passw='test_password', cnfpass='test_password'):
 		"""helper function to login a user"""
 		user_data = json.dumps({
 				'username' : username,
@@ -322,41 +325,94 @@ class UserModelTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 302)
 		self.assertIn('already registered', str(res.data))
 
-	def test_search_by_location(self):
+	def test_filter_by_location(self):
 		"""test searching events by location works"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/api/v2/events/search',
+		res = self.client().get('/api/v2/events/filter?location=the space',
 			headers=dict(Authorization="Bearer " + access_token),
-			data = json.dumps({"location" : "the space"}),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('the space', str(res.data))
 
-	def test_search_by_category(self):
+	def test_partial_location_filter(self):
+		"""test searching by a partial location name"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertIn('space', str(res.data))
+
+	def test_filter_by_category(self):
 		"""test searching events by category works"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/api/v2/events/search',
+		res = self.client().get('/api/v2/events/filter?category=event_testing',
 			headers=dict(Authorization="Bearer " + access_token),
-			data = json.dumps({"category" : "event_testing"}),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		self.assertIn('event_testing', str(res.data))
 
-	def test_invalid_search(self):
-		"""test searching events by category works"""
+	def test_invalid_filter(self):
+		"""test filtering with invalid parameter"""
 		access_token = self.get_access_token()
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
-		res = self.client().post('/api/v2/events/search',
+		res = self.client().get('/api/v2/events/filter?description=event_testing',
 			headers=dict(Authorization="Bearer " + access_token),
-			data = json.dumps({"description" : "event_testing"}),
 			content_type='application/json')
 		self.assertEqual(res.status_code, 400)
-		self.assertIn('can not search given parameter', str(res.data))
+		self.assertIn('can not search events with the given parameter', str(res.data))
+
+	def test_filter_by_category_and_location(self):
+		"""test filtering events by both category and location"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+		headers=dict(Authorization="Bearer " + access_token),
+		data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space&category=testing',
+		headers=dict(Authorization="Bearer " + access_token),
+		content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+
+	def test_filter_existing_location_and_non_existing_category(self):
+		"""filter existing events in a location but not category"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+		headers=dict(Authorization="Bearer " + access_token),
+		data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/filter?location=space&category=family',
+		headers=dict(Authorization="Bearer " + access_token),
+		content_type='application/json')
+		self.assertIn('there are no more family events in space', str(res.data))
+
+	def test_search_by_full_name(self):
+		"""test searching events by full name works"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/search?q=eventname',
+			headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('eventname', str(res.data))
+
+	def test_search_by_partial_name(self):
+		"""test searching events by partial name works"""
+		access_token = self.get_access_token()
+		self.client().post('/api/v2/events/create',
+			headers=dict(Authorization="Bearer " + access_token),
+			data=self.event_data, content_type='application/json')
+		res = self.client().get('/api/v2/events/search?q=event',
+			headers=dict(Authorization="Bearer " + access_token))
+		self.assertEqual(res.status_code, 200)
+		self.assertIn('eventname', str(res.data))
