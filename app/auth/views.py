@@ -13,7 +13,7 @@ def before_request():
 			access_token = auth_header.split(" ")[1]
 			if access_token:
 				#try decoding the token and get the user_id
-				res = User.decode_token(access_token)
+				res = User.decode_auth_token(access_token)
 				if isinstance(res, int):
 					#check if no error in string format was returned
 					#find the user with the id on the token
@@ -81,7 +81,7 @@ def login():
 		#verify found user details
 		if user and user.verify_password(data['password']):
 			#user details are valid hence generate the access token
-			access_token = user.generate_token()
+			access_token = user.generate_auth_token()
 			response = {
 				'message': 'login successful.',
 				'access_token':  access_token.decode()

@@ -40,7 +40,7 @@ class User(db.Model):
 		db.session.add(self)
 		db.session.commit()
 
-	def generate_token(self):
+	def generate_auth_token(self):
 		"""a method to generate the access token"""
 		try:
 			# set up a payload
@@ -62,7 +62,7 @@ class User(db.Model):
 			return str(error)
 
 	@staticmethod
-	def decode_token(token):
+	def decode_auth_token(token):
 		"""Decodes the access token from the Authorization header."""
 		try:
 			# try to decode the token using our SECRET variable
