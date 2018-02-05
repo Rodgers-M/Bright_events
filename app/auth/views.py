@@ -1,5 +1,5 @@
 import re
-from flask import request, jsonify, g
+from flask import request, jsonify, g, url_for, render_template
 from app.models import User
 from app.email import send_mail
 from . import auth
@@ -80,7 +80,6 @@ def register():
 				user.save()
 
 				#registration was successful
-				send_mail(email)
 				response = {'message' : "registration successful, now login"}
 				return jsonify(response), 201
 			except Exception as error:
@@ -125,11 +124,30 @@ def get_token():
 	user = User.query.filter_by(email=data['email']).first()
 	if user:
 		token = user.generate_confirmation_token()
-		send_mail(user.email)
-		return jsonify({"token" : token.decode()}), 200
+		subject = "Bright Events"
+		confirm_url = url_for(
+            'auth.confirm_email',
+            token=token,
+            _external=True)
+		html = render_template(
+            'mail/reset_pass.html',
+            confirm_url=confirm_url)
+		send_mail(to=user.email, subject=subject, html=html)
+		return jsonify({"message":"a confirmation email has been sent to {}".format(user.email),
+			"token" : token.decode()}), 200
 	return jsonify({"message" : "user not found, check the email and try again"}), 404
 
-@auth.route('/resetpass', methods=['POST'])
+@auth.route('/confirm/<token>')
+def confirm_email(token):
+	"""check if the confirmation token is  valid"""
+	res = User.decode_confirmation_token(token)
+	if res == "invalid or expired token":
+		return jsonify({"message" : res}), 403
+	#the token is valid.the user can now reset the password.
+	#the token will also have to be passed along to the reset password form
+	return jsonify({"message" : "confirmed, now reset your password"}), 200																				
+
+@auth.route('/resetpass', methods=['PUT'])
 def reset_pass():
 	"""confirm the user token and reset the password"""
 	data = request.get_json()
