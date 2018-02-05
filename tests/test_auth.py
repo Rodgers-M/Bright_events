@@ -79,7 +79,7 @@ class AuthTest(unittest.TestCase):
 							'cnfpassword' : 'test_password'
 						})
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
-		self.assertIn('username or email must be valid', str(res.data))
+		self.assertIn('please provide a valid email', str(res.data))
 
 	def test_special_characters_in_email(self):
 		"""try registering username with special characters"""
@@ -90,7 +90,7 @@ class AuthTest(unittest.TestCase):
 							'cnfpassword' : 'test_password'
 						})
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
-		self.assertIn('username or email must be valid', str(res.data))
+		self.assertIn('please provide a valid email', str(res.data))
 
 	def test_missing_some_fields(self):
 		"""test registering a user without a confirm password field"""
@@ -112,7 +112,7 @@ class AuthTest(unittest.TestCase):
 							'cnfpassword' : 'test_password'
 						})
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
-		self.assertIn('username or email must be valid', str(res.data))
+		self.assertIn('username  can only contain alphanumeric characters', str(res.data))
 
 	def test_a_short_username(self):
 		"""try registering a short username"""
@@ -123,7 +123,18 @@ class AuthTest(unittest.TestCase):
 							'cnfpassword' : 'test_password'
 						})
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
-		self.assertIn('username or email must be valid', str(res.data))
+		self.assertIn('username must be more than 3 characters', str(res.data))
+
+	def test_spaces_in_password(self):
+		"""test registering a user with a password containing spaces"""
+		invalid_user = json.dumps({
+							'username' : 'username',
+							'email' : 'test@example.com',
+							'password' : 'test password',
+							'cnfpassword' : 'test password'
+						})
+		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('password should be one word, no spaces', str(res.data))
 
 	def test_short_password(self):
 		"""test registering a user with a short passsword"""
@@ -134,7 +145,8 @@ class AuthTest(unittest.TestCase):
 							'cnfpassword' : 'test'
 						})
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
-		self.assertIn('Password too short', str(res.data))
+		self.assertIn('Password should have atleast 6 characters', str(res.data))
+
 	def test_existing_user_login(self):
 		"""test an existing user can login"""
 		res = self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
