@@ -170,3 +170,53 @@ class AuthTest(unittest.TestCase):
 		#assert for the error message in response
 		self.assertEqual(res.status_code, 401)
 		self.assertEqual(result['message'], "invalid username or password, Please try again")
+
+	def test_reset_password_works(self):
+		"""test resetting a user password"""
+		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		res = self.client().post('/api/v2/auth/gettoken', data=self.user_data, content_type='application/json')
+		token = json.loads(res.data.decode())['token']
+		#send the new password along with the token
+		data = json.dumps({
+			"password" : "mynewpassword",
+			"cnfpassword" : "mynewpassword",
+			"token" : token
+			})
+		res = self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
+		self.assertIn("password reset successful", str(res.data))
+
+	def test_user_can_login_using_new_password(self):
+		"""test a user can login after resetting password"""
+		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		res = self.client().post('/api/v2/auth/gettoken', data=self.user_data, content_type='application/json')
+		token = json.loads(res.data.decode())['token']
+		#send the new password along with the token
+		data = json.dumps({
+			"password" : "mynewpassword",
+			"cnfpassword" : "mynewpassword",
+			"token" : token
+			})
+		self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
+		#re-assign  the password field to the new value
+		new_user_data = json.dumps({
+			'username' : 'test_username',
+			'password' : 'mynewpassword'
+			})
+		res = self.client().post('/api/v2/auth/login', data=new_user_data, content_type='application/json')
+		self.assertIn("login successful.", str(res.data))
+
+	def test_user_can_not_login_using_old_password(self):
+		"""test a user can not use old password after reset"""
+		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		res = self.client().post('/api/v2/auth/gettoken', data=self.user_data, content_type='application/json')
+		token = json.loads(res.data.decode())['token']
+		#send the new password along with the token
+		data = json.dumps({
+			"password" : "mynewpassword",
+			"cnfpassword" : "mynewpassword",
+			"token" : token
+			})
+		self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
+		#send request with data containing same old password 
+		res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
+		self.assertIn("invalid username or password", str(res.data))
