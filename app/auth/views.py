@@ -1,6 +1,7 @@
 import re
 from flask import request, jsonify, g
 from app.models import User
+from app.email import send_mail
 from . import auth
 
 @auth.before_app_request
@@ -27,17 +28,31 @@ def before_request():
 def validdate_data(data):
 	"""validate user details"""
 	try:
-		if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip())\
-		or not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
-			return "username or email must be valid can only contain alphanumeric characters"
+		if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
+			return "username  can only contain alphanumeric characters"
 		elif len(data['username'].strip()) < 3:
 			return "username must be more than 3 characters"
-		elif data['password'] != data['cnfpassword']:
-			return "passwords do not match"
-		elif len(data['password'].strip()) < 6:
-			return "Password too short"
+		elif not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
+			return "please provide a valid email"
 		else:
 			return "valid"
+	except Exception as error:
+		return "please provide all the fields, missing " + str(error)
+
+def validate_password(data):
+	"""validate the password and return appropriate response"""
+	try:
+		#chack for spaces in password
+		if " " in data["password"]:
+			return "password should be one word, no spaces"
+		elif len(data['password'].strip()) < 6:
+			return "Password should have atleast 6 characters"
+		#check if the passwords mact
+		elif  data['password'] != data['cnfpassword']:
+			return "passwords do not match"
+		else:
+			return "valid"
+	#some data is missing and a keyError exception was raised
 	except Exception as error:
 		return "please provide all the fields, missing " + str(error)
 
@@ -47,7 +62,13 @@ def register():
 	data = request.get_json()
 	#validate the data
 	res = validdate_data(data)
-	if res is "valid":
+	check_pass = validate_password(data)
+	if res is not "valid":
+		return jsonify({"message" : res}), 400
+	elif check_pass is not "valid":
+		return jsonify({"message" : check_pass}), 400
+	else:
+		#all the deatails are valid, register the user
 		user = User.query.filter((User.email==data['email']) | (User.username==data['username'])).first()
 		if not user:
 			#if no user with matching email
@@ -59,6 +80,7 @@ def register():
 				user.save()
 
 				#registration was successful
+				send_mail(email)
 				response = {'message' : "registration successful, now login"}
 				return jsonify(response), 201
 			except Exception as error:
@@ -69,7 +91,7 @@ def register():
 			# there is an existing user with given email
 			response = {'message' : 'email or username exists, please login or chose another username'}
 			return jsonify(response), 202
-	return jsonify({"message" : res}), 400
+	
 
 @auth.route('/login', methods=['POST'])
 def login():
@@ -95,3 +117,33 @@ def login():
 		#an error occured in the server
 		response = {'message': str(e)}
 		return jsonify(response), 500
+
+@auth.route('/gettoken', methods=['post'])
+def get_token():
+	"""get the user email, generate a reset password token if user exists"""
+	data = request.get_json()
+	user = User.query.filter_by(email=data['email']).first()
+	if user:
+		token = user.generate_confirmation_token()
+		send_mail(user.email)
+		return jsonify({"token" : token.decode()}), 200
+	return jsonify({"message" : "user not found, check the email and try again"}), 404
+
+@auth.route('/resetpass', methods=['POST'])
+def reset_pass():
+	"""confirm the user token and reset the password"""
+	data = request.get_json()
+	token = data['token']
+	res = User.decode_confirmation_token(token)
+	if res == "invalid or expired token":
+		return jsonify({"message" : res}), 403
+	#the token is valid and the response is a user object
+	user = res
+	#validate the given password
+	check_pass = validate_password(data)
+	if check_pass is not "valid":
+		return jsonify({"message" : check_pass}), 400
+	#the password is valid, thus reset the user password
+	user.password = data["password"]
+	user.save()
+	return jsonify({"message" : "password reset successful, login"}), 200
