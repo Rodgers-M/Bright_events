@@ -145,13 +145,16 @@ def confirm_email(token):
 		return jsonify({"message" : res}), 403
 	#the token is valid.the user can now reset the password.
 	#the token will also have to be passed along to the reset password form
-	return jsonify({"message" : "confirmed, now reset your password"}), 200																				
+	return jsonify({"message" : "confirmed, now reset your password"}), 200
 
 @auth.route('/resetpass', methods=['PUT'])
 def reset_pass():
 	"""confirm the user token and reset the password"""
 	data = request.get_json()
-	token = data['token']
+	try:
+		token = data['token']
+	except KeyError:
+		return jsonify({"message" : "please verify your email before resetting password"}), 401
 	res = User.decode_confirmation_token(token)
 	if res == "invalid or expired token":
 		return jsonify({"message" : res}), 403
