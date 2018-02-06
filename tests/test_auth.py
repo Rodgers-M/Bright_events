@@ -220,3 +220,15 @@ class AuthTest(unittest.TestCase):
 		#send request with data containing same old password 
 		res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
 		self.assertIn("invalid username or password", str(res.data))
+
+	def test_resetting_password_without_token(self):
+		"""test a user can not reset password without confirmation token"""
+		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		#send the new password without confirmation token
+		data = json.dumps({
+			"password" : "mynewpassword",
+			"cnfpassword" : "mynewpassword",
+			})
+		res = self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
+		self.assertIn("verify your email before resetting password", str(res.data))
+		
