@@ -87,7 +87,7 @@ class User(db.Model):
 		serializer = Serializer(current_app.config.get('SECRET_KEY'))
 		try:
 			data = serializer.loads(token)
-		except:
+		except Exception:
 			#the token is either invalid or expired
 			return "invalid or expired token"
 		user = User.query.filter_by(email=data.get('conf_email')).first()
