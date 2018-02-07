@@ -247,7 +247,7 @@ class EventModelTest(unittest.TestCase):
 				'event_date' : '2020-12-30'
 			})
 		#send update request
-		res = self.client().put('/api/v2events/1',
+		res = self.client().put('/api/v2/events/1',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=update_data, content_type='application/json')
 		self.assertEqual(res.status_code, 200)
