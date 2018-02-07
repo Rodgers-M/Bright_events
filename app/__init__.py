@@ -16,11 +16,7 @@ def create_app(config_name):
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.init_app(app)
 	mail.init_app(app)
-	#define a url prefix to be used by each blueprint url
-	app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v2')
-	from .auth import auth as auth_blueprint
-	app.register_blueprint(auth_blueprint, url_prefix='/auth')
-	from .events import events as events_blueprint
-	app.register_blueprint(events_blueprint, url_prefix='/events')
+	from .api_v2 import api as api_v2_blueprint
+	app.register_blueprint(api_v2_blueprint, url_prefix='/api/v2')
 	return app
 	
