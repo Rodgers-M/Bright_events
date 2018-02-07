@@ -217,7 +217,6 @@ class AuthTest(unittest.TestCase):
 			"token" : token
 			})
 		self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
-		#send request with data containing same old password 
 		res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
 		self.assertIn("invalid username or password", str(res.data))
 
