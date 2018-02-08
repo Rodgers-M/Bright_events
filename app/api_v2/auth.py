@@ -28,10 +28,15 @@ def before_request():
 def validdate_data(data):
 	"""validate user details"""
 	try:
-		if not  re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
+		#check if there are specil characters in the username
+		if not re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
 			return "username  can only contain alphanumeric characters"
+		#check if the username is more than 3 characters
 		elif len(data['username'].strip()) < 3:
 			return "username must be more than 3 characters"
+		#check if the name contains only numbers or underscore
+		elif not re.match("[a-zA-Z]{3,}_*[0-9_]*[a-zA-Z]*_*", data['username'].strip()):
+			return "username must have atleast 3 letters before number or underscore"
 		elif not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
 			return "please provide a valid email"
 		else:
