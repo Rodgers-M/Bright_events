@@ -4,6 +4,7 @@ from datetime import date
 from sqlalchemy import cast , Date
 from flask import current_app
 from datetime import datetime, timedelta
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app import db
 
 rsvps = db.Table('rsvps',
@@ -40,7 +41,7 @@ class User(db.Model):
 		db.session.add(self)
 		db.session.commit()
 
-	def generate_token(self):
+	def generate_auth_token(self):
 		"""a method to generate the access token"""
 		try:
 			# set up a payload
@@ -62,7 +63,7 @@ class User(db.Model):
 			return str(error)
 
 	@staticmethod
-	def decode_token(token):
+	def decode_auth_token(token):
 		"""Decodes the access token from the Authorization header."""
 		try:
 			# try to decode the token using our SECRET variable
@@ -74,6 +75,23 @@ class User(db.Model):
 		except jwt.InvalidTokenError:
 			# the token is invalid, return an error message
 			return "Please register or login"
+
+	def generate_confirmation_token(self, expiration=1800):
+		"""generate a token for confiming user emails, valid for 30 min by default"""
+		serializer = Serializer(current_app.config.get('SECRET_KEY'), expires_in=expiration)
+		return serializer.dumps({'conf_email': self.email})
+
+	@staticmethod
+	def decode_confirmation_token(token):
+		"""trydecoding the token and fetch the user"""
+		serializer = Serializer(current_app.config.get('SECRET_KEY'))
+		try:
+			data = serializer.loads(token)
+		except Exception:
+			#the token is either invalid or expired
+			return "invalid or expired token"
+		user = User.query.filter_by(email=data.get('conf_email')).first()
+		return user
 
 	#this will be used to test pagination
 	@staticmethod

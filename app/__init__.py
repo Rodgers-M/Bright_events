@@ -1,9 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from app import middleware
 from config import app_config
 
 db = SQLAlchemy()
+mail = Mail()
 
 def create_app(config_name):
 	# Initialize flask app
@@ -13,6 +15,7 @@ def create_app(config_name):
 	app.config.from_object(app_config[config_name])
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 	db.init_app(app)
+	mail.init_app(app)
 	#define a url prefix to be used by each blueprint url
 	app.wsgi_app = middleware.PrefixMiddleware(app.wsgi_app, prefix='/api/v2')
 	from .auth import auth as auth_blueprint
