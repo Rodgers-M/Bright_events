@@ -78,7 +78,7 @@ class User(db.Model):
 
 	def generate_confirmation_token(self, expiration=1800):
 		"""generate a token for confiming user emails, valid for 30 min by default"""
-		serializer = Serializer(current_app.config.get('SECRET_KEY'))
+		serializer = Serializer(current_app.config.get('SECRET_KEY'), expires_in = expiration)
 		return serializer.dumps({'conf_email': self.email})
 
 	@staticmethod
