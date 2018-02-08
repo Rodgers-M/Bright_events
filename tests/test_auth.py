@@ -125,6 +125,28 @@ class AuthTest(unittest.TestCase):
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
 		self.assertIn('username must be more than 3 characters', str(res.data))
 
+	def test_only_numbers_in_username(self):
+		"""try registering a username containing only numbers"""
+		invalid_user = json.dumps({
+							'username' : '9998',
+							'email' : 'test@example',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username must have atleast 3 letters before number ', str(res.data))
+
+	def test_numbers_as_first_characters_in_username(self):
+		"""try registering a username starting with numbers"""
+		invalid_user = json.dumps({
+							'username' : '99rodger98',
+							'email' : 'test@example',
+							'password' : 'test_password',
+							'cnfpassword' : 'test_password'
+						})
+		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		self.assertIn('username must have atleast 3 letters before number ', str(res.data))
+
 	def test_spaces_in_password(self):
 		"""test registering a user with a password containing spaces"""
 		invalid_user = json.dumps({
