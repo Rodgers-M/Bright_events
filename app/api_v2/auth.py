@@ -2,12 +2,12 @@ import re
 from flask import request, jsonify, g, url_for, render_template
 from app.models import User
 from app.email import send_mail
-from . import auth
+from . import api
 
-@auth.before_app_request
+@api.before_app_request
 def before_request():
 	"""get the user bafore every request"""
-	if request.endpoint and request.blueprint != 'auth':
+	if request.endpoint and 'auth' not in request.url:
 		auth_header = request.headers.get('Authorization')
 		g.user = None
 		if auth_header:
@@ -61,7 +61,7 @@ def validate_password(data):
 	except Exception as error:
 		return "please provide all the fields, missing " + str(error)
 
-@auth.route('/register', methods=['POST'])
+@api.route('/auth/register', methods=['POST'])
 def register():
 	""" a route to register a user"""
 	data = request.get_json()
@@ -96,7 +96,7 @@ def register():
 			response = {'message' : 'email or username exists, please login or chose another username'}
 			return jsonify(response), 202
 
-@auth.route('/login', methods=['POST'])
+@api.route('/auth/login', methods=['POST'])
 def login():
 	"""a route to handle user login and access token generation"""
 	data = request.get_json()
@@ -121,7 +121,7 @@ def login():
 		response = {'message': str(e)}
 		return jsonify(response), 500
 
-@auth.route('/gettoken', methods=['post'])
+@api.route('/auth/gettoken', methods=['post'])
 def get_token():
 	"""get the user email, generate a reset password token if user exists"""
 	data = request.get_json()
@@ -130,7 +130,7 @@ def get_token():
 		token = user.generate_confirmation_token()
 		subject = "Bright Events"
 		confirm_url = url_for(
-            'auth.confirm_email',
+            'api.confirm_email',
             token=token,
             _external=True)
 		html = render_template(
@@ -141,7 +141,7 @@ def get_token():
 			"token" : token.decode()}), 200
 	return jsonify({"message" : "user not found, check the email and try again"}), 404
 
-@auth.route('/confirm/<token>')
+@api.route('/auth/confirm/<token>')
 def confirm_email(token):
 	"""check if the confirmation token is  valid"""
 	res = User.decode_confirmation_token(token)
@@ -151,7 +151,7 @@ def confirm_email(token):
 	#the token will also have to be passed along to the reset password form
 	return jsonify({"message" : "confirmed, now reset your password"}), 200
 
-@auth.route('/resetpass', methods=['PUT'])
+@api.route('/auth/resetpass', methods=['PUT'])
 def reset_pass():
 	"""confirm the user token and reset the password"""
 	data = request.get_json()

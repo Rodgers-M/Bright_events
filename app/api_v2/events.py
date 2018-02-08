@@ -3,7 +3,7 @@ from datetime import date, datetime
 from sqlalchemy import cast , Date
 from flask import request, jsonify,g
 from app.models import Events
-from . import events
+from . import api
 
 def validate_data(data):
 	"""validate the event details and return appropriate message"""
@@ -34,7 +34,7 @@ def make_event_list(events):
 		event_list.append(json_event)
 	return event_list
 
-@events.route('/create', methods=['POST'])
+@api.route('/events/create', methods=['POST'])
 def create():
 	"""a route to handle creating an event"""
 	event_details = request.get_json()
@@ -64,7 +64,7 @@ def create():
 			return jsonify(res), 201
 		return jsonify({"message" : "you have a similar event in the same location"}), 302
 
-@events.route('/all')
+@api.route('/events/all')
 def get_all():
 	"""fetch all events available"""
 	#fetch the first 15 events based on event date
@@ -78,7 +78,7 @@ def get_all():
 		return jsonify(event_list), 200
 	return jsonify({"message" : "this page has no events, or no events available"}), 200
 
-@events.route('/myevents')
+@api.route('/events/myevents')
 def my_events():
 	"""fetch all events belonging to a particular user"""
 	events = g.user.events
@@ -87,7 +87,7 @@ def my_events():
 		return jsonify(event_list), 200
 	return jsonify({"message" : "you have not created any events yet"}), 200
 
-@events.route('/<int:event_id>', methods=['PUT', 'DELETE' , 'GET' ])
+@api.route('/events/<int:event_id>', methods=['PUT', 'DELETE' , 'GET' ])
 def manipulate_event(event_id):
 	"""update or delete an event"""
 	event = Events.get_event_by_id(event_id)
@@ -116,7 +116,7 @@ def manipulate_event(event_id):
 		return jsonify({"message" : "you can not modify the event"})
 	return jsonify({"message" : "no event with given id found"}), 404
 
-@events.route('/<int:event_id>/rsvp', methods=['POST', 'GET'])
+@api.route('/events/<int:event_id>/rsvp', methods=['POST', 'GET'])
 def rsvp(event_id):
 	"""register a user to an event"""
 	event = Events.get_event_by_id(event_id)
@@ -139,7 +139,7 @@ def rsvp(event_id):
 		return jsonify({"message" : "no users have responded to this event yet"}),200
 	return jsonify({"message" : "event does not exist"}), 404
 
-@events.route('/myrsvps')
+@api.route('/events/myrsvps')
 def my_rsvps():
 	"""return the list of events that user has responded to"""
 	rsvps = g.user.myrsvps.all()
@@ -156,7 +156,7 @@ def my_rsvps():
 		return jsonify(rsvp_list), 200
 	return jsonify({"message" : "you have not responded to any events yet"}), 200
 
-@events.route('/filter')
+@api.route('/events/filter')
 def events_filter():
 	"""filter events by location or category"""
 	#get the incoming parameters
@@ -189,7 +189,7 @@ def events_filter():
 		return jsonify({"message" : "can not search events with the given parameter"}), 400
 
 
-@events.route('/search')
+@api.route('/events/search')
 def search():
     """search events given an event name"""
     #get the name given
