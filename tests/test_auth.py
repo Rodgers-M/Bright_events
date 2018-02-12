@@ -252,4 +252,13 @@ class AuthTest(unittest.TestCase):
 			})
 		res = self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
 		self.assertIn("verify your email before resetting password", str(res.data))
+
+	def test_user_logout(self):
+		"""test a user can logout"""
+		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		login_res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
+		access_token = json.loads(login_res.data.decode())['access_token']
+		res = self.client().get('/api/v2/auth/logout',headers=dict(Authorization="Bearer " + access_token),
+			content_type='application/json')
+		self.assertIn("logout succees.", str(res.data))
 		
