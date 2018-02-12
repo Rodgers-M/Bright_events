@@ -1,8 +1,9 @@
 import re
 from flask import request, jsonify, g, url_for, render_template
-from app.models import User
+from app.models import User, BlacklistToken
 from app.email import send_mail
 from . import api
+from app import db
 
 @api.before_app_request
 def before_request():
@@ -15,13 +16,13 @@ def before_request():
 			if access_token:
 				#try decoding the token and get the user_id
 				res = User.decode_auth_token(access_token)
-				if isinstance(res, int):
+				if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
 					#check if no error in string format was returned
 					#find the user with the id on the token
 					user = User.query.filter_by(id=res).first()
 					g.user = user
 					return
-				return jsonify({"message" : res}), 401
+				return jsonify({"message" : "Please register or login to continue"}), 401
 			return jsonify({"message" : "acess token is missing"}), 401
 		return jsonify({"message" : "Authorization header is missing"}), 401
 
@@ -172,3 +173,19 @@ def reset_pass():
 	user.password = data["password"]
 	user.save()
 	return jsonify({"message" : "password reset successful, login"}), 200
+
+@api.route('/auth/logout')
+def logout():
+	"""store the access_token in blacklist when a user logs out"""
+	auth_header= request.headers.get('Authorization')
+	access_token = auth_header.split(" ")[1]
+	#check is the token is valid
+	res = User.decode_auth_token(access_token)
+	if not BlacklistToken.is_blacklisted(access_token):
+		#the token is still valid and not in blasklist
+		blasklisted_token = BlacklistToken(access_token)
+		db.session.add(blasklisted_token)
+		db.session.commit()
+		return jsonify({"message" : "logout succees. Thank you for using Bright Events"}), 200
+	return jsonify({"message" : "you are already logged out"}), 401
+
