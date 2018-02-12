@@ -227,3 +227,24 @@ class Events(db.Model):
 
 	def __repr__(self):
 		return '<Events %r>' % self.name
+
+class BlacklistToken(db.Model):
+    """class to handle token blacklisting"""
+    __tablename__ = "blacklist_tokens"
+    id =  db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(500), unique=True)
+    blacklisted_on = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __init__(self, token):
+        """initialize the class with a token"""
+        self.token = token
+
+    @staticmethod
+    def is_blacklisted(token):
+        res = BlacklistToken.query.filter_by(token=token).first()
+        if res:
+        	return True
+        return False
+
+    def __repr__(self):
+        return '<id: token: {}'.format(self.token)
