@@ -181,7 +181,7 @@ def logout():
 	access_token = auth_header.split(" ")[1]
 	#check is the token is valid
 	res = User.decode_auth_token(access_token)
-	if not BlacklistToken.is_blacklisted(access_token):
+	if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
 		#the token is still valid and not in blasklist
 		blasklisted_token = BlacklistToken(access_token)
 		db.session.add(blasklisted_token)
