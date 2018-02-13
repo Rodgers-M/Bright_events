@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/Rodgers-M/Bright_events.svg?branch=dev)](https://travis-ci.org/Rodgers-M/Bright_events) [![Coverage Status](https://coveralls.io/repos/github/Rodgers-M/Bright_events/badge.svg?branch=dev)](https://coveralls.io/github/Rodgers-M/Bright_events?branch=dev) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a11748e7fa74e46aef7bdf6f09f1bf0)](https://www.codacy.com/app/Rodgers-M/Bright_events?utm_source=github.com&utm_medium=referral&utm_content=Rodgers-M/Bright_events&utm_campaign=badger) [![Maintainability](https://api.codeclimate.com/v1/badges/1c3a0ec277de71d59f8f/maintainability)](https://codeclimate.com/github/Rodgers-M/Bright_events/maintainability)
 
-
 # Welcome to Bright events
 A web application that provides a platform for event organizers to create and manage different types of events. 
 
@@ -74,24 +73,3 @@ The users can also search events based on location or category
 * Install nosetests 
 * navigate to project folder
 * Use `nosetests tests/` to run the tests
-
-
-**API endpoints**
-
-**These endpoints can be tested using postman**
-
-* POST /api/v1/auth/register   					create user acccount
-
-* POST /api/v1/ auth/login						login an existing user
-
-* GET  /api/events  								Retrieve events
-
-* POST /api/events/								Create an event	
-
-* POST /api/events/< eventid >/delete   			Delete an event
-
-* POST /api/events/< eventid >/edit				Edit an event			
-
-* POST /api/event/< eventid >/rsvp    			RSVP to an event
-
-* GET /api/event/< eventid >/rsvp    			Retrieve event RSVPs
