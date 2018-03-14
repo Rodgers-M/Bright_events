@@ -12,18 +12,18 @@ def before_request():
         auth_header = request.headers.get('Authorization')
         g.user = None
         if auth_header:
-                access_token = auth_header.split(" ")[1]
-                if access_token:
-                        #try decoding the token and get the user_id
-                        res = User.decode_auth_token(access_token)
-                        if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
-                                #check if no error in string format was returned
-                                #find the user with the id on the token
-                                user = User.query.filter_by(id=res).first()
-                                g.user = user
-                                return
-                        return jsonify({"message" : "Please register or login to continue"}), 401
-                return jsonify({"message" : "acess token is missing"}), 401
+            access_token = auth_header.split(" ")[1]
+            if access_token:
+                #try decoding the token and get the user_id
+                res = User.decode_auth_token(access_token)
+                if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
+                    #check if no error in string format was returned
+                    #find the user with the id on the token
+                    user = User.query.filter_by(id=res).first()
+                    g.user = user
+                    return
+                return jsonify({"message" : "Please register or login to continue"}), 401
+            return jsonify({"message" : "acess token is missing"}), 401
         return jsonify({"message" : "Authorization header is missing"}), 401
 
 def validdate_data(data):
@@ -31,17 +31,17 @@ def validdate_data(data):
     try:
         #check if there are specil characters in the username
         if not re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
-                return "username  can only contain alphanumeric characters"
+            return "username  can only contain alphanumeric characters"
         #check if the username is more than 3 characters
         elif len(data['username'].strip()) < 3:
-                return "username must be more than 3 characters"
+            return "username must be more than 3 characters"
         #check if the name contains only numbers or underscore
         elif not re.match("[a-zA-Z]{3,}_*[0-9_]*[a-zA-Z]*_*", data['username'].strip()):
-                return "username must have atleast 3 letters before number or underscore"
+            return "username must have atleast 3 letters before number or underscore"
         elif not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
-                return "please provide a valid email"
+            return "please provide a valid email"
         else:
-                return "valid"
+            return "valid"
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
 
@@ -50,14 +50,14 @@ def validate_password(data):
     try:
         #chack for spaces in password
         if " " in data["password"]:
-                return "password should be one word, no spaces"
+            return "password should be one word, no spaces"
         elif len(data['password'].strip()) < 6:
-                return "Password should have atleast 6 characters"
+            return "Password should have atleast 6 characters"
         #check if the passwords mact
         elif  data['password'] != data['cnfpassword']:
-                return "passwords do not match"
+            return "passwords do not match"
         else:
-                return "valid"
+            return "valid"
     #some data is missing and a keyError exception was raised
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
