@@ -108,10 +108,11 @@ def login():
         if user and user.verify_password(data['password']):
             #user details are valid hence generate the access token
             access_token = user.generate_auth_token()
-            response = {
+            response = {'user' : {
+                     'email' : user.email,
                     'message': 'login successful.',
                     'access_token':  access_token.decode()
-            }
+                    }}
             return jsonify(response), 200
         else:
             #no user found, return an error message
