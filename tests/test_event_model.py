@@ -57,7 +57,7 @@ class EventModelTest(unittest.TestCase):
 		"""register and login a user to get an access token"""
 		self.register_user()
 		result = self.login_user()
-		access_token = json.loads(result.data.decode())['access_token']
+		access_token = json.loads(result.data.decode())['user']['access_token']
 		return access_token
 
 	def test_create_event(self):
@@ -221,7 +221,7 @@ class EventModelTest(unittest.TestCase):
 			})
 		self.client().post('/api/v2/auth/register', data=user2_data, content_type='application/json')
 		result = self.client().post('/api/v2/auth/login', data=user2_data, content_type='application/json')
-		user2_access_token = json.loads(result.data.decode())['access_token']
+		user2_access_token = json.loads(result.data.decode())['user']['access_token']
 		self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + user2_access_token),
 			data=self.event_data, content_type='application/json')
