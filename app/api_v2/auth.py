@@ -95,7 +95,7 @@ def register():
         else:
             # there is an existing user with given email
             response = {'message' : 'email or username exists, please login or chose another username'}
-            return jsonify(response), 202
+            return jsonify(response), 409
 
 @api.route('/auth/login', methods=['POST'])
 def login():
