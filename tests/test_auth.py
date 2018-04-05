@@ -30,7 +30,8 @@ class AuthTest(unittest.TestCase):
 
 	def test_registration(self):
 		"""Test user registration works correcty."""
-		res=self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		res=self.client().post('/api/v2/auth/register', \
+                        data=self.user_data, content_type='application/json')
 		result = json.loads(res.data.decode())
 		#assert that the request contains a success message and a 201 status code
 		self.assertEqual(result['message'], "registration successful, now login")
@@ -38,36 +39,43 @@ class AuthTest(unittest.TestCase):
 
 	def test_already_registered_user(self):
 		"""Test app cannot registered same user twice."""
-		res = self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register',\
+                        data=self.user_data, content_type='application/json')
 		self.assertEqual(res.status_code, 201)
-		second_res = self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
-		self.assertEqual(second_res.status_code, 202)
+		second_res = self.client().post('/api/v2/auth/register', \
+                        data=self.user_data, content_type='application/json')
+		self.assertEqual(second_res.status_code, 409)
 		# get the results returned in json format
 		result = json.loads(second_res.data.decode())
-		self.assertEqual( result['message'], "email or username exists, please login or chose another username")
+		self.assertEqual( result['message'],\
+                        "email or username exists, please login or chose another username")
 
 	def test_register_existing_email(self):
 		"""try registering a user with existing email but unique username"""
-		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		self.client().post('/api/v2/auth/register', \
+                        data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
 							'username' : 'different_username',
 							'email' : 'test@example.com',
 							'password' : 'test_password',
 							'cnfpassword' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=another_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register',\
+                        data=another_user, content_type='application/json')
 		self.assertIn('email or username exists', str(res.data))
 
 	def test_register_existing_username(self):
 		"""try registering a user with existing email but unique username"""
-		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		self.client().post('/api/v2/auth/register', \
+                        data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
 							'username' : 'test_username',
 							'email' : 'diff_test@example.com',
 							'password' : 'test_password',
 							'cnfpassword' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=another_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register', \
+                        data=another_user, content_type='application/json')
 		self.assertIn('username exists', str(res.data))
 
 	def test_register_invalid_email(self):
@@ -78,7 +86,8 @@ class AuthTest(unittest.TestCase):
 							'password' : 'test_password',
 							'cnfpassword' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register', \
+                        data=invalid_user, content_type='application/json')
 		self.assertIn('please provide a valid email', str(res.data))
 
 	def test_special_characters_in_email(self):
@@ -89,18 +98,21 @@ class AuthTest(unittest.TestCase):
 							'password' : 'test_password',
 							'cnfpassword' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register', \
+                        data=invalid_user, content_type='application/json')
 		self.assertIn('please provide a valid email', str(res.data))
 
 	def test_missing_some_fields(self):
 		"""test registering a user without a confirm password field"""
-		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
+		self.client().post('/api/v2/auth/register', \
+                        data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
 							'username' : 'test_username',
 							'email' : 'diff_test@example.com',
 							'password' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=another_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register', \
+                        data=another_user, content_type='application/json')
 		self.assertIn("please provide all the fields", str(res.data))
 
 	def test_special_characters_in_username(self):
@@ -111,7 +123,8 @@ class AuthTest(unittest.TestCase):
 							'password' : 'test_password',
 							'cnfpassword' : 'test_password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register', data=invalid_user, \
+                        content_type='application/json')
 		self.assertIn('username  can only contain alphanumeric characters', str(res.data))
 
 	def test_a_short_username(self):
@@ -155,7 +168,7 @@ class AuthTest(unittest.TestCase):
 							'password' : 'test password',
 							'cnfpassword' : 'test password'
 						})
-		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register',data=invalid_user, content_type='application/json')
 		self.assertIn('password should be one word, no spaces', str(res.data))
 
 	def test_short_password(self):
@@ -166,7 +179,8 @@ class AuthTest(unittest.TestCase):
 							'password' : 'test',
 							'cnfpassword' : 'test'
 						})
-		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
+		res = self.client().post('/api/v2/auth/register',data=invalid_user,\
+                        content_type='application/json')
 		self.assertIn('Password should have atleast 6 characters', str(res.data))
 
 	def test_existing_user_login(self):
@@ -175,10 +189,10 @@ class AuthTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 201)
 		login_res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
 		result = json.loads(login_res.data.decode())
-		self.assertEqual(result['message'], "login successful.")
+		self.assertEqual(result['user']['message'], "login successful.")
 		#assert the status code is 200
 		self.assertEqual(login_res.status_code, 200)
-		self.assertTrue(result['access_token'])
+		self.assertTrue(result['user']['access_token'])
 
 	def test_non_existing_user_login(self):
 		"""test that a non-existing user cannot login"""
@@ -257,7 +271,7 @@ class AuthTest(unittest.TestCase):
 		"""test a user can logout"""
 		self.client().post('/api/v2/auth/register', data=self.user_data, content_type='application/json')
 		login_res = self.client().post('/api/v2/auth/login', data=self.user_data, content_type='application/json')
-		access_token = json.loads(login_res.data.decode())['access_token']
+		access_token = json.loads(login_res.data.decode())['user']['access_token']
 		res = self.client().get('/api/v2/auth/logout',headers=dict(Authorization="Bearer " + access_token),
 			content_type='application/json')
 		self.assertIn("logout succees.", str(res.data))
