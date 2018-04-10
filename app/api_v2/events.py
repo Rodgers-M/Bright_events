@@ -60,8 +60,8 @@ def create():
             event = Events(name=name, description=description, category=category, \
                 location=location, event_date=event_date, created_by=created_by)
             event.save()
-            res = event.to_json()
-            return jsonify(res), 201
+            response = event.to_json()
+            return jsonify(response), 201
         return jsonify({"message" : "you have a similar event in the same location"}), 302
 
 @api.route('/events/all')
@@ -122,8 +122,8 @@ def rsvp(event_id):
     event = Events.get_event_by_id(event_id)
     if event:
         if request.method == 'POST':
-            res = event.add_rsvp(g.user)
-            if res == "rsvp success":
+            response = event.add_rsvp(g.user)
+            if response == "rsvp success":
                 return jsonify({"message" : "rsvp success, see you then"}), 201
             return jsonify({"message" : "already registered for this event"}), 302
         rsvps = event.rsvps.all()

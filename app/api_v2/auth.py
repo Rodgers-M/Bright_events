@@ -15,11 +15,11 @@ def before_request():
             access_token = auth_header.split(" ")[1]
             if access_token:
                 #try decoding the token and get the user_id
-                res = User.decode_auth_token(access_token)
-                if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
+                response = User.decode_auth_token(access_token)
+                if isinstance(response, int) and not BlacklistToken.is_blacklisted(access_token):
                     #check if no error in string format was returned
                     #find the user with the id on the token
-                    user = User.query.filter_by(id=res).first()
+                    user = User.query.filter_by(id=response).first()
                     g.user = user
                     return
                 return jsonify({"message" : "Please register or login to continue"}), 401
@@ -67,10 +67,10 @@ def register():
     """ a route to register a user"""
     data = request.get_json()
     #validate the data
-    res = validdate_data(data)
+    response = validdate_data(data)
     check_pass = validate_password(data)
-    if res is not "valid":
-        return jsonify({"message" : res}), 400
+    if response is not "valid":
+        return jsonify({"message" : response}), 400
     elif check_pass is not "valid":
         return jsonify({"message" : check_pass}), 400
     else:
@@ -146,9 +146,9 @@ def get_token():
 @api.route('/auth/confirm/<token>')
 def confirm_email(token):
     """check if the confirmation token is  valid"""
-    res = User.decode_confirmation_token(token)
-    if res == "invalid or expired token":
-        return jsonify({"message" : res}), 403
+    response = User.decode_confirmation_token(token)
+    if response == "invalid or expired token":
+        return jsonify({"message" : response}), 403
     #the token is valid.the user can now reset the password.
     #the token will also have to be passed along to the reset password form
     return jsonify({"message" : "confirmed, now reset your password"}), 200
@@ -161,11 +161,11 @@ def reset_pass():
         token = data['token']
     except KeyError:
         return jsonify({"message" : "please verify your email before resetting password"}), 401
-    res = User.decode_confirmation_token(token)
-    if res == "invalid or expired token":
-        return jsonify({"message" : res}), 403
+    response = User.decode_confirmation_token(token)
+    if response == "invalid or expired token":
+        return jsonify({"message" : response}), 403
     #the token is valid and the response is a user object
-    user = res
+    user = response
     #validate the given password
     check_pass = validate_password(data)
     if check_pass is not "valid":
@@ -181,8 +181,8 @@ def logout():
     auth_header= request.headers.get('Authorization')
     access_token = auth_header.split(" ")[1]
     #check is the token is valid
-    res = User.decode_auth_token(access_token)
-    if isinstance(res, int) and not BlacklistToken.is_blacklisted(access_token):
+    response = User.decode_auth_token(access_token)
+    if isinstance(response, int) and not BlacklistToken.is_blacklisted(access_token):
         #the token is still valid and not in blasklist
         blasklisted_token = BlacklistToken(access_token)
         db.session.add(blasklisted_token)
