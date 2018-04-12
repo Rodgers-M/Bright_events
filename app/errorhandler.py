@@ -13,7 +13,7 @@ def bad_request(error):
         jsonify({
             "message": "Please check your inputs, inputs should be in valid JSON formatt"
         })), 400
- 
+
 def not_allowed(error):
     """Handle 405 error"""
     return make_response(
