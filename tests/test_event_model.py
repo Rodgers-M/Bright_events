@@ -13,12 +13,12 @@ class EventModelTest(unittest.TestCase):
 		self.client = self.app.test_client
 		db.create_all()
 		self.event_data = json.dumps({
-				'name' : 'eventname',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'the space',
-				'event_date' : str(date.today())
-			})
+                            'name' : 'eventname',
+                            'description' : 'sample event description',
+                            'category' : 'event_testing',
+                            'location' : 'the space',
+                            'event_date' : str(date.today())
+                    })
 
 		with self.app.app_context():
 			db.session.close()
@@ -34,11 +34,11 @@ class EventModelTest(unittest.TestCase):
                 passw='test_password', cnfpass='test_password'):
 		"""helper function to register a user"""
 		user_data = json.dumps({
-				'username' : username,
-				'email' : email,
-				'password' : passw,
-				'cnfpassword' : cnfpass
-			})
+                        'username' : username,
+                        'email' : email,
+                        'password' : passw,
+                        'confirm_password' : cnfpass
+                })
 		return self.client().post('/api/v2/auth/register', data=user_data,\
                         content_type='application/json')
 
@@ -46,11 +46,11 @@ class EventModelTest(unittest.TestCase):
                 passw='test_password', cnfpass='test_password'):
 		"""helper function to login a user"""
 		user_data = json.dumps({
-				'username' : username,
-				'email' : email,
-				'password' : passw,
-				'cnfpassword' : cnfpass
-			})
+                        'username' : username,
+                        'email' : email,
+                        'password' : passw,
+                        'confirm_password' : cnfpass
+                })
 		return self.client().post('/api/v2/auth/login', data=user_data, content_type='application/json')
 
 	def get_access_token(self):
@@ -94,12 +94,12 @@ class EventModelTest(unittest.TestCase):
 		self.assertEqual(result['location'], 'the space')
 		#change the event location before sending another request
 		self.event_data = json.dumps({
-				'name' : 'eventname',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'another_location',
-				'event_date' : str(date.today())
-			})
+                            'name' : 'eventname',
+                            'description' : 'sample event description',
+                            'category' : 'event_testing',
+                            'location' : 'another_location',
+                            'event_date' : str(date.today())
+                    })
 		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=self.event_data, content_type='application/json')
@@ -111,12 +111,12 @@ class EventModelTest(unittest.TestCase):
 		"""test creating an event with a short event name"""
 		access_token = self.get_access_token()
 		event_data = json.dumps({
-				'name' : 'nm',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'another_location',
-				'event_date' : str(date.today())
-			})
+                        'name' : 'nm',
+                        'description' : 'sample event description',
+                        'category' : 'event_testing',
+                        'location' : 'another_location',
+                        'event_date' : str(date.today())
+                })
 		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
@@ -127,42 +127,42 @@ class EventModelTest(unittest.TestCase):
 		"""test creating event with special characters in details"""
 		access_token = self.get_access_token()
 		event_data = json.dumps({
-				'name' : 'eventname#',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'another_location',
-				'event_date' : str(date.today())
-			})
+                        'name' : 'eventname#',
+                        'description' : 'sample event description',
+                        'category' : 'event_testing',
+                        'location' : 'another_location',
+                        'event_date' : str(date.today())
+                })
 		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertIn("should only contain alphanemeric characters", str(res.data))
 
-	def test_past_date(self):
+	def test_creating_event_with_past_date(self):
 		"""test creating event with a past date"""
 		access_token = self.get_access_token()
 		event_data = json.dumps({
-				'name' : 'eventname',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'another_location',
-				'event_date' : str(date.today() - timedelta(days=1))
-			})
+                        'name' : 'eventname',
+                        'description' : 'sample event description',
+                        'category' : 'event_testing',
+                        'location' : 'another_location',
+                        'event_date' : str(date.today() - timedelta(days=1))
+                })
 		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
 		self.assertIn("event cannot have a past date", str(res.data))
 
-	def test_invalid_date(self):
+	def test_creating_event_with_invalid_date(self):
 		"""test creating event with invalid date format"""
 		access_token = self.get_access_token()
 		event_data = json.dumps({
-				'name' : 'eventname',
-				'description' : 'sample event description',
-				'category' : 'event_testing',
-				'location' : 'another_location',
-				'event_date' : "2-12-2019"
-			})
+                        'name' : 'eventname',
+                        'description' : 'sample event description',
+                        'category' : 'event_testing',
+                        'location' : 'another_location',
+                        'event_date' : "2-12-2019"
+                })
 		res = self.client().post('/api/v2/events/create',
 			headers=dict(Authorization="Bearer " + access_token),
 			data=event_data, content_type='application/json')
@@ -214,11 +214,11 @@ class EventModelTest(unittest.TestCase):
 			data=self.event_data, content_type='application/json')
 		#register another user and create an event
 		user2_data = json.dumps({
-				'username' : 'test_user2',
-				'email' :'	testemail2@testing.com',
-				'password' : 'mypassword',
-				'cnfpassword' : 'mypassword'
-			})
+                        'username' : 'test_user2',
+                        'email' :'	testemail2@testing.com',
+                        'password' : 'mypassword',
+                        'confirm_password' : 'mypassword'
+                })
 		self.client().post('/api/v2/auth/register', data=user2_data, content_type='application/json')
 		result = self.client().post('/api/v2/auth/login', data=user2_data, content_type='application/json')
 		user2_access_token = json.loads(result.data.decode())['user']['access_token']
@@ -240,12 +240,12 @@ class EventModelTest(unittest.TestCase):
 		self.assertEqual(res.status_code, 201)
 		#update the event
 		update_data =  json.dumps({
-				'name' : 'new_event_name',
-				'description' : 'real event description',
-				'category' : 'event_update',
-				'location' : 'another space',
-				'event_date' : '2020-12-30'
-			})
+                        'name' : 'new_event_name',
+                        'description' : 'real event description',
+                        'category' : 'event_update',
+                        'location' : 'another space',
+                        'event_date' : '2020-12-30'
+                })
 		#send update request
 		res = self.client().put('/api/v2/events/1',
 			headers=dict(Authorization="Bearer " + access_token),

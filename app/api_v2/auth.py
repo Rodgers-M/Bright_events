@@ -14,11 +14,8 @@ def before_request():
         if auth_header:
             access_token = auth_header.split(" ")[1]
             if access_token:
-                #try decoding the token and get the user_id
                 response = User.decode_auth_token(access_token)
                 if isinstance(response, int) and not BlacklistToken.is_blacklisted(access_token):
-                    #check if no error in string format was returned
-                    #find the user with the id on the token
                     user = User.query.filter_by(id=response).first()
                     g.user = user
                     return
@@ -32,7 +29,6 @@ def validdate_data(data):
         #check if there are specil characters in the username
         if not re.match("^[a-zA-Z0-9_]*$", data['username'].strip()):
             return "username  can only contain alphanumeric characters"
-        #check if the username is more than 3 characters
         elif len(data['username'].strip()) < 3:
             return "username must be more than 3 characters"
         #check if the name contains only numbers or underscore
@@ -54,7 +50,7 @@ def validate_password(data):
         elif len(data['password'].strip()) < 6:
             return "Password should have atleast 6 characters"
         #check if the passwords mact
-        elif  data['password'] != data['cnfpassword']:
+        elif  data['password'] != data['confirm_password']:
             return "passwords do not match"
         else:
             return "valid"
@@ -91,7 +87,7 @@ def register():
             except Exception as error:
                 #an error occured when trying to register the user
                 response = {'message' : str(error)}
-                return jsonify(response), 401
+                return jsonify(response), 400
         else:
             # there is an existing user with given email
             response = {'message' : 'email or username exists, please login or chose another username'}

@@ -11,11 +11,11 @@ class AuthTest(unittest.TestCase):
 		self.app_context.push()
 		self.client = self.app.test_client
 		self.user_data = json.dumps({
-							'username' : 'test_username',
-							'email' : 'test@example.com',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'test_username',
+                            'email' : 'test@example.com',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                        })
 
 		with self.app.app_context():
 			db.session.close()
@@ -28,7 +28,7 @@ class AuthTest(unittest.TestCase):
 		self.app_context.pop()
 		del self.client
 
-	def test_registration(self):
+	def test_registration_with_valid_deatails(self):
 		"""Test user registration works correcty."""
 		res=self.client().post('/api/v2/auth/register', \
                         data=self.user_data, content_type='application/json')
@@ -50,16 +50,16 @@ class AuthTest(unittest.TestCase):
 		self.assertEqual( result['message'],\
                         "email or username exists, please login or chose another username")
 
-	def test_register_existing_email(self):
+	def test_registration_with_existing_email(self):
 		"""try registering a user with existing email but unique username"""
 		self.client().post('/api/v2/auth/register', \
                         data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
-							'username' : 'different_username',
-							'email' : 'test@example.com',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'different_username',
+                            'email' : 'test@example.com',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register',\
                         data=another_user, content_type='application/json')
 		self.assertIn('email or username exists', str(res.data))
@@ -69,11 +69,11 @@ class AuthTest(unittest.TestCase):
 		self.client().post('/api/v2/auth/register', \
                         data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
-							'username' : 'test_username',
-							'email' : 'diff_test@example.com',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'test_username',
+                            'email' : 'diff_test@example.com',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', \
                         data=another_user, content_type='application/json')
 		self.assertIn('username exists', str(res.data))
@@ -81,11 +81,11 @@ class AuthTest(unittest.TestCase):
 	def test_register_invalid_email(self):
 		"""try registering a user with invlid email"""
 		invalid_user = json.dumps({
-							'username' : 'test_username',
-							'email' : 'test@example',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'test_username',
+                            'email' : 'test@example',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', \
                         data=invalid_user, content_type='application/json')
 		self.assertIn('please provide a valid email', str(res.data))
@@ -93,11 +93,11 @@ class AuthTest(unittest.TestCase):
 	def test_special_characters_in_email(self):
 		"""try registering username with special characters"""
 		invalid_user = json.dumps({
-							'username' : 'username',
-							'email' : 'test@example/.com',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'username',
+                            'email' : 'test@example/.com',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', \
                         data=invalid_user, content_type='application/json')
 		self.assertIn('please provide a valid email', str(res.data))
@@ -107,10 +107,10 @@ class AuthTest(unittest.TestCase):
 		self.client().post('/api/v2/auth/register', \
                         data=self.user_data, content_type='application/json')
 		another_user = json.dumps({
-							'username' : 'test_username',
-							'email' : 'diff_test@example.com',
-							'password' : 'test_password'
-						})
+                            'username' : 'test_username',
+                            'email' : 'diff_test@example.com',
+                            'password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', \
                         data=another_user, content_type='application/json')
 		self.assertIn("please provide all the fields", str(res.data))
@@ -118,11 +118,11 @@ class AuthTest(unittest.TestCase):
 	def test_special_characters_in_username(self):
 		"""try registering username with special characters"""
 		invalid_user = json.dumps({
-							'username' : '#username',
-							'email' : 'test@example',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : '#username',
+                            'email' : 'test@example',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, \
                         content_type='application/json')
 		self.assertIn('username  can only contain alphanumeric characters', str(res.data))
@@ -130,55 +130,55 @@ class AuthTest(unittest.TestCase):
 	def test_a_short_username(self):
 		"""try registering a short username"""
 		invalid_user = json.dumps({
-							'username' : 'ab',
-							'email' : 'test@example',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : 'ab',
+                            'email' : 'test@example',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
 		self.assertIn('username must be more than 3 characters', str(res.data))
 
 	def test_only_numbers_in_username(self):
 		"""try registering a username containing only numbers"""
 		invalid_user = json.dumps({
-							'username' : '9998',
-							'email' : 'test@example',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : '9998',
+                            'email' : 'test@example',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
 		self.assertIn('username must have atleast 3 letters before number ', str(res.data))
 
 	def test_numbers_as_first_characters_in_username(self):
 		"""try registering a username starting with numbers"""
 		invalid_user = json.dumps({
-							'username' : '99rodger98',
-							'email' : 'test@example',
-							'password' : 'test_password',
-							'cnfpassword' : 'test_password'
-						})
+                            'username' : '99rodger98',
+                            'email' : 'test@example',
+                            'password' : 'test_password',
+                            'confirm_password' : 'test_password'
+                    })
 		res = self.client().post('/api/v2/auth/register', data=invalid_user, content_type='application/json')
 		self.assertIn('username must have atleast 3 letters before number ', str(res.data))
 
 	def test_spaces_in_password(self):
 		"""test registering a user with a password containing spaces"""
 		invalid_user = json.dumps({
-							'username' : 'username',
-							'email' : 'test@example.com',
-							'password' : 'test password',
-							'cnfpassword' : 'test password'
-						})
+                            'username' : 'username',
+                            'email' : 'test@example.com',
+                            'password' : 'test password',
+                            'confirm_password' : 'test password'
+                    })
 		res = self.client().post('/api/v2/auth/register',data=invalid_user, content_type='application/json')
 		self.assertIn('password should be one word, no spaces', str(res.data))
 
 	def test_short_password(self):
 		"""test registering a user with a short passsword"""
 		invalid_user = json.dumps({
-							'username' : 'username',
-							'email' : 'test@example.com',
-							'password' : 'test',
-							'cnfpassword' : 'test'
-						})
+                            'username' : 'username',
+                            'email' : 'test@example.com',
+                            'password' : 'test',
+                            'confirm_password' : 'test'
+                    })
 		res = self.client().post('/api/v2/auth/register',data=invalid_user,\
                         content_type='application/json')
 		self.assertIn('Password should have atleast 6 characters', str(res.data))
@@ -215,7 +215,7 @@ class AuthTest(unittest.TestCase):
 		#send the new password along with the token
 		data = json.dumps({
 			"password" : "mynewpassword",
-			"cnfpassword" : "mynewpassword",
+			"confirm_password" : "mynewpassword",
 			"token" : token
 			})
 		res = self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
@@ -229,7 +229,7 @@ class AuthTest(unittest.TestCase):
 		#send the new password along with the token
 		data = json.dumps({
 			"password" : "mynewpassword",
-			"cnfpassword" : "mynewpassword",
+			"confirm_password" : "mynewpassword",
 			"token" : token
 			})
 		self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
@@ -249,7 +249,7 @@ class AuthTest(unittest.TestCase):
 		#send the new password along with the token
 		data = json.dumps({
 			"password" : "mynewpassword",
-			"cnfpassword" : "mynewpassword",
+			"confirm_password" : "mynewpassword",
 			"token" : token
 			})
 		self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
@@ -262,7 +262,7 @@ class AuthTest(unittest.TestCase):
 		#send the new password without confirmation token
 		data = json.dumps({
 			"password" : "mynewpassword",
-			"cnfpassword" : "mynewpassword",
+			"confirm_password" : "mynewpassword",
 			})
 		res = self.client().put('/api/v2/auth/resetpass', data=data, content_type='application/json' )
 		self.assertIn("verify your email before resetting password", str(res.data))
