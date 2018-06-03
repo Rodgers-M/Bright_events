@@ -11,7 +11,7 @@ def validate_data(data):
         return "event name should only contain alphanemeric characters and be at least 3 characters"
     elif len(data['location'].strip()) < 3 or not re.match("^[a-zA-Z0-9_ ]*$", data['location'].strip()):
         return "event location should only contain alphanemeric characters and be at least 3 characters"
-    elif len(data['category'].strip())<3 or not re.match("^[a-zA-Z0-9_]*$", data['category'].strip()):
+    elif len(data['category'].strip())<3 or not re.match("^[a-zA-Z0-9_ ]*$", data['category'].strip()):
         return "event category should only contain alphanemeric characters and be at least 3 characters"
     else:
         return "valid"
@@ -67,16 +67,19 @@ def create():
 @api.route('/events/all')
 def get_all():
     """fetch all events available"""
-    #fetch the first 15 events based on event date
+    # fetch the first 15 events based on event date
     page = request.args.get("page", default=1, type=int)
     per_page = request.args.get("limit", default=15, type=int)
-    #fetch matching events from the database
-    result = Events.query.filter(cast(Events.event_date, Date) >=  date.today())\
-    .paginate(page, per_page, error_out=False)
+    # fetch matching events from the database
+    result = Events.query.filter(cast(Events.event_date, Date) >= date.today())\
+        .paginate(page, per_page, error_out=False)
     if result.items:
         event_list = make_event_list(result.items)
-        return jsonify(event_list), 200
-    return jsonify({"message" : "this page has no events, or no events available"}), 200
+        print(jsonify(event_list))
+        return jsonify({"message": "all events, paginated", 'event_list': event_list}), 200
+    event_list = []
+    return jsonify({"message" : "this page has no events, or no events available",
+        'event_list': event_list}), 200
 
 @api.route('/events/myevents')
 def my_events():
@@ -84,8 +87,10 @@ def my_events():
     events = g.user.events
     if events:
         event_list = make_event_list(events)
-        return jsonify(event_list), 200
-    return jsonify({"message" : "you have not created any events yet"}), 200
+        return jsonify({"message": "my events, paginated", 'event_list': event_list}), 200
+    event_list = []
+    return jsonify({"message": "you have not created any events yet",
+            'event_list': event_list}), 200
 
 @api.route('/events/<int:event_id>', methods=['PUT', 'DELETE' , 'GET' ])
 def manipulate_event(event_id):
@@ -104,7 +109,10 @@ def manipulate_event(event_id):
                 event.event_date = event_details['event_date']
                 #save the event back to the database
                 event.save()
-                return jsonify({"message" : "event updated successfully"}), 200
+                return jsonify({
+                    "message": "event updated successfully",
+                    "event": event.to_json()
+                    }), 200
             elif request.method == 'GET':
                 #return the event with the given id
                 found_event = event.to_json()
@@ -124,7 +132,8 @@ def rsvp(event_id):
         if request.method == 'POST':
             response = event.add_rsvp(g.user)
             if response == "rsvp success":
-                return jsonify({"message" : "rsvp success, see you then"}), 201
+                return jsonify({"message": "rsvp success, see you then",
+                    'event': event.to_json()}), 201
             return jsonify({"message" : "already registered for this event"}), 302
         rsvps = event.rsvps.all()
         if rsvps:
