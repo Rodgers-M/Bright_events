@@ -184,7 +184,7 @@ class EventModelTest(unittest.TestCase):
 			headers=dict(Authorization=" "),
 			data=self.event_data, content_type='application/json')
 		self.assertEqual(res.status_code, 401)
-		self.assertIn('acess token is missing', str(res.data))
+		self.assertIn('Please register or login to continue', str(res.data))
 
 	def test_get_all_events(self):
 		"""test if the api can fecth all events"""
@@ -197,7 +197,7 @@ class EventModelTest(unittest.TestCase):
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		self.assertEqual(res.status_code, 200)
 		result = json.loads(res.data.decode())
-		self.assertEqual(result[0]['name'], 'eventname')
+		self.assertEqual(result['event_list'][0]['name'], 'eventname')
 
 	def test_get_all_events_with_empty_db(self):
 		"""fecth events when no events are created"""
@@ -229,8 +229,8 @@ class EventModelTest(unittest.TestCase):
 		res = self.client().get('/api/v2/events/myevents',
 			headers=dict(Authorization="Bearer " + access_token), content_type='application/json')
 		result = json.loads(res.data.decode())
-		self.assertEqual(result[0]['orgarniser'], 'test_user')
-		self.assertNotEqual(result[0]['orgarniser'], 'test_user2')
+		self.assertEqual(result['event_list'][0]['orgarniser'], 'test_user')
+		self.assertNotEqual(result['event_list'][0]['orgarniser'], 'test_user2')
 	def test_update_event(self):
 		"""test if an event owner can update an event"""
 		access_token = self.get_access_token()
