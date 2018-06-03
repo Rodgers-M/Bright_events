@@ -20,8 +20,8 @@ def before_request():
                     g.user = user
                     return
                 return jsonify({"message" : "Please register or login to continue"}), 401
-            return jsonify({"message" : "acess token is missing"}), 401
-        return jsonify({"message" : "Authorization header is missing"}), 401
+            return jsonify({"message" : "Please register or login to continue"}), 401
+        return jsonify({"message" : "Please register or login to continue"}), 409
 
 def validdate_data(data):
     """validate user details"""
