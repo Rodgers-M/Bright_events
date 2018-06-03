@@ -48,7 +48,8 @@ class User(db.Model):
             payload={
                     'exp': datetime.utcnow() + timedelta(minutes=60),
                     'iat': datetime.utcnow(),
-                    'sub': self.id
+                    'sub': self.id,
+                    'username': self.username
             }
             # create the byte string token using the payload and the SECRET key
             jwt_string = jwt.encode(
@@ -155,15 +156,16 @@ class Events(db.Model):
 
     def to_json(self):
         """convert a given event to json"""
-        json_event ={
-            "id" : self.id,
-            "name" : self.name,
-            "description" : self.description,
-            "category" : self.category,
-            "location" : self.location,
-            "orgarniser" : self.created_by.username,
-            "event date" : self.event_date,
-            "date created" : self.date_created
+        json_event = {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "category": self.category,
+            "location": self.location,
+            "orgarniser": self.created_by.username,
+            "event_date": self.event_date,
+            "date_created": self.date_created,
+            "rsvp_list": [user.username for user in self.rsvps.all()]
             }
         return json_event
 
