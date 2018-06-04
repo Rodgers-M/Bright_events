@@ -129,7 +129,6 @@ class Events(db.Model):
     location = db.Column(db.String(64))
     event_date = db.Column(db.DateTime)
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-    
 
     def add_rsvp(self, user):
         """ This method adds a user to the list of rsvps"""
@@ -138,6 +137,14 @@ class Events(db.Model):
             self.save()
             return "rsvp success"
         return "already registered"
+
+    def delete_rsvp(self, user):
+        """ This method removes a user to the list of rsvps"""
+        if self.has_rsvp(user):
+            self.rsvps.remove(user)
+            self.save()
+            return "rsvp delete success"
+        return "already deleted"
 
     def has_rsvp(self, user):
         """This method checks if a user is already registered for an event"""
