@@ -92,39 +92,41 @@ def my_events():
     return jsonify({"message": "you have not created any events yet",
             'event_list': event_list}), 200
 
-@api.route('/events/<int:event_id>', methods=['PUT', 'DELETE' , 'GET' ])
+
+@api.route('/events/<int:event_id>', methods=['PUT', 'DELETE', 'GET'])
 def manipulate_event(event_id):
     """update or delete an event"""
     event = Events.get_event_by_id(event_id)
     if event:
-        #make sure the events is modified by the right person
+        # make sure the events is modified by the right person
         if event.created_by.username == g.user.username:
-            if request.method == 'PUT': 
-                event_details = request.get_json() #get the incoming details
-                #update the details accordingly
+            if request.method == 'PUT':
+                event_details = request.get_json()  # get the incoming details
+                # update the details accordingly
                 event.name = event_details['name']
                 event.description = event_details['description']
                 event.category = event_details['category']
                 event.location = event_details['location']
                 event.event_date = event_details['event_date']
-                #save the event back to the database
+                # save the event back to the database
                 event.save()
                 return jsonify({
                     "message": "event updated successfully",
                     "event": event.to_json()
                     }), 200
             elif request.method == 'GET':
-                #return the event with the given id
+                # return the event with the given id
                 found_event = event.to_json()
                 return jsonify(found_event), 200
             else:
-            #if the request method is delete
+                # if the request method is delete
                 event.delete()
-                return jsonify({"message" : "event deleted successfully"}), 200
-        return jsonify({"message" : "you can not modify the event"})
-    return jsonify({"message" : "no event with given id found"}), 404
+                return jsonify({"message": "event deleted successfully"}), 200
+        return jsonify({"message": "you can not modify the event"})
+    return jsonify({"message": "no event with given id found"}), 404
 
-@api.route('/events/<int:event_id>/rsvp', methods=['POST', 'GET'])
+
+@api.route('/events/<int:event_id>/rsvp', methods=['POST', 'GET', 'DELETE'])
 def rsvp(event_id):
     """register a user to an event"""
     event = Events.get_event_by_id(event_id)
@@ -134,19 +136,22 @@ def rsvp(event_id):
             if response == "rsvp success":
                 return jsonify({"message": "rsvp success, see you then",
                     'event': event.to_json()}), 201
-            return jsonify({"message" : "already registered for this event"}), 302
+            return jsonify({"message": "already registered for this event"}), 302
+        if request.method == 'DELETE':
+            event.delete_rsvp(g.user)
+            return jsonify({'message': 'rsvp cancelled', 'event': event.to_json()}), 200
         rsvps = event.rsvps.all()
         if rsvps:
             rsvp_list = []
             for user in rsvps:
-                rsvp= {
-                    "username" : user.username,
-                    "email" : user.email
+                rsvp = {
+                    "username": user.username,
+                    "email": user.email
                 }
                 rsvp_list.append(rsvp)
             return jsonify(rsvp_list), 200
-        return jsonify({"message" : "no users have responded to this event yet"}),200
-    return jsonify({"message" : "event does not exist"}), 404
+        return jsonify({"message": "no users have responded to this event yet"}),200
+    return jsonify({"message": "event does not exist"}), 404
 
 @api.route('/events/myrsvps')
 def my_rsvps():
