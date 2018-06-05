@@ -62,13 +62,13 @@ def validate_password(data):
 def register():
     """ a route to register a user"""
     data = request.get_json()
-    #validate the data
+    # validate the data
     response = validdate_data(data)
     check_pass = validate_password(data)
     if response is not "valid":
-        return jsonify({"message" : response}), 400
+        return jsonify({"message": response}), 400
     elif check_pass is not "valid":
-        return jsonify({"message" : check_pass}), 400
+        return jsonify({"message": check_pass}), 400
     else:
         #all the deatails are valid, register the user
         user = User.query.filter((User.email==data['email']) | (User.username==data['username'])).first()
