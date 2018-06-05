@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_cors import CORS
 from config import app_config
 from app.errorhandler import not_found, bad_request, internal_server_error,not_allowed
 
@@ -10,6 +11,7 @@ mail = Mail()
 def create_app(config_name):
     # Initialize flask app
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
 
     #load from config.py in root folder
     app.config.from_object(app_config[config_name])
