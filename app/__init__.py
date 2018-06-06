@@ -12,8 +12,7 @@ def create_app(config_name):
     # Initialize flask app
     app = Flask(__name__, instance_relative_config=True)
     CORS(app)
-
-    #load from config.py in root folder
+    # load from config.py in root folder
     app.config.from_object(app_config[config_name])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
@@ -24,4 +23,4 @@ def create_app(config_name):
     app.register_error_handler(405, not_allowed)
     app.register_error_handler(500, internal_server_error)
     return app
-	
+
