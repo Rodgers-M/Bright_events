@@ -62,7 +62,7 @@ def create():
             event.save()
             response = event.to_json()
             return jsonify(response), 201
-        return jsonify({"message" : "you have a similar event in the same location"}), 302
+        return jsonify({"message": "you have a similar event in the same location"}), 302
 
 @api.route('/events/all')
 def get_all():
