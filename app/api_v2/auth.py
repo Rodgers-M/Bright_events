@@ -1,5 +1,5 @@
 import re
-from flask import request, jsonify, g, url_for, render_template
+from flask import request, jsonify, g, render_template
 from app.models import User, BlacklistToken
 from app.email import send_mail
 from . import api
@@ -28,6 +28,7 @@ def before_request():
                 return jsonify({"message": "Please register or login to continue"}), 401
             return jsonify({"message": "Please register or login to continue"}), 401
         return jsonify({"message": "Please register or login to continue"}), 401
+
 
 def validdate_data(data):
     """validate user details"""
@@ -113,19 +114,20 @@ def login():
             # user details are valid hence generate the access token
             access_token = user.generate_auth_token()
             response = {'user': {
-                     'email': user.email,
-                    'message': 'login successful.',
-                    'access_token':  access_token.decode()
-                    }}
+                'email': user.email,
+                'message': 'login successful.',
+                'access_token':  access_token.decode()
+            }}
             return jsonify(response), 200
-        else:
-            # no user found, return an error message
-            response = {'message': 'invalid username or password, Please try again'}
-            return jsonify(response), 401
+        # no user found, return an error message
+        response = {'message': 'invalid username or password,\
+                Please try again'}
+        return jsonify(response), 401
     except Exception as e:
         # an error occured in the server
         response = {'message': str(e)}
         return jsonify(response), 500
+
 
 @api.route('/auth/gettoken', methods=['post'])
 def get_token():
@@ -135,27 +137,28 @@ def get_token():
     if user:
         token = user.generate_confirmation_token()
         subject = "Bright Events"
-        confirm_url = url_for(
-        'api.confirm_email',
-        token=token,
-        _external=True)
-        html = render_template(
-        'mail/reset_pass.html',
-        confirm_url=confirm_url)
+        confirm_url = 'http://localhost:3000/auth/confirm/{}'.format(token)
+        print(str(token))
+        html = render_template('mail/reset_pass.html', confirm_url=confirm_url)
         send_mail(to=user.email, subject=subject, html=html)
-        return jsonify({"message":"a confirmation email has been sent to {}".format(user.email),
-                "token" : token.decode()}), 200
-    return jsonify({"message" : "user not found, check the email and try again"}), 404
+        return jsonify({"message": "a confirmation email has been sent to {}\
+                use the link to reset your password, valid for\
+                30 min".format(user.email), "token": token.decode()}), 200
+    return jsonify({"message": "user not found, check the email\
+            and try again"}), 403
+
 
 @api.route('/auth/confirm/<token>')
 def confirm_email(token):
     """check if the confirmation token is  valid"""
     response = User.decode_confirmation_token(token)
     if response == "invalid or expired token":
-        return jsonify({"message": response}), 403
+        return jsonify({"message": "Invalid or expired link,submit email to\
+                get a new link"}), 403
     # the token is valid.the user can now reset the password.
     # the token will also have to be passed along to the reset password form
-    return jsonify({"message" : "confirmed, now reset your password"}), 200
+    return jsonify({"message": "confirmed, now reset your password"}), 200
+
 
 @api.route('/auth/resetpass', methods=['PUT'])
 def reset_pass():
@@ -164,7 +167,8 @@ def reset_pass():
     try:
         token = data['token']
     except KeyError:
-        return jsonify({"message": "please verify your email before resetting password"}), 401
+        return jsonify({"message": "please verify your email before resetting\
+                password"}), 401
     response = User.decode_confirmation_token(token)
     if response == "invalid or expired token":
         return jsonify({"message": response}), 403
@@ -173,7 +177,7 @@ def reset_pass():
     # validate the given password
     check_pass = validate_password(data)
     if check_pass is not "valid":
-        return jsonify({"message" : check_pass}), 400
+        return jsonify({"message": check_pass}), 400
     # the password is valid, thus reset the user password
     user.password = data["password"]
     user.save()
