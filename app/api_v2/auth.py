@@ -1,9 +1,11 @@
+""" module handles user registration, login and password reset"""
+
 import re
 from flask import request, jsonify, g, render_template
 from app.models import User, BlacklistToken
 from app.email import send_mail
-from . import api
 from app import db
+from . import api
 
 
 @api.before_app_request
@@ -25,9 +27,12 @@ def before_request():
                     user = User.query.filter_by(id=response).first()
                     g.user = user
                     return
-                return jsonify({"message": "Please register or login to continue"}), 401
-            return jsonify({"message": "Please register or login to continue"}), 401
-        return jsonify({"message": "Please register or login to continue"}), 401
+                return jsonify({"message": "Please register or login to\
+                        continue"}), 401
+            return jsonify({"message": "Please register or login to\
+                    continue"}), 401
+        return jsonify({"message": "Please register or login to\
+                continue"}), 401
 
 
 def validdate_data(data):
@@ -40,13 +45,15 @@ def validdate_data(data):
             return "username must be more than 3 characters"
         # check if the name contains only numbers or underscore
         elif not re.match("[a-zA-Z]{3,}_*[0-9_]*[a-zA-Z]*_*", data['username'].strip()):
-            return "username must have atleast 3 letters before number or underscore"
+            return "username must have atleast 3 letters before number\
+                    or underscore"
         elif not re.match("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data['email'].strip()):
             return "please provide a valid email"
         else:
             return "valid"
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
+
 
 def validate_password(data):
     """validate the password and return appropriate response"""
@@ -59,8 +66,7 @@ def validate_password(data):
         # check if the passwords mact
         elif data['password'] != data['confirm_password']:
             return "passwords do not match"
-        else:
-            return "valid"
+        return "valid"
     # some data is missing and a keyError exception was raised
     except Exception as error:
         return "please provide all the fields, missing " + str(error)
@@ -137,7 +143,7 @@ def get_token():
     if user:
         token = user.generate_confirmation_token()
         subject = "Bright Events"
-        confirm_url = 'http://localhost:3000/auth/confirm/{}'.format(token)
+        confirm_url = 'https://rodgerevents-pr-7.herokuapp.com/auth/confirm/{}'.format(token)
         print(str(token))
         html = render_template('mail/reset_pass.html', confirm_url=confirm_url)
         send_mail(to=user.email, subject=subject, html=html)
@@ -196,5 +202,6 @@ def logout():
         blasklisted_token = BlacklistToken(access_token)
         db.session.add(blasklisted_token)
         db.session.commit()
-        return jsonify({"message": "logout succees. Thank you for using Bright Events"}), 200
+        return jsonify({"message": "logout succees. Thank you for using\
+                Bright Events"}), 200
     return jsonify({"message": "you are already logged out"}), 401
