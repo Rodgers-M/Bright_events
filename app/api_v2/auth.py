@@ -148,8 +148,7 @@ def get_token():
         html = render_template('mail/reset_pass.html', confirm_url=confirm_url)
         send_mail(to=user.email, subject=subject, html=html)
         return jsonify({"message": "a confirmation email has been sent to {}\
-                use the link to reset your password, valid for\
-                30 min".format(user.email), "token": token.decode()}), 200
+                ".format(user.email), "token": token.decode()}), 200
     return jsonify({"message": "user not found, check the email\
             and try again"}), 403
 
