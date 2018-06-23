@@ -24,7 +24,7 @@ The users can also search events based on location or category
 
 * To interact with the application via the browser,visit the following url
     
-     * [rodgerbrightevents](https://rogderbrightevents.herokuapp.com/api/v1)
+     * [rodgerevents](https://rodgerevents.herokuapp.com)
     
 * To interact with the API via Postman, use the link below
     
