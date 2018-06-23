@@ -143,9 +143,8 @@ def get_token():
     if user:
         token = user.generate_confirmation_token()
         subject = "Bright Events"
-        confirm_url = 'https://rodgerevents-pr-7.herokuapp.com/auth/confirm/{}'.format(token)
-        print(str(token))
-        html = render_template('mail/reset_pass.html', confirm_url=confirm_url)
+        url = 'https://rodgerevents.herokuapp.com/auth/confirm/{}'.format(token)
+        html = render_template('mail/reset_pass.html', confirm_url=url)
         send_mail(to=user.email, subject=subject, html=html)
         return jsonify({"message": "a confirmation email has been sent to {}\
                 ".format(user.email), "token": token.decode()}), 200
